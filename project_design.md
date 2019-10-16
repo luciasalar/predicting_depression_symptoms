@@ -49,7 +49,8 @@ The text 'There is a bike there'
 has positive strength 1 and negative strength -1
 
 Approximate classification rationale: There is a bike there [sentence: 1,-1] [result: max + and - of any sentence][trinary result = 0 as pos=1 neg=-1] 
----
+
+---------------------------------
 we can define document with postive > 3, negative < -3 as mixed. Here we can change the mapping according to mannual judegment
 
 ## traditional machine learning Approach
@@ -82,7 +83,9 @@ Mood transition vector: {P-N, P-Neu, N-Neu, N-S, S-P, S-Neu, P-M, M-Neu, M-N}, w
 
 * step 3: same as mood vector 
 
--------Let's try the traditional approach first, this is for extension-----------------------
+Let's try the traditional approach first, this is for extension
+------------------------------
+
 
 ## neural network approach
 neural network approach gives us more flexibility in designing the features
