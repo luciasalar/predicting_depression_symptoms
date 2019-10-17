@@ -6,9 +6,7 @@ In this project, we want to examine does mood or transitions of mood indicated i
 
 * We will first introduce how researchers use social media data to predict mental illnesses symptoms
 
-* Then we will discuss the problem of:
-problem of using social media data to predict mental illnesses (Methodological Gaps in Predicting Mental Health
-States from Social Media: Triangulating Diagnostic Signals)
+* Then we will discuss the concerns of using social media data to predict mental illnesses (Methodological Gaps in Predicting Mental Health States from Social Media: Triangulating Diagnostic Signals)
 
 1. Do these diagnostic signals measure what they claim to measure? (mismatched between predictive features in the proxy classifiers and those of the patient model, classifier capture support seeking behaviors, interest in others’ lived experiences of the illness, self-reported accounts of stigma and inhibition)
 
@@ -20,14 +18,16 @@ States from Social Media: Triangulating Diagnostic Signals)
 
 ### To address the questions above, we examine using mood pattern to infer depression symptoms. 
 
-Explain mood and emotions and depression.  Clinical studies suggest mood is an important indicator of depression, there's a lot of controversies about whether social media sentiment reflects real life mood. 
+Explain mood and emotions and depression.  Clinical studies suggest mood is an important indicator of depression. 
 
-Explain how researchers use them to predict depression symptoms in the social media context. Their approach didn't capture the temporal component of mood and mood transitions.
+Explain the current approach of using sentiment as one of the features to predict depression symptoms in the social media context. Their approach didn't capture the temporal component of mood and mood transitions.
 
 ### Contribution 
 1. By looking at whether social media mood predicts depression symptoms, we gain insights on whether it's possible to build a ML model that is more algin with clinical theories. 
 2. Existing literature use sentiment score within a specific period of time as feature, therefore, the temporal element is not included in the model prediction. Here we construct temporal mood features and we explore using transitions of mood as features.
 
+### Limitation 
+social media mood is different from real life mood
 
 ### Research questions
 1. Can mood patterns and mood transition patterns indicated by social media text predict depression symptoms?
