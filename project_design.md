@@ -6,22 +6,38 @@ In this project, we want to examine does mood or transitions of mood indicated i
 
 We will first introduce:
 
-Mood and emotions and depression
-Mood and emotions on social media, how researchers use them to predict depression symptoms
-
-We move on to discuss these models do not look at the transtion and do not consider mood as a temporal feature, and why transtions are important
+ How researchers use social media data to predict mental illnesses symptoms
 
 Then we will discuss the problem of:
-using social media data to predict mental illnesses (cite review )
-and then we explain Why we still use social media data to infer depression symptoms
+problem of using social media data to predict mental illnesses (Methodological Gaps in Predicting Mental Health
+States from Social Media: Triangulating Diagnostic)
+Signals)
 
-1.  Clinical studies suggest mood is an important indicator of depression, there's a lot of controversies about whether social media sentiment reflects real life mood. By looking at whether social media mood predicts depression symptoms, we gain insights on the degree to which social media mood can reflect real life mood.
+1)Do these diagnostic signals measure what they claim to measure? (mismatched between predictive features in the proxy classifiers and those of the patient model, classifier capture support seeking behaviors, interest in others’ lived experiences of the illness, self-reported accounts of stigma and inhibition)
+
+2) Is what is being measured by a diagnostic signal itself valid?
+'a lack of clinical grounding in the diagnostic information (individual’s clinical mental health state) that these signals intend to measure. Instead, what these signals presume as diagnostic information are essentially behavioral patterns associated with the appropriation of social media by a wide variety of stakeholders, not necessarily patients, in relation to the illness. '
+
+'a lack of theoretical underpinning in the ways the diagnostic signals were identified.'
+
+
+To address the questions above, we examine using mood pattern to infer depression symptoms. 
+
+Explain mood and emotions and depression.  Clinical studies suggest mood is an important indicator of depression, there's a lot of controversies about whether social media sentiment reflects real life mood. 
+
+Explain how researchers use them to predict depression symptoms in the social media context. Their approach didn't capture the temporal component of mood and mood transitions.
+
+### Contribution 
+1. By looking at whether social media mood predicts depression symptoms, we gain insights on whether it's possible to build a ML model that is more algin with clinical theories. 
 2. Existing literature use sentiment score within a specific period of time as feature, therefore, the temporal element is not included in the model prediction. Here we construct temporal mood features and we explore using transitions of mood as features.
-3.  
+
+
+### Research questions
+1. Can mood patterns and mood transition patterns indicated by social media text predict depression symptoms?
 
 
 # Here's our design:
-## Our goal
+
 
 Develop a prediction model on depression symptoms:
 * model 1: This model use a set of features including, averaged sentiment score in 1 year, LIWC, demographic, part-of-speech, readability score asn so on (baseline) (also check again to see if there's a paper predicting depression using this dataset)
