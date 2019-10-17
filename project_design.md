@@ -4,24 +4,21 @@ In this project, we want to examine does mood or transitions of mood indicated i
 
 ## Literature:
 
-We will first introduce:
+* We will first introduce how researchers use social media data to predict mental illnesses symptoms
 
- How researchers use social media data to predict mental illnesses symptoms
-
-Then we will discuss the problem of:
+* Then we will discuss the problem of:
 problem of using social media data to predict mental illnesses (Methodological Gaps in Predicting Mental Health
-States from Social Media: Triangulating Diagnostic)
-Signals)
+States from Social Media: Triangulating Diagnostic Signals)
 
-1)Do these diagnostic signals measure what they claim to measure? (mismatched between predictive features in the proxy classifiers and those of the patient model, classifier capture support seeking behaviors, interest in others’ lived experiences of the illness, self-reported accounts of stigma and inhibition)
+1. Do these diagnostic signals measure what they claim to measure? (mismatched between predictive features in the proxy classifiers and those of the patient model, classifier capture support seeking behaviors, interest in others’ lived experiences of the illness, self-reported accounts of stigma and inhibition)
 
-2) Is what is being measured by a diagnostic signal itself valid?
+2. Is what is being measured by a diagnostic signal itself valid?
 'a lack of clinical grounding in the diagnostic information (individual’s clinical mental health state) that these signals intend to measure. Instead, what these signals presume as diagnostic information are essentially behavioral patterns associated with the appropriation of social media by a wide variety of stakeholders, not necessarily patients, in relation to the illness. '
 
 'a lack of theoretical underpinning in the ways the diagnostic signals were identified.'
 
 
-To address the questions above, we examine using mood pattern to infer depression symptoms. 
+### To address the questions above, we examine using mood pattern to infer depression symptoms. 
 
 Explain mood and emotions and depression.  Clinical studies suggest mood is an important indicator of depression, there's a lot of controversies about whether social media sentiment reflects real life mood. 
 
