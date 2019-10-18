@@ -11,28 +11,110 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Data Selection Process
 
-Here we select users who completed CES-D survey, with demographic information and fb status updates. There are `r dim(dep)[1]` participants completed CES-D, these users posted `r dim(dep_status)[1]` status updates from Jan 2009 - Nov 2011. 
-
 ```{r data, include=FALSE}
-path = "/Users/lucia/phd_work/cognitive_distortion/data/"
+#path = "/Users/lucia/phd_work/cognitive_distortion/data/"
+path = "/home/lucia/phd_work/mypersonality_data/cognitive_distortion/data/"
 setwd(path)
 dep <- read.csv('dep.csv')
 dep_status <- read.csv('user_status_match_dep.csv')
+demog <- read.csv('demog.csv')
 ```
 
-X users also have demographic info
+
+```{r}
+#matching depression, status and demographic info
+names(dep_status) <- c('rownum', 'userid','time','text','other')
+dep_status <- dep_status[c('userid','time','text')]
+demog_selected <- demog[c('userid','gender','age')]
+dep_status_demog <- merge(dep_status, demog_selected, by = 'userid', all.x = T)
+unique_users <- dep_status_demog[!duplicated(dep_status_demog$userid),]
+```
+
+Here we select users who completed CES-D survey, with demographic information and fb status updates. There are `r dim(dep)[1]` participants completed CES-D, these users posted `r dim(dep_status)[1]` status updates from Jan 2009 - Nov 2011. `r dim(demog)[1]` users also have demographic info, eventually we idenfity `r dim(unique_users)[1]` users completed cesd, have demographic info and status updates.
+
+#recode depression score
+CESD NOTE: -1 means “user submitted a form with that question in but left it blank”, 0 means “user didn't submit a form with that question in” and 1, 2, 3, 4 are the response options.
+here we need to remove participants with -1 and 0
 
 ```{r}
 
+clean_dep <- function(dep_data) {
+  for (i in 8:27){
+    dep_clean <- dep_data[!dep_data[i] == -1, ]
+    dep_data <- dep_clean
+    return (dep_data)
+  }
+}
+
+dep_clean <- clean_dep(dep)
 ```
 
+## demographic info
+```{r}
+#merging data
+all_info <- merge(unique_users, dep, by = 'userid', all.x =T)
+all_info <- all_info[!duplicated(all_info$userid),]
+all_info$time <- NULL
+all_info$text <- NULL
+#write.csv(all_info,'\data\unique_user_info.csv')
+```
 
-## Including Plots
+##age
+```{r demographic, include=FALSE}
+minor <- all_info[all_info$age < 18, ]
+final_participants <- all_info[all_info$age >= 18, ]
+```
 
-You can also embed plots, for example:
+Among `r dim(unique_users)[1]`  users, `r dim(minor)[1]`  of them were lower than 18 years old, we remove these participants and yeild `r dim(final_participants)[1]` participants. Here we show their demographic infomation
 
-```{r pressure, echo=FALSE}
+### gender
+```{r gender, include=TRUE}
+table(final_participants$gender)
+prop.table(table(final_participants$gender))
+```
+
+### age
+```{r, include=TRUE}
+summary(final_participants$age)
+```
+
+### ethnicity
+```{r gender, include=TRUE}
+table(final_participants$ethnicity)
+prop.table(table(final_participants$ethnicity))
+```
+
+### maritual status
+```{r gender, include=TRUE}
+table(final_participants$marital_status)
+prop.table(table(final_participants$marital_status))
+```
+
+## Depression score
+CESD NOTE: -1 means “user submitted a form with that question in but left it blank”, 0 means “user didn't submit a form with that question in” and 1, 2, 3, 4 are the response options.
+here we need to remove participants with -1 and 0
+```{r gender, include=TRUE}
+
+
+final_participants$cesd_sum <- rowSums(final_participants[10:29])
+summary(final_participants$cesd_sum)
+```
+Here we visualise their depression symptom score
+
+```{r , echo=FALSE}
 plot(pressure)
+
+p <- ggplot(SelData) +
+    geom_density(aes(x=CESD_sum), fill="#ADD8E6", size=1) +
+    labs(title="CESD Score") +
+    theme(text = element_text(size=20))+
+    xlim(-10,60) +
+    xlab("Normal Dist. mean=23.79, sd=12") +
+    ylab("Density") +
+    geom_vline(xintercept=22, linetype="longdash", colour="red") +
+    annotate("text", x=0, y=0.02, label= "low score", size = 6) +
+    annotate("text", x = 50, y=0.02, label= "high score", size = 6) 
+p
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
