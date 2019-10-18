@@ -1,0 +1,38 @@
+---
+title: "StatsReport"
+author: "lushi"
+date: "17/10/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Data Selection Process
+
+Here we select users who completed CES-D survey, with demographic information and fb status updates. There are `r dim(dep)[1]` participants completed CES-D, these users posted `r dim(dep_status)[1]` status updates from Jan 2009 - Nov 2011. 
+
+```{r data, include=FALSE}
+path = "/Users/lucia/phd_work/cognitive_distortion/data/"
+setwd(path)
+dep <- read.csv('dep.csv')
+dep_status <- read.csv('user_status_match_dep.csv')
+```
+
+X users also have demographic info
+
+```{r}
+
+```
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
