@@ -78,15 +78,15 @@ all_info <- all_info[!duplicated(all_info$userid),]
 all_info$time <- NULL
 all_info$text <- NULL
 #write.csv(all_info,'\data\unique_user_info.csv')
-all_info$cesd_sum <- rowSums(all_info[10:29])
-all_info <- all_info[complete.cases(all_info$cesd_sum),]
+
 ```
 
 ##age
 ```{r demographic, include=FALSE}
 minor <- all_info[all_info$age < 18, ]
 final_participants <- all_info[all_info$age >= 18, ]
-
+final_participants$cesd_sum <- rowSums(final_participants[10:29])
+final_participants <- final_participants[complete.cases(final_participants$cesd_sum),]
 ```
 
 Among `r dim(unique_users)[1]`  users, `r dim(minor)[1]`  of them were lower than 18 years old, we remove these participants and yeild `r dim(final_participants)[1]` participants. Here we show their demographic infomation
@@ -130,7 +130,7 @@ p <- ggplot(final_participants) +
     labs(title="CESD Score") +
     theme(text = element_text(size=20))+
     xlim(-10,60) +
-    xlab("mean=26.45, sd=12") +
+    xlab("mean=26.00, sd=8.97") +
     ylab("Density") +
     geom_vline(xintercept=22, linetype="longdash", colour="red") +
     annotate("text", x=0, y=0.02, label= "low score", size = 6) +
