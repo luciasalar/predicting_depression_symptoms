@@ -1,0 +1,142 @@
+---
+title: "StatsReport"
+author: "lushi"
+date: "17/10/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(dplyr)
+```
+
+## Data Selection Process
+
+```{r data, include=FALSE}
+#path = "/Users/lucia/phd_work/cognitive_distortion/data/"
+path = "/home/lucia/phd_work/mypersonality_data/cognitive_distortion/data/"
+setwd(path)
+dep <- read.csv('dep.csv')
+dep_status <- read.csv('user_status_match_dep.csv')
+demog <- read.csv('demog.csv')
+```
+
+
+```{r}
+#matching depression, status and demographic info
+names(dep_status) <- c('rownum', 'userid','time','text','other')
+dep_status <- dep_status[c('userid','time','text')]
+demog_selected <- demog[c('userid','gender','age')]
+dep_status_demog <- merge(dep_status, demog_selected, by = 'userid', all.x = T)
+unique_users <- dep_status_demog[!duplicated(dep_status_demog$userid),]
+```
+
+Here we select users who completed CES-D survey, with demographic information and fb status updates. There are `r dim(dep)[1]` participants completed CES-D, these users posted `r dim(dep_status)[1]` status updates from Jan 2009 - Nov 2011. `r dim(demog)[1]` users also have demographic info, eventually we idenfity `r dim(unique_users)[1]` users completed cesd, have demographic info and status updates.
+
+#recode depression score
+
+
+```{r, include=FALSE}
+clean_dep <- function(dep_data) {
+  #remove columns with 0 and -1 in cesd
+  for (i in 8:27){
+    if (i == 8){
+      dep_clean <- dep_data[!(dep_data[i] == -1 & dep_data[i] == 0), ]
+    }
+    if (i > 8){
+      dep_clean <- dep_clean[!dep_clean[i] == -1, ]
+      dep_clean <- dep_clean[!dep_clean[i] == 0, ]
+      #print(dim(dep_clean))
+      
+    }
+  }
+  return (dep_clean)
+}
+
+adjust_dep <- function(clean_data) {
+  #reduce 1 in cesd because the traditional scale use 0-4, my personality use 1-5
+  for (i in 8:27){
+    clean_data[i] <- clean_data[i] - 1
+  }
+  return (clean_data)
+}
+
+dep_clean <- clean_dep(dep)
+dep_adjusted <- adjust_dep(dep_clean)
+
+```
+
+CESD NOTE: -1 means “user submitted a form with that question in but left it blank”, 0 means “user didn't submit a form with that question in” and 1, 2, 3, 4 are the response options.
+here we need to remove participants with -1 and 0. We have `r dim(dep_clean)[1]` cesd participants after cleaning the data.
+
+## demographic info
+```{r, include=FALSE}
+#merging data
+all_info <- merge(unique_users, dep_adjusted, by = 'userid')
+all_info <- all_info[!duplicated(all_info$userid),]
+all_info$time <- NULL
+all_info$text <- NULL
+#write.csv(all_info,'\data\unique_user_info.csv')
+
+```
+
+##age
+```{r demographic, include=FALSE}
+minor <- all_info[all_info$age < 18, ]
+final_participants <- all_info[all_info$age >= 18, ]
+final_participants$cesd_sum <- rowSums(final_participants[10:29])
+final_participants <- final_participants[complete.cases(final_participants$cesd_sum),]
+write.csv(final_participants, 'participants_matched.csv')
+```
+
+Among `r dim(unique_users)[1]`  users, `r dim(minor)[1]`  of them were lower than 18 years old, we remove these participants and yeild `r dim(final_participants)[1]` participants. Here we show their demographic infomation
+
+### gender
+```{r gender2, include=TRUE}
+table(final_participants$gender)
+prop.table(table(final_participants$gender))
+```
+
+### age
+```{r, include=TRUE}
+summary(final_participants$age)
+```
+
+### ethnicity
+```{r ethnicity, include=TRUE}
+table(final_participants$ethnicity)
+prop.table(table(final_participants$ethnicity))
+```
+
+### maritual status
+```{r maritual, include=TRUE}
+table(final_participants$marital_status)
+prop.table(table(final_participants$marital_status))
+```
+
+## Depression score
+CESD NOTE: -1 means “user submitted a form with that question in but left it blank”, 0 means “user didn't submit a form with that question in” and 1, 2, 3, 4 are the response options.
+here we need to remove participants with -1 and 0
+```{r dep, include=TRUE}
+#final_participants$cesd_sum <- rowSums(final_participants[10:29])
+summary(final_participants$cesd_sum)
+sd(final_participants$cesd_sum)
+```
+Here we visualise their depression symptom score
+
+```{r , echo=FALSE}
+p <- ggplot(final_participants) +
+    geom_density(aes(x=cesd_sum), fill="#ADD8E6", size=1) +
+    labs(title="CESD Score") +
+    theme(text = element_text(size=20))+
+    xlim(-10,60) +
+    xlab("mean=26.00, sd=8.97") +
+    ylab("Density") +
+    geom_vline(xintercept=22, linetype="longdash", colour="red") +
+    annotate("text", x=0, y=0.02, label= "low score", size = 6) +
+    annotate("text", x = 50, y=0.02, label= "high score", size = 6) 
+p
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
