@@ -37,6 +37,8 @@ social media mood is different from real life mood
 
 
 Develop a prediction model on depression symptoms:
+### discuss: should we build one model with all users and one model with frequent users only? I selected a set of users who posted at least once in 25 weeks each year. However, I don't think selecting frequent users is a good idea, the model is suppose to learn whether frequent/non frequent posting behavior predicts depression
+
 * model 1: This model use a set of features including, averaged sentiment score in 1 year, LIWC, demographic, part-of-speech, readability score asn so on (baseline) (also check again to see if there's a paper predicting depression using this dataset)
 * model 2: Same set of features as model 1 but we replace the averaged sentiment score in 1 year with temporal mood feature
 * model 3: Same set of features as model 1 but we replace the averaged sentiment score in 1 year with temporal mood transition feature
