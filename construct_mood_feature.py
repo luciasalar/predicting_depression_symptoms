@@ -115,6 +115,7 @@ moodVector = getValenceVector(users, sorted_senti)
 #the length of this feature is X/100
 #problem silence will always be the most frequent
 import collections 
+import numpy as np
 
 count = 0
 mood_vect_window_dict={}
@@ -126,13 +127,18 @@ for k, v in moodVector.items():
 	#if silence day more than half 50% then mood is slience 
 	if freq[-1] > window/2:
 		mood_vect_window.append(-1)
+		#print(mini_vect)
+		
 	else: #otherwise remove silence and count the most frequent one 
-		mini_vect.remove(-1)
-		print(mini_vect.remove(-1))
+		#if -1 in mini_vect:
+		#	mini_vect.remove(-1)
+		lst = [i for i in mini_vect if i != -1]
+
+		print(lst)
 		#freq2 = collections.Counter(no_silence).most_common(1)[0][0]
 		#mood_vect_window.append(freq2)
 
-		print(mini_vect)
+		#print(mini_vect)
 	mood_vect_window_dict[k] = mood_vect_window 
 	count+= 1
 	if count == 10:
