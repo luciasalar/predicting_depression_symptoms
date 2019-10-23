@@ -86,8 +86,7 @@ Vd1, Vd2, Vd3.... di    i= X
 
 
 * step 3: Build temporal features:
-$Design 1: We can compute the mood in the past X days, X equal to a string of numbers with an interval of [i], i is meaningful in psychology theory, here we can select i = 7
-X= [7, 14, 21....]
+$Design 1: We can compute the mood in the past X days, in each step we move X+1 days. For example, feature 1 = mood from day 0 -day 7, feature 2 = mood from day 1-day 8 ...
 
 
 ### mood transition vector

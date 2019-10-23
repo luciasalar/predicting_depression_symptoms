@@ -1,5 +1,7 @@
 import pandas as pd 
 import datetime
+import collections 
+import numpy as np
 
 def map_sentiment(data):
 	#mapping sentiment score (positive: 2, negative:1, neutral:4)
@@ -20,7 +22,6 @@ def get_relative_day(adjusted_sentiment,time_frame):
 	return senti_sel
 
 
-
 def sentiment_groups(series):
 	'''recode sentiment to categorical '''
 	if series > 0:
@@ -33,7 +34,7 @@ def sentiment_groups(series):
 
 def SortTime(file):
 	'''sort post by time'''
-	file = file.sort_values(by=['userid','time_diff'],  ascending=False)
+	file = file.sort_values(by=['userid','time_diff'],  ascending=True)
 	return file
 
 
@@ -92,69 +93,71 @@ def getValenceFromMultipleDays(curdayPosts):
 	    return -1
 
 
+def get_mood_dict(timeRange, windowSzie, moodVector):
+	'''construct mood temporal feature, in the past X day, the dominant mood is ? The window moves +1 day in each iteration'''
+	#count = 0
+	mood_vect_window_dict={}
+	for k, v in moodVector.items():
+		mood_vect_window  = []
+		for start in range(0,timeRange): #define data range
+			end = start+windowSzie #window size
+			#print(start, end)
+			mini_vect = v[start:end]
+			#mood_vect_window = []
+			freq = collections.Counter(mini_vect)
+			#if silence days are more than 50% then mood is slience 
+			if freq[-1] > len(mini_vect)*0.6:
+				mood_vect_window.append(-1)
+				#print(freq[-1])
+			else: #otherwise remove silence and count the most frequent one 
+				lst = [i for i in mini_vect if i != -1]
+				freq2 = collections.Counter(lst).most_common(1)[0][0]
+				mood_vect_window.append(freq2)
+
+		mood_vect_window_dict[k] = mood_vect_window 
+	return mood_vect_window_dict
+
+def get_mood_vector(timeRange, sentiment_status):
+	'''return a daily mood vector in certain time range '''
+	#map sentiment score 
+	adjusted_sentiment = map_sentiment(sentiment_status)
+	#get relative day
+	sentiment_selected = get_relative_day(adjusted_sentiment, timeRange)
+	#get mood score for each day , construct mood vector
+
+	# sort posts according to time
+	sorted_senti = SortTime(sentiment_selected)
+
+	# get mood vector for X days
+	users = user_obj(sorted_senti['userid'], timeRange)
+	moodVector = getValenceVector(users, sorted_senti)
+	return moodVector
+
+def get_mood_in_timewindow(timeRange, windowSzie):
+	# get mood vector with 
+	moodVector = get_mood_vector(1095, sentiment_status)
+	mood_dict = get_mood_dict(timeRange, windowSzie, moodVector) #paramenter: number of days used as features, time window
+	mood_vect_df = pd.DataFrame.from_dict(mood_dict).T
+	mood_vect_df.to_csv(path + './mood_vectors/mood_vector_frequent_user_window{}.csv'.format(windowSzie)) #feature matrx for prediction 
+	return mood_vect_df
+
+
 #read sentiment file
 path = '/home/lucia/phd_work/mypersonality_data/predicting_depression_symptoms/data/'
 sentiment_status = pd.read_csv(path + 'status_sentiment.csv')
 participants = pd.read_csv(path + 'participants_matched.csv')
+frequent_users = pd.read_csv(path + 'frequent_users.csv')
+frequent_users.columns = ['rowname', 'userid','freq']
 participants  = participants[['userid','time_completed','cesd_sum']]
+#frequent participants (commment this one if not needed)
+participants = pd.merge(frequent_users, participants, on='userid')
+participants.drop('rowname', axis=1, inplace=True)
+participants.drop('freq', axis=1, inplace=True)
 
-#map sentiment score 
-adjusted_sentiment = map_sentiment(sentiment_status)
-#get relative day
-sentiment_selected = get_relative_day(adjusted_sentiment, 1095)
-#get mood score for each day , construct mood vector
 
-# sort posts according to time
-sorted_senti = SortTime(sentiment_selected)
+get_mood_in_timewindow(365, 3)
 
-# get mood vector for X days
-users = user_obj(sorted_senti['userid'], 1095)
-moodVector = getValenceVector(users, sorted_senti)
 
-#construct mood temporal feature, in the past X day, the dominant mood is , X increase in each loop. If we have 100 days, 
-#the length of this feature is X/100
-#problem silence will always be the most frequent
-import collections 
-import numpy as np
-
-count = 0
-mood_vect_window_dict={}
-for k, v in moodVector.items():
-	window = 10
-	mini_vect = v[0:window]
-	mood_vect_window = []
-	freq = collections.Counter(mini_vect)
-	#if silence day more than half 50% then mood is slience 
-	if freq[-1] > window/2:
-		mood_vect_window.append(-1)
-		#print(mini_vect)
-		
-	else: #otherwise remove silence and count the most frequent one 
-		#if -1 in mini_vect:
-		#	mini_vect.remove(-1)
-		lst = [i for i in mini_vect if i != -1]
-
-		print(lst)
-		#freq2 = collections.Counter(no_silence).most_common(1)[0][0]
-		#mood_vect_window.append(freq2)
-
-		#print(mini_vect)
-	mood_vect_window_dict[k] = mood_vect_window 
-	count+= 1
-	if count == 10:
-		break
-
-# print('save objects')
-# savePath = path + '/newScripts/moodVector/moodVectorsData/MoodVecDes1.pickle'
-# with open(savePath, 'wb') as handle:
-#     pickle.dump(users2, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-# savePath2 = path + '/newScripts/moodVector/moodVectorsData/MoodVec.csv'
-# saveCSV(users2, savePath2)
-
-# print('compute transition states probability')
-
-# TransitionStates = getUserTransitions(users2)  
 
 
 
