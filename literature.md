@@ -20,48 +20,73 @@ language modeling
 * Recognizing Depression from Twitter Activity
 
 Name Description
+
 bag of words Frequencies of words used in the tweet
+
 topic Ratio of tweet topics found by LDA [5]
-positive Ratio of positive-affect words
-contained in the tweet
-negative Ratio of negative-affect words
-contained in the tweet
+
+positive Ratio of positive-affect words contained in the tweet
+
+negative Ratio of negative-affect words contained in the tweet
+
 hour Hourly posting frequency
+
 tweet frequency Tweets per day
+
 num. of words Average number of words per tweet
 RT Overall retweet rate
+
 mention Overall mention rate
+
 URL Ratio of tweets containing a URL
+
 followee Number of users following
+
 follower Number of users followed
 
 * Characterizing and Predicting Postpartum Depression
 from Shared Facebook Data
 
 LIWC 
+
 affect
+
 number of likes, comment
+
 activity signal 
 
 * Multi-Task Learning for Mental Health
+
 using Social Media Text 
+
 neural network 
 
 embeddings 
 
 * The Role of Personality, Age and Gender in Tweeting about Mental Illnesses
 Random - .5 .5 .5
+
 Age 1 .557 .742 .801
+
 Gender 1 .559 .513 .522
+
 Age + Gender 2 .590 .747 .8
+
 Big5 5 .784 .813 .777
+
 Age + Gender + Big5 7 .783 .844 .806
+
 Affect + Intensity 2 .583 .519 .559
+
 LIWC 64 .824 .854 .781
+
 Topics 2000 .851 .901 .819
+
 Unigrams 5432 .858 .911 .809
+
 1-3 grams 12677 .859 .917 .812
-Table 1: Pred
+
+
 
 This work has an accuracy of 0.9 but it's cheating because it uses big 5
 --- 
@@ -69,8 +94,11 @@ This work has an accuracy of 0.9 but it's cheating because it uses big 5
 * Forecasting the onset and course of mental illness with Twitter data
 
 ANEW unigram sentiment instruments
+
 LIWC 2007
+
 labMT
+
 word_count 
 
 De Choudhury et al.8 looked at all of a given user’s tweets in a single day, and aggregated those data into per-person, per-day units of observation. In this report we have followed the convention of aggregated “user-days” as a primary unit of analysis, rather than try to categorize a person’s entire history, or analyze each individual tweet. In our own previous research, however, we have found that many Twitter users do not generate enough daily content to make for robust unigram sentiment analysis43. For completeness, we conducted analyses using both daily and weekly units of observation
@@ -86,10 +114,15 @@ This work has an accuracy of 0.87 and it does an analysis with HMM in the depres
 Base on the above literature, our baseline should include
 
 LIWC
+
 number of post
+
 ANEW unigram sentiment instruments
+
 labMT
+
 word_count
+
 demographic info
 
 ## Novelty in our model
