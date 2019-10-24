@@ -1,13 +1,13 @@
-#data 
+# data 
 
 contains data for this project, data is stored in myCloud
 contains results for the models
 
-#data selection
+# data selection
 
 script for data selection process
 
-#sentiment score
+# sentiment score
 
 scripts to retrieve sentiment score
 
