@@ -90,41 +90,33 @@ def get_transitions(ValenceObject):
 
 
 def get_mood_transitions(valencVec):
+    '''get transtions of mood dict'''
     result = {}
-    for item in valencVec:
-        result[item] = get_transitions(valencVec[item])
-#         print(result)
+    for index, row in valencVec.iterrows():
+        result[index] = get_transitions(row)
     return result
 
-def get_mood_transitions(valencVec):
-    result = {}
-    for item in valencVec:
-        result[item] = get_transitions(valencVec[item])
-#         print(result)
-    return result
-
-def get_mood_transitions(valencVec):
-	result = {}
-	for index, row in mood_vector_feature.iterrows():
-	    result[index] = get_transitions(valencVec[item])
-	return result
-
-TransitionStates = get_mood_transitions(mood_vector_feature) 
 
 def get_transitions_df(path, windowSzie):
-	TransitionStates = get_mood_transitions(mood_vector_feature)  
-	TransitionStates_df = pd.DataFrame.from_dict(TransitionStates).T
-	TransitionStates_df.to_csv(path + './mood_vectors/mood_transition_frequent_user_window_{}.csv'.format(windowSzie)) #feature matrx for prediction 
-	return TransitionStates_df
+    '''convert transition of mood dict to df'''
+    TransitionStates = get_mood_transitions(mood_vector_feature)  
+    TransitionStates_df = pd.DataFrame.from_dict(TransitionStates).T
+    TransitionStates_df.to_csv(path + './mood_vectors/mood_transition_frequent_user_window_{}.csv'.format(windowSzie)) #feature matrx for prediction 
+    return TransitionStates_df
 
-TransitionStates = get_transitions_df(path, windowSzie)
+def get_transition_oneHoc(path, windowSzie):
+    TransitionStates = get_transitions_df(path, windowSzie)
+    #convert transition df to one hot
+    onehoc_X = OneHotEncoder(handle_unknown='ignore')
+    TransitionStatesOneHot = onehoc_X.fit_transform(TransitionStates.iloc[:,0:]).toarray()
 
+    df = pd.DataFrame(TransitionStatesOneHot)
+    df.columns = [str(col) + '_transitions' for col in df.columns]
+    df.index = TransitionStates.index
+    df.to_csv(path + './mood_vectors/mood_transition_one_hoc_frequent_user_window_{}.csv'.format(windowSzie))
+    return df
 
-onehoc_X = OneHotEncoder(handle_unknown='ignore')
-TransitionStates[:,1:] = onehoc_X.fit_transform(TransitionStates.iloc[:,1:]).toarray()
-
-
-
+TransitionStatesOneHot = get_transition_oneHoc(path, windowSzie)
 
 
 
