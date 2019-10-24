@@ -2,6 +2,7 @@
 
 In this project, we want to examine does mood or transitions of mood indicated in social media data can be used to infer depression symptoms
 
+
 ## Literature:
 
 * We will first introduce how researchers use social media data to predict mental illnesses symptoms
@@ -18,6 +19,8 @@ In this project, we want to examine does mood or transitions of mood indicated i
 
 ### To address the questions above, we examine using mood pattern to infer depression symptoms. 
 
+*Maria's note: You cannot address those questions with your data set, because all you have is the behavioural pattern, and the CES-D is NOT a diagnostic instrument. I know that Ernala et al. also work just from the social media data, but I think that their approach of diagnosis by Twitter, even though it's done by clinical experts, is deeply flawed.* 
+
 Explain mood and emotions and depression.  Clinical studies suggest mood is an important indicator of depression. 
 
 Explain the current approach of using sentiment as one of the features to predict depression symptoms in the social media context. Their approach didn't capture the temporal component of mood and mood transitions.
@@ -25,6 +28,8 @@ Explain the current approach of using sentiment as one of the features to predic
 ### Contribution 
 1. By looking at whether social media mood predicts depression symptoms, we gain insights on whether it's possible to build a ML model that is more algin with clinical theories. 
 2. Existing literature use sentiment score within a specific period of time as feature, therefore, the temporal element is not included in the model prediction. Here we construct temporal mood features and we explore using transitions of mood as features.
+
+*Maria's note: I think that 2 is your main contribution.*
 
 ### Limitation 
 social media mood is different from real life mood
@@ -42,6 +47,8 @@ Develop a prediction model on depression symptoms:
 * model 1: This model use a set of features including, averaged sentiment score in 1 year, LIWC, demographic, part-of-speech, readability score asn so on (baseline) (also check again to see if there's a paper predicting depression using this dataset)
 * model 2: Same set of features as model 1 but we replace the averaged sentiment score in 1 year with temporal mood feature
 * model 3: Same set of features as model 1 but we replace the averaged sentiment score in 1 year with temporal mood transition feature
+
+*Maria's note: Good idea to integrate posting patterns like this.*
 
 -------------------------------------
 * model 4 (extension): neural network
@@ -67,6 +74,8 @@ Approximate classification rationale: There is a bike there [sentence: 1,-1] [re
 
 ---------------------------------
 we can define document with postive > 3, negative < -3 as mixed. Here we can change the mapping according to mannual judegment
+
+*Maria's note: Make sure that you select the threshold on a "training set", and then validate it on a held out data set with equal proportions of each category.*
 
 ## traditional machine learning Approach
 
