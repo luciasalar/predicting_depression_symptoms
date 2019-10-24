@@ -13,7 +13,9 @@ require(openair)
 ```
 
 ## data selection
-### Here we selected frequent users for our prediction model, frequent users refer to those who posted at least once in 25 weeks each year
+### Here we selected frequent users for our prediction model, frequent users refer to those who posted at least once per week for half the year
+
+*Maria's note: the way you've written it means that they have posted at least once in a time period of 25 weeks. I recommend using 26 weeks as your unit, because that is exactly half the year.*
 
 ```{r stats, include=FALSE}
 path = '/home/lucia/phd_work/mypersonality_data/predicting_depression_symptoms/data/'
@@ -28,7 +30,9 @@ sel_status$X <- NULL
 #all$time_diff <- difftime(as.Date(all$date_added_CESD), as.Date(all$post_time) , units = c("days"))
 ```
 
-Here we show the posting statistics, there are `r dim(sel_status)[1]` posts from  `r dim(participants_b)[1]`users (y 2009 - y 2012). We can see that ppl posted more often in 2010
+*Q from Maria: what is the content of the participants\_matched file?*
+
+Here we show the posting statistics, there are `r dim(sel_status)[1]` posts from  `r dim(participants_b)[1]` users (y 2009 - y 2012). We can see that ppl posted more often in 2010
 
 ```{r, echo=FALSE}
 #convert to date object
@@ -40,6 +44,7 @@ ggplot(data = count_tab , aes(x = Var1, y = Freq))+
   geom_line(color = "#00AFBB", size = 2)
 ```
 
+*Q from Maria: what are the names and units of the axes? What are the units of the time axis? Days/weeks?*
 
 ```{r week, include=FALSE}
 #get week
@@ -68,4 +73,6 @@ frequent_users <- rbind(frequent_users, frequent_user2011)
 ```
 
 We see the number of posts a user write in each week and we selected `r dim(frequent_users)[1]` users who wrote at least 1 post in 25 weeks in a year (52-53 weeks). week_stats2009 shows whether user has at least one post each week 
+
+*Q from Maria: Can you please show those statistics in the file? the path points to your home directory, not to a shared OneDrive or DataSync*
 
