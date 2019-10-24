@@ -38,7 +38,6 @@ def SortTime(file):
 	return file
 
 
-
 def user_obj(dfUserid, length):
 	'''#create user vector of x(length) days'''
 	users = {}
@@ -138,12 +137,13 @@ def get_mood_in_timewindow(timeRange, windowSzie):
 	moodVector = get_mood_vector(1095, sentiment_status)
 	mood_dict = get_mood_dict(timeRange, windowSzie, moodVector) #paramenter: number of days used as features, time window
 	mood_vect_df = pd.DataFrame.from_dict(mood_dict).T
-	mood_vect_df.to_csv(path + './mood_vectors/mood_vector_frequent_user_window{}.csv'.format(windowSzie)) #feature matrx for prediction 
+	mood_vect_df.to_csv(path + './mood_vectors/mood_vector_frequent_user_window_{}.csv'.format(windowSzie)) #feature matrx for prediction 
 	return mood_vect_df
 
 
 #read sentiment file
-path = '/home/lucia/phd_work/mypersonality_data/predicting_depression_symptoms/data/'
+#path = '/home/lucia/phd_work/mypersonality_data/predicting_depression_symptoms/data/'
+path = '/Users/lucia/phd_work/predicting_depression_symptoms/data/'
 sentiment_status = pd.read_csv(path + 'status_sentiment.csv')
 participants = pd.read_csv(path + 'participants_matched.csv')
 frequent_users = pd.read_csv(path + 'frequent_users.csv')
