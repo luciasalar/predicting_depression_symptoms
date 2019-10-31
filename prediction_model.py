@@ -26,14 +26,22 @@ from inspect import signature
 
 path = '/home/lucia/phd_work/mypersonality_data/predicting_depression_symptoms/data/'
 
-def prepare_data(path, moodFeatureFile):
+def prepare_data(path, moodFeatureFile, transitionFeatureFile):
 	'''merging data'''
 	mood_feature = pd.read_csv(path + moodFeatureFile)
 	mood_feature  = mood_feature.rename(columns = {"Unnamed: 0":"userid"}) 
 	participants = pd.read_csv(path + 'participants_matched.csv')
 	participants  = participants[['userid','cesd_sum']]
-	feature_cesd = pd.merge(mood_feature, participants, on = 'userid')
+	mood_transitions = pd.read_csv(path + transitionFeatureFile)
+	mood_transitions.rename(columns={'Unnamed: 0':'userid'}, inplace=True)
+	mood_feature2 = pd.merge(mood_feature, mood_transitions, on = 'userid')
+	feature_cesd = pd.merge(mood_feature2, participants, on = 'userid')
 	return feature_cesd
+	#return mood_transitions
+
+#f = prepare_data(path, 'mood_vectors/mood_vector_frequent_user_window3.csv', 'mood_vectors/mood_transition_one_hoc_frequent_user_window_3.csv')
+
+
 
 def get_y(feature_df):
 	'''get y '''
@@ -147,15 +155,29 @@ def store_results(path, y_true, y_pred, grid_search, y_label_name, moodFeatureFi
     writer_top.writerows(result_row)
     f.close
 
+def select_features(all_features, featureName):
+    #all_feature = prepare_data(path,  moodFeatureFile, transitionFeatureFile)
+    if featureName == 'transitions':
+        selected = [col for col in all_features.columns if 'transitions' in col]
+        selected_c = all_features[selected]
+        return selected_c
 
-def run_model(path, moodFeatureFile): 
+    elif featureName == 'mood':
+        selected = [col for col in all_features.columns if 'mood' in col]
+        selected_c = all_features[selected]
+        return selected_c
+
+	
+
+
+def run_model(path, moodFeatureFile, transitionFeatureFile): 
     '''run model, plot and store results'''
 
-    all_features = prepare_data(path, moodFeatureFile)
+    all_features = prepare_data(path,  moodFeatureFile, transitionFeatureFile)
     y_cesd = get_y(all_features)
-    X = get_feature(all_features)
+   # X = get_feature(all_features)
     y_recode = recode_y(y_cesd, 22) #recode y to 1, 0 according to threshold
-    #X = select_features(all_features, 'valenceVec', 60)
+    X = select_features(all_features, 'mood')
 
     X_train, X_test, y_train, y_test = get_train_test_split(X, y_recode)
     y_label_name = y_cesd.name
@@ -166,11 +188,10 @@ def run_model(path, moodFeatureFile):
 
     y_true, y_pred, grid_search = SVM_classifier(X_train, y_train, y_test, X_test)
     store_results(path + 'results/', y_true, y_pred, grid_search, y_label_name, moodFeatureFile)
-
-
+   
 #merge with CESD
 
-run_model(path, 'mood_vectors/mood_vector_frequent_user_window3.csv')
+all_features = run_model(path, 'mood_vectors/mood_vector_frequent_user_window_3.csv', 'mood_vectors/mood_transition_one_hoc_frequent_user_window_3.csv')
 
 # def loop_the_grid(path_to_psy, path_to_valencefile, path_to_save, path_to_valFreq, days_for_model, feature_name):
 #     #loop days

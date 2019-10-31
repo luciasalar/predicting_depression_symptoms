@@ -137,13 +137,18 @@ def get_mood_in_timewindow(timeRange, windowSzie):
 	moodVector = get_mood_vector(1095, sentiment_status)
 	mood_dict = get_mood_dict(timeRange, windowSzie, moodVector) #paramenter: number of days used as features, time window
 	mood_vect_df = pd.DataFrame.from_dict(mood_dict).T
+	#change column names
+
+	mood_vect_df.columns = [str(col) + '_mood' for col in mood_vect_df.columns]
+	#mood_vect_df.rename(columns={'0_mood':'userid'}, inplace=True)
+	#mood_vect_df['userid'] = mood_vect_df.index
 	mood_vect_df.to_csv(path + './mood_vectors/mood_vector_frequent_user_window_{}.csv'.format(windowSzie)) #feature matrx for prediction 
-	return mood_vect_df
+	return mood_vect_df, windowSzie
 
 
 #read sentiment file
-#path = '/home/lucia/phd_work/mypersonality_data/predicting_depression_symptoms/data/'
-path = '/Users/lucia/phd_work/predicting_depression_symptoms/data/'
+path = '/home/lucia/phd_work/mypersonality_data/predicting_depression_symptoms/data/'
+#path = '/Users/lucia/phd_work/predicting_depression_symptoms/data/'
 sentiment_status = pd.read_csv(path + 'status_sentiment.csv')
 participants = pd.read_csv(path + 'participants_matched.csv')
 frequent_users = pd.read_csv(path + 'frequent_users.csv')
@@ -155,9 +160,6 @@ participants.drop('rowname', axis=1, inplace=True)
 participants.drop('freq', axis=1, inplace=True)
 
 
-get_mood_in_timewindow(365, 3)
-
-
-
+mood_vector_feature, windowSzie = get_mood_in_timewindow(365, 3)
 
 
