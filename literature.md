@@ -12,6 +12,24 @@ For each set of behavioral measures, we obtained daily measurements per user, wh
 This work use temporal feature 
 ---
 
+
+Facebook language predicts depression in medical records
+
+We found that language
+predictors of depression include emotional (sadness), interpersonal
+(loneliness, hostility), and cognitive (preoccupation with the self, rumination) processes. Unobtrusive depression assessment through social media of consenting individuals may become feasible as a scalable
+complement to existing screening and monitoring procedures.
+
+Topic modelling 
+unigram
+bigram
+temporal feature of posting behavior
+word count
+LIWC
+
+This work use temporal posting behavior 
+---
+
 * Quantifying Mental Health Signals in Twitter
 
 LIWC
