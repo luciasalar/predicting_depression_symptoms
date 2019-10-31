@@ -96,20 +96,18 @@ def get_mood_transitions(valencVec):
 #         print(result)
     return result
 
-def get_mood_transitions(valencVec):
-    result = {}
-    for item in valencVec:
-        result[item] = get_transitions(valencVec[item])
-#         print(result)
-    return result
 
 def get_mood_transitions(valencVec):
 	result = {}
-	for index, row in mood_vector_feature.iterrows():
-	    result[index] = get_transitions(valencVec[item])
+	for index, row in valencVec.iterrows():
+	    result[index] = get_transitions(row)
+	    #print(row)
 	return result
 
+
 TransitionStates = get_mood_transitions(mood_vector_feature) 
+
+#
 
 def get_transitions_df(path, windowSzie):
 	TransitionStates = get_mood_transitions(mood_vector_feature)  
