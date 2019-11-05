@@ -30,6 +30,7 @@ def prepare_data(path, moodFeatureFile, transitionFeatureFile):
 	'''merging data'''
 	mood_feature = pd.read_csv(path + moodFeatureFile)
 	mood_feature  = mood_feature.rename(columns = {"Unnamed: 0":"userid"}) 
+    #select frequent users, here you need to change the matched user files if selection criteria changed
 	participants = pd.read_csv(path + 'participants_matched.csv')
 	participants  = participants[['userid','cesd_sum']]
 	mood_transitions = pd.read_csv(path + transitionFeatureFile)

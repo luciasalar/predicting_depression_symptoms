@@ -48,6 +48,7 @@ def user_obj(dfUserid, length):
 	return users
 
 def getValenceVector(userObject, df):
+	''' parse mood condition to a day framework, return a dictionary of user: day1 mood, day2 mood...'''
 	preDay = None
 	preUser = None
 	preValence = None
@@ -70,6 +71,7 @@ def getValenceVector(userObject, df):
 	return userObject
 
 def getValenceFromMultipleDays(curdayPosts):
+	'''get mood of the day'''
 	positive_count = 0
 	neg_count = 0
 	neu_count = 0
@@ -81,7 +83,7 @@ def getValenceFromMultipleDays(curdayPosts):
 	    else:
 	        positive_count +=1
 
-	#     compute mood
+	#  define mood conditions
 	if (neg_count !=0 and (neg_count > positive_count or neg_count > neu_count )):
 	    return 1
 	if (positive_count !=0 and (positive_count > neg_count or positive_count > neu_count)):

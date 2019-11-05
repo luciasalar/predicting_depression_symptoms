@@ -89,7 +89,6 @@ def get_transitions(ValenceObject):
 	return transitions
 
 
-
 def get_mood_transitions(valencVec):
     '''get transtions of mood dict'''
     result = {}
@@ -118,6 +117,8 @@ def get_transition_oneHoc(path, windowSzie):
     return df
 
 TransitionStatesOneHot = get_transition_oneHoc(path, windowSzie)
+
+
 
 
 

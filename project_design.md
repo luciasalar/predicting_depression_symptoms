@@ -9,26 +9,25 @@ In this project, we want to examine does mood or transitions of mood indicated i
 
 * Then we will discuss the concerns of using social media data to predict mental illnesses (Methodological Gaps in Predicting Mental Health States from Social Media: Triangulating Diagnostic Signals)
 
-This paper raise a concern that the machine learning models capture signals related to support seeking behaviors, interest in others’ lived experiences of the illness, self-reported accounts of stigma and inhibition and so on, rather than behavioral patterns that a clinician would observe.
+1. Do these diagnostic signals measure what they claim to measure? (mismatched between predictive features in the proxy classifiers and those of the patient model, classifier capture support seeking behaviors, interest in others’ lived experiences of the illness, self-reported accounts of stigma and inhibition)
+
+2. Is what is being measured by a diagnostic signal itself valid?
+'a lack of clinical grounding in the diagnostic information (individual’s clinical mental health state) that these signals intend to measure. Instead, what these signals presume as diagnostic information are essentially behavioral patterns associated with the appropriation of social media by a wide variety of stakeholders, not necessarily patients, in relation to the illness. '
+
+'a lack of theoretical underpinning in the ways the diagnostic signals were identified.'
 
 
-'a lack of theoretical underpinning in the ways the symptom signals were identified.'
-
-
-### To address the concern above, we examine using mood pattern to infer depression symptoms. 
+### To address the questions above, we examine using mood pattern to infer depression symptoms. 
 
 *Maria's note: You cannot address those questions with your data set, because all you have is the behavioural pattern, and the CES-D is NOT a diagnostic instrument. I know that Ernala et al. also work just from the social media data, but I think that their approach of diagnosis by Twitter, even though it's done by clinical experts, is deeply flawed.* 
-
-*I have rephrased the concern raised in the paper*
 
 Explain mood and emotions and depression.  Clinical studies suggest mood is an important indicator of depression. 
 
 Explain the current approach of using sentiment as one of the features to predict depression symptoms in the social media context. Their approach didn't capture the temporal component of mood and mood transitions.
 
 ### Contribution 
-
-1. Existing literature use sentiment score within a specific period of time as feature, therefore, the temporal element is not included in the model prediction. Here we construct temporal mood features and we explore using transitions of mood as features.
-2. By using features that aligns with behavioral symptoms documented in the clinical literature, there is a potential to build assistive tools for clinicals to observe patients' affective changes over time.
+1. By looking at whether social media mood predicts depression symptoms, we gain insights on whether it's possible to build a ML model that is more algin with clinical theories. 
+2. Existing literature use sentiment score within a specific period of time as feature, therefore, the temporal element is not included in the model prediction. Here we construct temporal mood features and we explore using transitions of mood as features.
 
 *Maria's note: I think that 2 is your main contribution.*
 
@@ -98,14 +97,8 @@ Vd1, Vd2, Vd3.... di    i= X
 * step 3: Build temporal features:
 $Design 1: We can compute the mood in the past X days, in each step we move X+1 days. For example, feature 1 = mood from day 0 -day 7, feature 2 = mood from day 1-day 8 ...
 
-### original content
 
-original content: {0, 1, 0, 1, 1}
-We can either use a sliding window to define original content or just use the counts
-
-
-### mood transition vector (I don't think we need this one anymore because the mood vector already capture the mood changes, we can add transtion states count as feature)
-
+### mood transition vector
 * step 1: same as mood vector
 
 * step 2: 
