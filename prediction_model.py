@@ -24,24 +24,29 @@ from sklearn.metrics import precision_recall_curve
 import matplotlib.pyplot as plt
 from inspect import signature
 
-path = '/home/lucia/phd_work/mypersonality_data/predicting_depression_symptoms/data/'
-
+#path = '/home/lucia/phd_work/mypersonality_data/predicting_depression_symptoms/data/'
+path = '/disk/data/share/s1690903/predicting_depression_symptoms/data/'
 def prepare_data(path, moodFeatureFile, transitionFeatureFile):
-	'''merging data'''
-	mood_feature = pd.read_csv(path + moodFeatureFile)
-	mood_feature  = mood_feature.rename(columns = {"Unnamed: 0":"userid"}) 
+    '''merging data'''
+    mood_feature = pd.read_csv(path + moodFeatureFile)
+    mood_feature  = mood_feature.rename(columns = {"Unnamed: 0":"userid"}) 
     #select frequent users, here you need to change the matched user files if selection criteria changed
-	participants = pd.read_csv(path + 'participants_matched.csv')
-	participants  = participants[['userid','cesd_sum']]
-	mood_transitions = pd.read_csv(path + transitionFeatureFile)
-	mood_transitions.rename(columns={'Unnamed: 0':'userid'}, inplace=True)
-	mood_feature2 = pd.merge(mood_feature, mood_transitions, on = 'userid')
-	feature_cesd = pd.merge(mood_feature2, participants, on = 'userid')
-	return feature_cesd
-	#return mood_transitions
+    participants = pd.read_csv(path + 'participants_matched.csv')
+    participants  = participants[['userid','cesd_sum']]
+    mood_transitions = pd.read_csv(path + transitionFeatureFile)
+    mood_transitions.rename(columns={'Unnamed: 0':'userid'}, inplace=True)
+    mood_feature2 = pd.merge(mood_feature, mood_transitions, on = 'userid')
+    #merge with tfidf and liwc
+    # tfidf = pd.read_csv(path + 'countVect.csv')
+    # tfidf.columns = [str(col) + '_tfidf' for col in tfidf.columns]
+    # tfidf.rename(columns={'userid_tfidf':'userid'}, inplace=True)
+    #liwc = pd.read_csv(path + 'liwc_scores.csv')
+    #liwc.columns = [str(col) + '_liwc' for col in liwc.columns]
 
-#f = prepare_data(path, 'mood_vectors/mood_vector_frequent_user_window3.csv', 'mood_vectors/mood_transition_one_hoc_frequent_user_window_3.csv')
-
+    #mood_feature2 = pd.merge(mood_feature2, tfidf, on = 'userid')
+    feature_cesd = pd.merge(mood_feature2, participants, on = 'userid')
+    return feature_cesd
+    #return mood_transitions
 
 
 def get_y(feature_df):
@@ -192,7 +197,7 @@ def run_model(path, moodFeatureFile, transitionFeatureFile):
    
 #merge with CESD
 
-all_features = run_model(path, 'mood_vectors/mood_vector_frequent_user_window_3.csv', 'mood_vectors/mood_transition_one_hoc_frequent_user_window_3.csv')
+#all_features = run_model(path, 'mood_vectors/mood_vector_frequent_user_window_3.csv', 'mood_vectors/mood_transition_one_hoc_frequent_user_window_3.csv')
 
 # def loop_the_grid(path_to_psy, path_to_valencefile, path_to_save, path_to_valFreq, days_for_model, feature_name):
 #     #loop days

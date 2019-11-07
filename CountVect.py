@@ -166,15 +166,29 @@ class Count_Vect():
         return ' '.join(new_words)
 
 
+    # def prepare_text_data(self):
+    #     '''merging data, select frequent users, return df with text and user id'''
+    #    #select frequent users, here you need to change the matched user files if selection criteria changed
+    #     participants = pd.read_csv(self.path + 'participants_matched.csv')   
+    #     text = pd.read_csv(self.path + 'status_sentiment.csv')
+    #     text_merge = pd.merge(participants, text, on = 'userid')
+    #     text_fea = text_merge[['userid','text']]
+    #     text_fea['text'] = text_fea.groupby(['userid'])['text'].transform(lambda x: ','.join(x))
+    #     text_fea['userid'].drop_duplicates()
+        
+    #     return text_fea
+
     def prepare_text_data(self):
         '''merging data, select frequent users, return df with text and user id'''
-       #select frequent users, here you need to change the matched user files if selection criteria changed
+        #select frequent users, here you need to change the matched user files if selection criteria changed
         participants = pd.read_csv(self.path + 'participants_matched.csv')   
         text = pd.read_csv(self.path + 'status_sentiment.csv')
         text_merge = pd.merge(participants, text, on = 'userid')
         text_fea = text_merge[['userid','text']]
-        
-        return text_fea
+        text_fea['text'] = text_fea.groupby(['userid'])['text'].transform(lambda x: ''.join(str(x)))
+        text_fea2 = text_fea.drop_duplicates()
+        #text_fea2.to_csv(path + 'text.csv')
+        return text_fea2
 
 
     def parallelize_dataframe(self, df, func):
@@ -199,11 +213,13 @@ class Count_Vect():
         '''get tfidf of the text file, parallel processing  '''
         text = self.prepare_text_data()
         file = self.parallelize_dataframe(text, self.get_precocessed_text)
+
         #here you set the maximum number of features 
         tfidfconverter = TfidfVectorizer(max_features=1500, min_df=5, max_df=0.7, stop_words=stopwords.words('english'))
         VecCounts = tfidfconverter.fit_transform(file.text).toarray()
         VecCountsDf = pd.DataFrame(VecCounts)
         VecCountsDf.columns = tfidfconverter.get_feature_names()
+        VecCountsDf['userid'] = file['userid']
         #save tfidf to csv file
         VecCountsDf.to_csv(self.path + 'countVect.csv')
         return VecCounts
@@ -213,10 +229,10 @@ if __name__ == '__main__':
     print('initializing..')
 
     #path = '/home/lucia/phd_work/mypersonality_data/predicting_depression_symptoms/data/'
-    #p = '/disk/data/share/s1690903/predicting_depression_symptoms/data/'
+    #path = '/disk/data/share/s1690903/predicting_depression_symptoms/data/'
     
     c= Count_Vect()
-
+    #text = c.prepare_text_data()
     print('get tfidf scores and save it to csv ...')
     start = time.time()
     tfidf = c.get_tfidf()
