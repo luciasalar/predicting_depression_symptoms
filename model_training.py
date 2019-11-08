@@ -29,6 +29,7 @@ from CountVect import *
 import time 
 import logging
 import csv
+from sklearn.decomposition import TruncatedSVD
 
 def load_experiment(path_to_experiment):
 	
@@ -61,10 +62,15 @@ class PrepareData():
 	    text = self.process_text()
 	    all_features = pd.merge(text, mood_feature,on = 'userid')
 	    #merge with  liwc
-	    #liwc = pd.read_csv(path + 'liwc_scores.csv')
-	    #liwc.columns = [str(col) + '_liwc' for col in liwc.columns]
+	    liwc = pd.read_csv(self.path + 'liwc_scores.csv')
+	    liwc.columns = [str(col) + '_liwc' for col in liwc.columns]
+	    liwc  = liwc.rename(columns = {"userid_liwc":"userid"})
 	    #merge with sentiment
+
+	    #merge all features
+	    all_features = pd.merge(liwc, all_features, on = 'userid')
 	    feature_cesd = pd.merge(all_features, participants, on = 'userid')
+
 	    return feature_cesd
 	
 
@@ -100,16 +106,35 @@ class PrepareData():
 
 
 
-class ItemSelectorText(BaseEstimator, TransformerMixin):
+class ItemSelector(BaseEstimator, TransformerMixin):
 	'''feature selector for pipline '''
-	def __init__(self, key):
-	    self.key = key
+	# def __init__(self, key):
+	#     self.key = key
 
-	def fit(self, x, y=None):
-	    return self
+	# def fit(self, x, y=None):
+	#     return self
 
-	def transform(self, data_dict):
-	    return data_dict[self.key]
+	# def transform(self, data_dict):
+	#     return data_dict[self.key]
+	def __init__(self, columns):
+		self.columns = columns
+
+
+	def fit(self, X, y=None):
+		return self
+
+	def transform(self, X):
+		assert isinstance(X, pd.DataFrame)
+
+		try:
+		    return X[self.columns]
+		except KeyError:
+		    cols_error = list(set(self.columns) - set(X.columns))
+		    raise KeyError("The DataFrame does not include the columns: %s" % cols_error)
+		    
+
+	# def get_feature_names(self):
+ #        return df.columns.tolist()
 
 
 class TrainingClassifiers(): 
@@ -119,17 +144,26 @@ class TrainingClassifiers():
 		self.X_test = X_test
 		self.y_test= y_test
 		self.parameters = parameters
+		self.experiment = experiment
+		self.tfidf_words = tfidf_words
 
 	def select_features(self,features_list):
 		'''
 		select columns with names in feature list then convert it to a transformer object 
 		feature_list is in the dictionary 
 		'''
-		selected_features = FunctionTransformer(lambda x: x[[i for i in self.X_train.columns if features_list in i]], validate=False)
+		fea_list = []
+		for fea in features_list: #select column names with keywords in dict
+			f_list = [i for i in self.X_train.columns if fea in i]
+			fea_list.append(f_list)
+		#flatten a list
+		flat = [x for sublist in fea_list for x in sublist]
+		#convert to transformer object
+		selected_features = FunctionTransformer(lambda x: x[flat], validate=False)
 
 		return selected_features
 
-	def setup_pipeline(self,features_list, classifier):
+	def setup_pipeline(self,features_list, classifier, tfidf_words):
 		'''set up pipeline'''
 		
 		pipeline = Pipeline([
@@ -137,10 +171,10 @@ class TrainingClassifiers():
 		    ('feats', FeatureUnion([
 		    #generate count vect features
 		        ('text', Pipeline([
-		            ('selector', ItemSelectorText(key='text')),
+		            ('selector', ItemSelector(columns='text')),
 		            #('cv', CountVectorizer()),
-		            ('tfidf', TfidfVectorizer()),
-
+		            ('tfidf', TfidfVectorizer(max_features = tfidf_words, ngram_range = (1,3), stop_words ='english', max_df = 0.25, min_df = 0.01)),
+		           # ('svd', TruncatedSVD(algorithm='randomized', n_components=300))
 		             ])),
 		  #select other features, feature sets are defines in the yaml file
 		     	('other_features', Pipeline([
@@ -166,16 +200,16 @@ class TrainingClassifiers():
 		
 		return grid_search
 
-	def test_model(self, path, classifier, features_list):
+	def test_model(self, path, classifier, features_list, tfidf_words):
 		'''test model and save data'''
 		start = time.time()
 		#training model
 		print('getting pipeline...')
 		#the dictionary returns a list, here we extract the string from list use [0]
-		pipeline = c.setup_pipeline(features_list[0], eval(classifier)())
+		pipeline = self.setup_pipeline(features_list[0], eval(classifier)(), tfidf_words)
 
 		print('training...')
-		grid_search = c.training_models(pipeline)
+		grid_search = self.training_models(pipeline)
 		#make prediction
 		print('prediction...')
 		y_true, y_pred = self.y_test, grid_search.predict(self.X_test)
@@ -186,53 +220,62 @@ class TrainingClassifiers():
 		result.columns = ['y_true', 'y_pred']
 		result.to_csv(path + 'results/best_result2.csv' )
 		end = time.time()
-		print('running time:', end-start)
+		print('running time:{}, fscore:{}'.format(end-start, fscore))
 
-		return precision,recall,fscore,support,grid_search
-
-
-def loop_experiment():
-	p = PrepareData()
-	X_train, X_test, y_train, y_test = p.get_train_test_split()
-	experiment = load_experiment(p.path + '../experiment/experiment.yaml')
+		return precision,recall,fscore,support,grid_search,pipeline
 
 
-	f = open(p.path + 'results/result.csv' , 'w')
-	writer_top = csv.writer(f, delimiter = ',',quoting=csv.QUOTE_MINIMAL)
-	writer_top.writerow(['best_scores'] + ['best_parameters'] + ['marco_precision']+['marco_recall']+['marco_fscore']+['support'] +['time'] + ['model'] +['feature_set'])
+prepare = PrepareData()
+X_train, X_test, y_train, y_test = prepare.get_train_test_split()
+experiment = load_experiment(prepare.path + '../experiment/experiment.yaml')
 
-	
 
-	for classifer in experiment['experiment']:
-		for feature in experiment['features']:
+# parameters = experiment['experiment']['sklearn.ensemble.RandomForestClassifier']
+# features_list = experiment['features']['set1']
 
+# tfidf_words = 5000
+# training = TrainingClassifiers()
+# precision,recall,fscore,support,grid_search,pipeline = training.test_model(prepare.path, 'sklearn.ensemble.RandomForestClassifier', features_list, tfidf_words)
+
+
+
+f = open(prepare.path + 'results/result.csv' , 'a')
+writer_top = csv.writer(f, delimiter = ',',quoting=csv.QUOTE_MINIMAL)
+writer_top.writerow(['best_scores'] + ['best_parameters'] + ['marco_precision']+['marco_recall']+['marco_fscore']+['support'] +['time'] + ['model'] +['feature_set'] +['tfidf_words'])
+
+for classifier in experiment['experiment']:
+
+	for feature in experiment['features']: #loop feature sets
+		for word_n in experiment['tfidf_features']['max_fea']: #loop tfidf features
+			tfidf_words = word_n
+
+			parameters = experiment['experiment'][classifier]
+			print('parameters are:', parameters)
+			training = TrainingClassifiers()
 			
+			precision, recall, fscore, support, grid_search, pipeline = training.test_model(prepare.path, classifier, feature, tfidf_words)
 
-			#pipeline = set_pipeline(experiment['features'][feature], eval(classifer)())
-			parameters = experiment['experiment'][classifer]
-			c = TrainingClassifiers()
-			precision, recall, fscore, support,grid_search = c.test_model(p.path, classifer, feature)
+			print('printing fscore', fscore)
+			result_row = [[grid_search.best_score_, grid_search.best_params_, precision,recall,fscore,support, str(datetime.datetime.now()), classifier, feature,tfidf_words]]
 
-			result_row = [[grid_search.best_score_, grid_search.best_params_, precision,recall,fscore,support, str(datetime.datetime.now()), classifer, feature]]
-
-
-		
 			writer_top.writerows(result_row)
 			f.close
-	f.close
-	return grid_search
+f.close
 
-#preparing data
+# features_list  = experiment['features']['set2']
 
-#parameters = experiment['experiment']['sklearn.ensemble.RandomForestClassifier']
-#training classifiers
+# def selected_fea_list(features_list):
+# 	fea_list = []
+# 	for f in features_list:
+# 		f_list = [i for i in X_train.columns if f in i]
+# 		fea_list.append(f_list)
 
-loop_experiment()
+# 	#flatten a list
+# 	flat = [x for sublist in fea_list for x in sublist]
+# 	return flat
 
-# start = time.time()
-# grid_search = c.training_models(pipeline, parameters)
-# end = time.time()
-# print('running time:', end-start)
+# flat = selected_fea_list(features_list)
+# selected_features = X_train[flat]
 
 
 
@@ -241,12 +284,13 @@ class plotting_results():
 	def __init__(self):
 		self.grid_search = grid_search
 		self.path = path
+		self.X_train = X_train
 
 
 	def get_feature_importance(self, X_train):
 		importance = self.grid_search.best_estimator_.named_steps['clf'].steps[1][1].feature_importances_
 		print(X_train.shape)
-		feat_importances = pd.Series(importance, index=X_train.columns)
+		feat_importances = pd.Series(importance, index= self.X_train.columns)
 		feat_importances.nlargest(20).plot(kind='barh')
 		plt.show()
 
