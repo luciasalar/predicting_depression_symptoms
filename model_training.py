@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 import pandas as pd
 import numpy as np
+import re
 import sklearn
+import nltk
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.linear_model import LogisticRegression
 from sklearn import svm
-import re
 from sklearn.metrics import confusion_matrix, f1_score, precision_score,\
 recall_score, confusion_matrix, classification_report, accuracy_score 
-import nltk
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import FunctionTransformer
 from sklearn.feature_selection import SelectFromModel
@@ -20,19 +20,22 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import precision_recall_fscore_support
 from ruamel import yaml
 import datetime
-from sklearn.metrics import precision_recall_fscore_support
 import matplotlib.pyplot as plt
 import os
 from CountVect import *
+from topic_model import *
 import time 
 import logging
 import csv
 from sklearn.decomposition import TruncatedSVD
+from construct_mood_feature import *
+
 
 def load_experiment(path_to_experiment):
-	
+	#load experiment 
 	data = yaml.safe_load(open(path_to_experiment))
 	return data
 
@@ -42,16 +45,94 @@ class PrepareData():
 		'''define the main path'''
 		self.path = '/disk/data/share/s1690903/predicting_depression_symptoms/data/'
 
-	def process_text(self):
+	def liwc_preprocess(self, timeRange):
+		'''aggregate text then process text with liwc'''
+		#get posts within time range
+		participants = pd.read_csv(self.path + 'participants_matched.csv') 
+		sentiment_pre = pd.read_csv(self.path + 'status_sentiment.csv')  
+		text = mood.get_relative_day(sentiment_pre, timeRange)
+		#merge posts with matched participants
+		text_merge = pd.merge(participants, text, on = 'userid') 
+		text_fea = text_merge[['userid','text']]
+		#aggregate text
+		text_fea['text'] = text_fea.groupby(['userid'])['text'].transform(lambda x: ''.join(str(x)))
+		text_fea2 = text_fea.drop_duplicates() #remove duplication
+		text_fea2.to_csv(self.path + 'aggregrate_text_{}.csv'.format(timeRange))
+
+		return text_fea2
+
+	def process_text(self, timeRange):
 		'''read text data, clean data then concatenate string according to userid'''
 		c= Count_Vect()
-		text = c.prepare_text_data()
-		clean_text = c.parallelize_dataframe(text, c.get_precocessed_text)
+		text = self.liwc_preprocess(timeRange) #retrieve text within time Range
+
+		text2 = c.prepare_text_data(text) #define time range for features
+		clean_text = c.parallelize_dataframe(text2, c.get_precocessed_text)
 
 		return clean_text
 
+
+	def sentiment_data(self):
+		'''generate sentiment features in time window X'''
+		#read sentiment data
+		mood = MoodFeature()
+		sentiment_pre = pd.read_csv(self.path + 'status_sentiment.csv')
+		sentiment = mood.get_relative_day(sentiment_pre, 365)
+
+		sentiment = sentiment[['userid','time','positive','negative']]
+		#compute sentiment sum on each post
+		sentiment['sentiment_sum'] = sentiment['positive'] + sentiment['negative']
+
+		#compute average sentiment
+		s_mean = sentiment.groupby('userid')['sentiment_sum'].mean().to_frame().reset_index() 
+		#compute sentiment sd
+		s_sd = sentiment.groupby('userid')['sentiment_sum'].std().to_frame().reset_index() 
+		#compute number of post
+		p_count = sentiment.groupby('userid')['sentiment_sum'].count().to_frame().reset_index() 
+		p_count = p_count.rename(columns={"sentiment_sum": "post_c"})
+		#count positive and negative sentiment post
+		p_neg_count = sentiment.loc[sentiment['sentiment_sum'] < 0].groupby('userid')['sentiment_sum'].count().to_frame().reset_index() 
+		p_pos_count = sentiment.loc[sentiment['sentiment_sum'] >= 0].groupby('userid')['sentiment_sum'].count().to_frame().reset_index() 
+
+		p_total = pd.merge(p_count, p_pos_count, on = 'userid', how = 'left') 
+		p_total = pd.merge(p_total, p_neg_count, on = 'userid', how = 'left')
+		p_total = p_total.rename(columns={"sentiment_sum_x": "pos_count", "sentiment_sum_y": "neg_count"})
+		p_total = p_total.fillna(0) #convert NA to 0
+		#compute positive and negative ratio
+		p_total['pos_per'] = p_total['pos_count']/p_total['post_c']
+		p_total['neg_per'] = p_total['neg_count']/p_total['post_c']
+
+		per_fea = p_total[['userid','post_c','pos_per','neg_per']]
+		#return df with sentiment features
+		mean_sd = pd.merge(s_sd, s_mean, on = 'userid', how = 'left')
+		mean_sd = mean_sd.rename(columns={"sentiment_sum_x": "sent_sd", "sentiment_sum_y": "sent_mean"})
+
+		sentiment_fea = pd.merge(mean_sd, per_fea, on = 'userid', how = 'left')
+		#rename columns
+		sentiment_fea.columns = [str(col) + '_sentiment' for col in sentiment_fea.columns]
+		sentiment_fea  = sentiment_fea.rename(columns = {"userid_sentiment":"userid"})
+		return sentiment_fea
+
+
+	# def posting_frequency():
+	# 	'''compute posting frequency in the past x days'''
+	# 	pass
+	def demographic(self):
+		'''create demographic features '''
+		demographics = pd.read_csv(self.path + 'participants_matched.csv')
+
+	def topic_modeling(self, text, topic_number):
+		'''return topic features'''
+		t = LDATopicModel() 
+		lda_score_df, lda_model = t.get_lda_score(text, topic_number) 
+		return lda_score_df, lda_model
+
+
+
 	def merge_data(self, moodFeatureFile):
+
 	    '''merging features, LIWC, mood vectors'''
+
 	    mood_feature = pd.read_csv(self.path + moodFeatureFile)
 	    mood_feature.columns = [str(col) + '_mood' for col in mood_feature.columns]
 	    mood_feature  = mood_feature.rename(columns = {"Unnamed: 0_mood":"userid"}) 
@@ -59,19 +140,39 @@ class PrepareData():
 	    participants = pd.read_csv(self.path + 'participants_matched.csv')
 	    participants  = participants[['userid','cesd_sum']]
 	    #merge with text feature
-	    text = self.process_text()
+	    c= Count_Vect()
+	    text = self.process_text(365)
+	    text['text'] = text['text'].apply(lambda x: c.remove_noise(str(x)))
+	    text['text'] = text['text'].apply(lambda x: c.lemmatization(x))
+	    text = c.parallelize_dataframe(text, c.get_precocessed_text)
+	    text['text'] = text['text'].apply(lambda x: c.remove_single_letter(x))
+
 	    all_features = pd.merge(text, mood_feature,on = 'userid')
-	    #merge with  liwc
-	    liwc = pd.read_csv(self.path + 'liwc_scores.csv')
+	    #load  liwc (including WC)
+	    liwc = pd.read_csv(self.path + 'liwc_scores_1year.csv')
 	    liwc.columns = [str(col) + '_liwc' for col in liwc.columns]
 	    liwc  = liwc.rename(columns = {"userid_liwc":"userid"})
-	    #merge with sentiment
+	    #load sentiment feature (including post count)
+	    sentiment = self.sentiment_data()
+	   
+	    #posting frequency
+
+
+	    #topic ratio LDA
+	    
+	    topic_text = all_features[['userid','text']]
+	    topics, ldamodel = self.topic_modeling(topic_text, 30) #topic number and time range for text
+	    topics.columns = [str(col) + '_topic' for col in topics.columns]
+	    topics  = liwc.rename(columns = {"userid_topic":"userid"})
 
 	    #merge all features
 	    all_features = pd.merge(liwc, all_features, on = 'userid')
-	    feature_cesd = pd.merge(all_features, participants, on = 'userid')
+	    all_features2 = pd.merge(all_features, sentiment, on = 'userid')
+	    all_features2 = pd.merge(all_features2, topics, on = 'userid')
+	    feature_cesd = pd.merge(all_features2, participants, on = 'userid')
 
 	    return feature_cesd
+
 	
 
 	def get_y(self, feature_df):
@@ -108,17 +209,8 @@ class PrepareData():
 
 class ItemSelector(BaseEstimator, TransformerMixin):
 	'''feature selector for pipline '''
-	# def __init__(self, key):
-	#     self.key = key
-
-	# def fit(self, x, y=None):
-	#     return self
-
-	# def transform(self, data_dict):
-	#     return data_dict[self.key]
 	def __init__(self, columns):
 		self.columns = columns
-
 
 	def fit(self, X, y=None):
 		return self
@@ -131,11 +223,10 @@ class ItemSelector(BaseEstimator, TransformerMixin):
 		except KeyError:
 		    cols_error = list(set(self.columns) - set(X.columns))
 		    raise KeyError("The DataFrame does not include the columns: %s" % cols_error)
+
+	def get_feature_names(self):
+		return self.columns.tolist
 		    
-
-	# def get_feature_names(self):
- #        return df.columns.tolist()
-
 
 class TrainingClassifiers(): 
 	def __init__(self):
@@ -163,9 +254,21 @@ class TrainingClassifiers():
 
 		return selected_features
 
+	def get_other_feature_names(self, feature_list):
+		fea_list = []
+		for fea in feature_list: #select column names with keywords in dict
+			f_list = [i for i in self.X_train.columns if fea in i]
+			fea_list.append(f_list)
+		#flatten a list
+		flat = [x for sublist in fea_list for x in sublist]
+		#convert to transformer object
+		return flat
+
+
 	def setup_pipeline(self,features_list, classifier, tfidf_words):
 		'''set up pipeline'''
-		
+		features_col = self.get_other_feature_names(features_list)
+
 		pipeline = Pipeline([
 		    
 		    ('feats', FeatureUnion([
@@ -173,13 +276,18 @@ class TrainingClassifiers():
 		        ('text', Pipeline([
 		            ('selector', ItemSelector(columns='text')),
 		            #('cv', CountVectorizer()),
-		            ('tfidf', TfidfVectorizer(max_features = tfidf_words, ngram_range = (1,3), stop_words ='english', max_df = 0.25, min_df = 0.01)),
+		            ('tfidf', TfidfVectorizer(max_features = tfidf_words, ngram_range = (1,2), stop_words ='english', max_df = 0.25, min_df = 0.0025)),
 		           # ('svd', TruncatedSVD(algorithm='randomized', n_components=300))
 		             ])),
 		  #select other features, feature sets are defines in the yaml file
-		     	('other_features', Pipeline([
+		   #   	('other_features', Pipeline([
 
-		 			('selector',  self.select_features(features_list)),
+		 		# 	('selector',  self.select_features(features_list)),
+		 		# ])),
+
+		 		('other_features', Pipeline([
+
+		 			('selector',  ItemSelector(columns=features_col)),
 		 		])),
 
 		     ])),
@@ -224,20 +332,35 @@ class TrainingClassifiers():
 
 		return precision,recall,fscore,support,grid_search,pipeline
 
+def get_liwc_text(self, timeRange):  
+    '''run this to get text for liwc, you need to define the time range in days '''
+    prepare = PrepareData()
+    sen = prepare.sentiment_data()
+    liwc_text = prepare.liwc_preprocess(timeRange)
+    return liwc_text
+
 
 prepare = PrepareData()
+
+# t = LDATopicModel()
+# ldaText = prepare.liwc_preprocess(365)
+# ldaText.to_csv(prepare.path + 'sample.csv')
+# lda_score_df, lda_model = t.get_lda_score(ldaText, 30)
+
+
 X_train, X_test, y_train, y_test = prepare.get_train_test_split()
 experiment = load_experiment(prepare.path + '../experiment/experiment.yaml')
 
 
 # parameters = experiment['experiment']['sklearn.ensemble.RandomForestClassifier']
-# features_list = experiment['features']['set1']
+# features_list = experiment['features']['set2']
 
 # tfidf_words = 5000
 # training = TrainingClassifiers()
 # precision,recall,fscore,support,grid_search,pipeline = training.test_model(prepare.path, 'sklearn.ensemble.RandomForestClassifier', features_list, tfidf_words)
 
 
+#f = prepare.merge_data('mood_vectors/mood_vector_frequent_user_window_3_timeRange365.csv')
 
 f = open(prepare.path + 'results/result.csv' , 'a')
 writer_top = csv.writer(f, delimiter = ',',quoting=csv.QUOTE_MINIMAL)
@@ -262,6 +385,8 @@ for classifier in experiment['experiment']:
 			f.close
 f.close
 
+
+
 # features_list  = experiment['features']['set2']
 
 # def selected_fea_list(features_list):
@@ -279,48 +404,52 @@ f.close
 
 
 
-class plotting_results():
 
-	def __init__(self):
-		self.grid_search = grid_search
-		self.path = path
-		self.X_train = X_train
+#grid_search.best_estimator_.named_steps['feats'].transformer_list[0][1].
 
 
-	def get_feature_importance(self, X_train):
-		importance = self.grid_search.best_estimator_.named_steps['clf'].steps[1][1].feature_importances_
-		print(X_train.shape)
-		feat_importances = pd.Series(importance, index= self.X_train.columns)
-		feat_importances.nlargest(20).plot(kind='barh')
-		plt.show()
+# class plotting_results():
 
-		fea_df = pd.DataFrame(feat_importances)
-		fea_df['features'] = fea_df.index
-		fea_df.columns = ['importance','features']
-		fea_df.to_csv(self.path + 'results/topFea_test.csv')
+# 	def __init__(self):
+# 		self.grid_search = grid_search
+# 		self.path = path
+# 		self.X_train = X_train
 
-	def calculate_feature_importance_rf():
-	    importances = self.grid_search.best_estimator_.named_steps['clf'].steps[1][1].feature_importances_
-	    std_importances = np.std([tree.feature_importances_ for tree in grid_search.best_estimator_.named_steps['clf'].steps[1][1].estimators_],
-	            axis=0)
-	    indices = np.argsort(importances)[::-1]
-	    return importances, std_importances, indices
 
-def plot_feature_importance_rf(matrix, mean_importance, std_importance, indices, fig_size):
-    tfidf_names = grid_search.best_estimator_.named_steps['feats'].transformer_list[0][1].named_steps['cv'].get_feature_names()
-    feature_names = pd.concat([pd.Series(tfidf_names), pd.Series(matrix.columns.tolist)])
-    sorted_predictors = [x for (y, x) in sorted(zip(mean_importance, feature_names[:-1]), reverse=True)]
+# 	def get_feature_importance(self, X_train):
+# 		importance = grid_search.best_estimator_.named_steps['clf'].steps[1][1].feature_importances_
+# 		print(X_train.shape)
+# 		feat_importances = pd.Series(importance, index= names)
+# 		feat_importances.nlargest(50).plot(kind='barh')
+# 		plt.show()
 
-    fig, ax = plt.subplots(figsize=fig_size)
+# 		fea_df = pd.DataFrame(feat_importances)
+# 		fea_df['features'] = fea_df.index
+# 		fea_df.columns = ['importance','features']
+# 		fea_df.to_csv(self.path + 'results/topFea_test.csv')
+
+# 	def calculate_feature_importance_rf():
+# 	    importances = self.grid_search.best_estimator_.named_steps['clf'].steps[1][1].feature_importances_
+# 	    std_importances = np.std([tree.feature_importances_ for tree in grid_search.best_estimator_.named_steps['clf'].steps[1][1].estimators_],
+# 	            axis=0)
+# 	    indices = np.argsort(importances)[::-1]
+# 	    return importances, std_importances, indices
+
+# def plot_feature_importance_rf(matrix, mean_importance, std_importance, indices, fig_size):
+#     tfidf_names = grid_search.best_estimator_.named_steps['feats'].transformer_list[0][1].named_steps['cv'].get_feature_names()
+#     feature_names = pd.concat([pd.Series(tfidf_names), pd.Series(matrix.columns.tolist)])
+#     sorted_predictors = [x for (y, x) in sorted(zip(mean_importance, feature_names[:-1]), reverse=True)]
+
+#     fig, ax = plt.subplots(figsize=fig_size)
     
-    plt.bar(range(len(indices)), mean_importance[indices],
-            color="m", yerr=std_importance[indices], align="center")
-    plt.xticks(range(len(indices)), sorted_predictors, rotation=90)
-    plt.xlim([-1, len(indices)])
-    ##£
-    plt.show()
+#     plt.bar(range(len(indices)), mean_importance[indices],
+#             color="m", yerr=std_importance[indices], align="center")
+#     plt.xticks(range(len(indices)), sorted_predictors, rotation=90)
+#     plt.xlim([-1, len(indices)])
+#     ##£
+#     plt.show()
    
-    return fig, ax
+#     return fig, ax
 
 
 #if __name__ == '__main__':

@@ -1,45 +1,44 @@
 import matplotlib.pyplot as plt
+from model_training import *
+
+os.environ['OT_QPA_PLATFORM'] = 'offscreen'
+
+
 
 
 class plotting_results():
+	'''plotting feature importance '''
 
 	def __init__(self):
 		self.grid_search = grid_search
-		self.path = path
-		self.X_train = X_train
+		self.path = path 
+		self.other_fea_names = other_fea_names
+		
+	def get_feature_names(self):
+		'''combine tfidf features with other features'''
+		tfidf_names = self.grid_search.best_estimator_.named_steps['feats'].transformer_list[0][1].steps[1][1].get_feature_names()
+		names = tfidf_names + self.other_fea_names
+		
+		return names
 
 
-	def get_feature_importance(self, X_train):
-		importance = self.grid_search.best_estimator_.named_steps['clf'].steps[1][1].feature_importances_
-		print(X_train.shape)
-		feat_importances = pd.Series(importance, index= self.X_train.columns)
-		feat_importances.nlargest(20).plot(kind='barh')
+	def get_feature_importance(self):
+		'''plot feature importance and store results '''
+		names = self.get_feature_names()
+
+		importance = grid_search.best_estimator_.named_steps['clf'].steps[1][1].feature_importances_
+		feat_importances = pd.Series(importance, index= names)
+		feat_importances.nlargest(50).plot(kind='barh')
+		plt.savefig(self.path + 'results/plots/feature_importance.png')
 		plt.show()
 
 		fea_df = pd.DataFrame(feat_importances)
 		fea_df['features'] = fea_df.index
 		fea_df.columns = ['importance','features']
-		fea_df.to_csv(self.path + 'results/topFea_test.csv')
+		fea_df.to_csv(self.path + 'results/feature_importance/topFea_test.csv')
 
-	def calculate_feature_importance_rf():
-	    importances = self.grid_search.best_estimator_.named_steps['clf'].steps[1][1].feature_importances_
-	    std_importances = np.std([tree.feature_importances_ for tree in grid_search.best_estimator_.named_steps['clf'].steps[1][1].estimators_],
-	            axis=0)
-	    indices = np.argsort(importances)[::-1]
-	    return importances, std_importances, indices
 
-def plot_feature_importance_rf(matrix, mean_importance, std_importance, indices, fig_size):
-    tfidf_names = grid_search.best_estimator_.named_steps['feats'].transformer_list[0][1].named_steps['cv'].get_feature_names()
-    feature_names = pd.concat([pd.Series(tfidf_names), pd.Series(matrix.columns.tolist)])
-    sorted_predictors = [x for (y, x) in sorted(zip(mean_importance, feature_names[:-1]), reverse=True)]
-
-    fig, ax = plt.subplots(figsize=fig_size)
-    
-    plt.bar(range(len(indices)), mean_importance[indices],
-            color="m", yerr=std_importance[indices], align="center")
-    plt.xticks(range(len(indices)), sorted_predictors, rotation=90)
-    plt.xlim([-1, len(indices)])
-    ##£
-    plt.show()
-   
-    return fig, ax
+path = prepare.path
+other_fea_names = training.get_other_feature_names(features_list)
+plot = plotting_results()
+plot.get_feature_importance()
