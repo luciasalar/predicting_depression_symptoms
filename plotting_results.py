@@ -22,6 +22,7 @@ class plotting_results():
 		return names
 
 
+
 	def get_feature_importance(self):
 		'''plot feature importance and store results '''
 		names = self.get_feature_names()
