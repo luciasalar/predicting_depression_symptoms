@@ -1,13 +1,17 @@
 from sklearn.feature_extraction.text import CountVectorizer
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
-from nltk.stem.porter import *
 from nltk.corpus import stopwords
 import re
 import numpy as np
 from multiprocessing import Pool
 import multiprocessing
 import time
+from nltk.stem import PorterStemmer
+import string
+import spacy
+import csv
+
 
 
 
@@ -42,12 +46,12 @@ class Count_Vect():
         "how'd'y": "how do you",
         "how'll": "how will",
         "how's": "how has / how is / how does",
-        "I'd": "I had / I would",
-        "I'd've": "I would have",
-        "I'll": "I shall / I will",
-        "I'll've": "I shall have / I will have",
-        "I'm": "I am",
-        "I've": "I have",
+        "i'd": "i had / i would",
+        "i'd've": "i would have",
+        "i'll": "i shall / i will",
+        "i'll've": "i shall have / i will have",
+        "i'm": "i am",
+        "i've": "i have",
         "isn't": "is not",
         "it'd": "it had / it would",
         "it'd've": "it would have",
@@ -141,51 +145,69 @@ class Count_Vect():
         self.num_partitions = 15
         self.num_cores = 10
         self.path = '/disk/data/share/s1690903/predicting_depression_symptoms/data/'
-        #self.path = path 
+        self.nlp = spacy.load('en', disable=['parser', 'ner'])
 
-    def preprocess(self, sent):
+    def remove_noise(self, text):
+        sep = 'Name:'
+        text = text.replace('**bobsnewline**', '')
+        text = text.replace('_', '')
+        rest = text.split(sep, 1)[0]
+        return rest
+
+    def lemmatization(self, texts):
+        """lemmitization text, filter words with relevant tags"""
+        allowed_postags=['PROPN', 'NOUN', 'ADJ', 'VERB', 'ADV'] #define words remain
+
+        doc = self.nlp(texts) 
+        new_sent = [token.lemma_ for token in doc if token.pos_ in allowed_postags]
+        return ' '.join(new_sent)
+
+    def remove_single_letter(self, sent):
+        '''remove words less than two letters '''
+        pass
+        return ' '.join([w for w in sent.split() if len(w)>2])
+        #" ".join(sent)
+        #return texts_out
+
+    def preprocess1(self, sent):
+        # remove non English word characters
+        sent = re.sub('\S*@\S*\s?', '', sent)
+        sent = re.sub(r'[^\x00-\x7F]+',' ', sent).lower()
+        # remove puncutation 
+        #sent = re.sub(r'[^\w\s]','',sent)
+        #remove digits
+        sent = re.sub(r'[0-9]+', '', sent) 
+        
+        
 
         words = str(sent).split()
         new_words = []
         ps = PorterStemmer()
-        for w in words:
+        for w in words: #convert contractions
             if w in list(self.contractions.keys()):
                 w = self.contractions[w]
-            # remove non English word characters
-            w = re.sub(r'[^\x00-\x7F]+',' ', w).lower()
-            # remove puncutation 
-            w = re.sub(r'[^\w\s]','',w)
-            #remove digits
-            w = re.sub(r'[0-9]+', '', w)  
-            w = ps.stem(w)
-            
-                
-            if w not in set(stopwords.words('english')):
                 new_words.append(w)
+
+            elif w not in set(stopwords.words('english')):
+                new_words.append(ps.stem(w))
             
         return ' '.join(new_words)
 
+    def preprocess(self, sent): #remove punctuation
+        sent_clean = self.preprocess1(sent)
+        new_sent = re.sub(r'[^\w\s]','',sent_clean)
+        return new_sent
 
-    # def prepare_text_data(self):
-    #     '''merging data, select frequent users, return df with text and user id'''
-    #    #select frequent users, here you need to change the matched user files if selection criteria changed
-    #     participants = pd.read_csv(self.path + 'participants_matched.csv')   
-    #     text = pd.read_csv(self.path + 'status_sentiment.csv')
-    #     text_merge = pd.merge(participants, text, on = 'userid')
-    #     text_fea = text_merge[['userid','text']]
-    #     text_fea['text'] = text_fea.groupby(['userid'])['text'].transform(lambda x: ','.join(x))
-    #     text_fea['userid'].drop_duplicates()
-        
-    #     return text_fea
 
-    def prepare_text_data(self):
+    def prepare_text_data(self, text):
         '''merging data, select frequent users, return df with text and user id'''
         #select frequent users, here you need to change the matched user files if selection criteria changed
         participants = pd.read_csv(self.path + 'participants_matched.csv')   
-        text = pd.read_csv(self.path + 'status_sentiment.csv')
+        #text = pd.read_csv(self.path + 'status_sentiment.csv')
+        
         text_merge = pd.merge(participants, text, on = 'userid')
         text_fea = text_merge[['userid','text']]
-        text_fea['text'] = text_fea.groupby(['userid'])['text'].transform(lambda x: ''.join(str(x)))
+        text_fea['text'] = text_fea.groupby(['userid'])['text'].transform(lambda x: ','.join(str(x)))
         text_fea2 = text_fea.drop_duplicates()
         #text_fea2.to_csv(path + 'text.csv')
         return text_fea2
@@ -209,20 +231,61 @@ class Count_Vect():
         file['text'] = file['text'].apply(lambda x: self.preprocess(x))
         return file
 
-    def get_tfidf(self):
-        '''get tfidf of the text file, parallel processing  '''
-        text = self.prepare_text_data()
-        file = self.parallelize_dataframe(text, self.get_precocessed_text)
 
-        #here you set the maximum number of features 
-        tfidfconverter = TfidfVectorizer(max_features=1500, min_df=5, max_df=0.7, stop_words=stopwords.words('english'))
-        VecCounts = tfidfconverter.fit_transform(file.text).toarray()
-        VecCountsDf = pd.DataFrame(VecCounts)
-        VecCountsDf.columns = tfidfconverter.get_feature_names()
-        VecCountsDf['userid'] = file['userid']
-        #save tfidf to csv file
-        VecCountsDf.to_csv(self.path + 'countVect.csv')
-        return VecCounts
+    def read_text_as_dict(self, text_df):
+        '''read df and concatnate strings from multiple rows then return dictionary
+        userid is the key
+        '''
+        text_dict={}
+        prev_id = ''
+        prev_text = ''
+        text_list = []
+        for index, row in text_df.iterrows(): 
+            
+            if row['userid'] == prev_id:
+                text_list.append(row['text'])
+
+            else:
+                text_dict[row['userid']] = row['text']
+                text_list= []
+                
+            text_dict[row['userid']] = text_list
+
+            prev_id = row['userid']
+            prev_text = row['text']
+        return text_dict
+
+    def join_text_in_dict(self, text_dictionary):
+        '''join strings in the dicitonary value '''
+
+        join_dict = {}
+        for key, value in text_dictionary.items():
+            join_dict[key] = ','.join(str(v) for v in value)
+        return join_dict
+
+    def write_dict_to_text(self, path, inputDict):
+        '''write dictionary to csv '''
+        w = csv.writer(open(path + "output.csv", "w"))
+        for key, val in inputDict.items():
+            w.writerow([key, val])
+
+
+
+
+    # def get_tfidf(self):
+    #     '''get tfidf of the text file, parallel processing  '''
+    #     text = self.prepare_text_data()
+    #     file = self.parallelize_dataframe(text, self.get_precocessed_text)
+
+    #     #here you set the maximum number of features 
+    #     tfidfconverter = TfidfVectorizer(max_features=1500, min_df=5, max_df=0.7, stop_words=stopwords.words('english'))
+    #     VecCounts = tfidfconverter.fit_transform(file.text).toarray()
+    #     VecCountsDf = pd.DataFrame(VecCounts)
+    #     VecCountsDf.columns = tfidfconverter.get_feature_names()
+    #     VecCountsDf['userid'] = file['userid']
+    #     #save tfidf to csv file
+    #     VecCountsDf.to_csv(self.path + 'countVect.csv')
+    #     return VecCounts
 
     
 if __name__ == '__main__':
@@ -239,8 +302,13 @@ if __name__ == '__main__':
     end = time.time()
     print('running time', end-start)
 
-   
-    
+
+    # text_dict = read_text_as_dict(text)
+    # joined_dict = join_text_in_dict(text_dict)
+    # text_df = pd.DataFrame.from_dict(joined_dict, orient='index')
+    # #text_df.to_csv(path + 'aggregate_text.csv')
+    # write_file_to_text(path, joined_dict)
+
 
 
 

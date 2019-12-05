@@ -35,7 +35,7 @@ unique_users <- dep_status_demog[!duplicated(dep_status_demog$userid),]
 Here we select users who completed CES-D survey, with demographic information and fb status updates. There are `r dim(dep)[1]` participants completed CES-D, these users posted `r dim(dep_status)[1]` status updates from Jan 2009 - Nov 2011. `r dim(demog)[1]` users also have demographic info, eventually we idenfity `r dim(unique_users)[1]` users completed cesd, have demographic info and status updates.
 
 #recode depression score
-
+ 
 
 ```{r, include=FALSE}
 clean_dep <- function(dep_data) {

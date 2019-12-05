@@ -1,38 +1,60 @@
-# experiment:
-#   sklearn.svm.SVC:
-#     clf__classifier__C: [0.1, 0.3, 0.5, 0.7, 0.9, 1.0, 1.5, 2.0]
-#     clf__classifier__kernel: ['linear', 'poly', 'rbf', 'sigmoid']
-#     clf__classifier__gamma: [0.5, 0.1, 0.01, 0.001, 0.0001]
+experiment:
+    # sklearn.svm.SVC:
+    #     clf__classifier__C: [0.1, 0.3, 0.5, 0.7, 0.9, 1.0, 1.5, 2.0]
+    #     clf__classifier__kernel: ['linear', 'poly', 'rbf', 'sigmoid']
+    #     clf__classifier__gamma: [0.5, 0.1, 0.01, 0.001, 0.0001]
 
 
-#   sklearn.ensemble.RandomForestClassifier:
-#     clf__classifier__max_depth: [20, 50, 100, 200]
-#     clf__classifier__max_features: ['auto','sqrt','log2']
-#     clf__classifier__max_leaf_nodes: [300,500,1000]
-#     clf__classifier__n_estimators: [100,300,500]
-#     clf__classifier__n_jobs: [-1]
-#     clf__classifier__random_state: [300]
-#     clf__classifier__class_weight: ['balanced']
+    # sklearn.ensemble.RandomForestClassifier:
+    #     clf__classifier__max_depth: [20, 50, 100, 200]
+    #     clf__classifier__max_features: ['auto','sqrt','log2']
+    #     clf__classifier__max_leaf_nodes: [300,500,1000]
+    #     clf__classifier__n_estimators: [100,300,500,1000]
+    #     clf__classifier__n_jobs: [-1]
+    #     clf__classifier__random_state: [300]
+    #     clf__classifier__class_weight: ['balanced']
+
+
+    sklearn.linear_model.LogisticRegression:
+        clf__classifier__penalty: ['l1','l2']
+        clf__classifier__C: [0.1, 0.3, 0.5, 0.7, 0.9, 1.0, 1.5, 2.0]
+        clf__classifier__random_state: [300]
+        clf__classifier__n_jobs: [-1]
+
+    sklearn.ensemble.ExtraTreesClassifier:
+        clf__classifier__n_estimators: [100,300,500,1000]
+        clf__classifier__max_depth: [20, 50, 100, 200]
+        clf__classifier__max_features: ['auto','sqrt','log2']
+        clf__classifier__max_leaf_nodes: [300,500,1000]
+        clf__classifier__n_jobs: [-1]
+        clf__classifier__random_state: [300]
+        clf__classifier__class_weight: ['balanced']
+
 
 features:
-  set1: ['liwc']
-  set2: ['mood']
+    set2: ['liwc']
+    set3: ['liwc','sentiment']
+    set4: ['liwc','sentiment','topic']
+    set5: ['liwc','sentiment','topic','mood']
+    set6: ['liwc','sentiment','topic','moodChange']
+
+tfidf_features:
+    max_fea: [1000, 1500, 2000, 5000, 8000]
 
 
+# experiment:
+#     sklearn.svm.SVC:
+#         clf__classifier__C: [0.1, 0.3]
+#         clf__classifier__kernel: ['linear', 'poly', 'rbf', 'sigmoid']
+#         clf__classifier__gamma: [0.5, 0.1]
 
-experiment:
-  sklearn.svm.SVC:
-    clf__classifier__C: [0.1, 0.3]
-    clf__classifier__kernel: ['linear', 'poly', 'rbf', 'sigmoid']
-    clf__classifier__gamma: [0.5, 0.1]
 
-
-  sklearn.ensemble.RandomForestClassifier:
-    clf__classifier__max_depth: [20, 50, 100]
-    clf__classifier__max_features: ['auto','sqrt','log2']
-    clf__classifier__max_leaf_nodes: [300]
-    clf__classifier__n_estimators: [100]
-    clf__classifier__n_jobs: [-1]
-    clf__classifier__random_state: [300]
-    clf__classifier__class_weight: ['balanced']
+#     sklearn.ensemble.RandomForestClassifier:
+#         clf__classifier__max_depth: [100]
+#         clf__classifier__max_features: ['auto','sqrt','log2']
+#         clf__classifier__max_leaf_nodes: [300]
+#         clf__classifier__n_estimators: [100]
+#         clf__classifier__n_jobs: [-1]
+#         clf__classifier__random_state: [300]
+#         clf__classifier__class_weight: ['balanced']
 

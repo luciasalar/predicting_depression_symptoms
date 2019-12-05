@@ -33,11 +33,18 @@ import csv
 from sklearn.decomposition import TruncatedSVD
 from construct_mood_feature import *
 
+#to do 
+
+# add mood changes every 7 days, 3 days, mood category as features, mood transitions
+
 
 def load_experiment(path_to_experiment):
 	#load experiment 
 	data = yaml.safe_load(open(path_to_experiment))
 	return data
+
+
+
 
 class PrepareData():
 
@@ -63,21 +70,11 @@ class PrepareData():
 
 		return text_fea3
 
-	# def process_text(self, timeRange):
-	# 	'''read text data, clean data then concatenate string according to userid'''
-	# 	c= Count_Vect()
-	# 	text = self.liwc_preprocess(timeRange) #retrieve text within time Range
-
-	# 	text2 = c.prepare_text_data(text) #define time range for features
-	# 	clean_text = c.parallelize_dataframe(text2, c.get_precocessed_text)
-
-	# 	return clean_text
-
 
 	def sentiment_data(self):
 		'''generate sentiment features in time window X'''
 		#read sentiment data
-		mood = MoodFeature()
+		mood = MoodFeature(path = path, participants = participants)
 		sentiment_pre = pd.read_csv(self.path + 'status_sentiment.csv')
 		sentiment = mood.get_relative_day(sentiment_pre, 365)
 
@@ -134,15 +131,14 @@ class PrepareData():
 	def merge_data(self, moodFeatureFile):
 
 	    '''merging features, LIWC, mood vectors'''
-
-	    mood_feature = pd.read_csv(self.path + moodFeatureFile)
-	    mood_feature.columns = [str(col) + '_mood' for col in mood_feature.columns]
-	    mood_feature  = mood_feature.rename(columns = {"Unnamed: 0_mood":"userid"}) 
+	    c= Count_Vect()
+	    #mood_feature = pd.read_csv(self.path + moodFeatureFile)
+	    #mood = MoodFeature(path = path, participants = participants)
+	   
 	    #select frequent users, here you need to change the matched user files if selection criteria changed
 	    participants = pd.read_csv(self.path + 'participants_matched.csv')
 	    participants  = participants[['userid','cesd_sum']]
 	    #merge with text feature
-	    c= Count_Vect()
 	    text = self.liwc_preprocess(self.timeRange)
 
 	    text['text'] = text['text'].apply(lambda x: c.remove_noise(str(x)))
@@ -150,9 +146,21 @@ class PrepareData():
 	    text = c.parallelize_dataframe(text, c.get_precocessed_text)
 	    #text['text'] = text['text'].apply(lambda x: c.remove_single_letter(x))
 
-	    all_features = pd.merge(text, mood_feature,on = 'userid')
+	    #mood = MoodFeature(path = path, participants = participants)
+	    mood_feature, windowSzie = mood.get_mood_in_timewindow(365, 3)
+	   
+	    mood_feature.columns = [str(col) + '_mood' for col in mood_feature.columns]
+	    mood_feature['userid'] = mood_feature.index
+	    #print(mood_feature['userid']) 
+	    
+	    ###get mood change
+	    mood_change, windowSzie = mood.get_mood_change_in_timewindow(365, 3)
+	    mood_change.columns = [str(col) + '_moodChange' for col in mood_change.columns]
+	    mood_change['userid'] = mood_change.index
+	    all_features = pd.merge(text, mood_feature, on = 'userid')
 	    #load  liwc (including WC)
-	    liwc = pd.read_csv(self.path + 'liwc_scores_1year.csv')
+	    liwc = pd.read_csv(self.path + 'liwc_scores.csv')
+	    liwc['userid'] = liwc['userid'].apply(lambda x: x.split('.')[0])
 	    liwc.columns = [str(col) + '_liwc' for col in liwc.columns]
 	    liwc  = liwc.rename(columns = {"userid_liwc":"userid"})
 	    #load sentiment feature (including post count)
@@ -163,15 +171,16 @@ class PrepareData():
 
 	    #topic ratio LDA
 	    
-	    # topic_text = all_features[['userid','text']]
-	    # topics, ldamodel = self.topic_modeling(topic_text, 30) #topic number and time range for text
-	    # topics.columns = [str(col) + '_topic' for col in topics.columns]
-	    # topics  = liwc.rename(columns = {"userid_topic":"userid"})
+	    topic_text = all_features[['userid','text']]
+	    topics, ldamodel = self.topic_modeling(topic_text, 30) #topic number and time range for text
+	    topics.columns = [str(col) + '_topic' for col in topics.columns]
+	    topics  = liwc.rename(columns = {"userid_topic":"userid"})
 
 	    #merge all features
 	    all_features = pd.merge(liwc, all_features, on = 'userid')
 	    all_features2 = pd.merge(all_features, sentiment, on = 'userid')
-	    #all_features2 = pd.merge(all_features2, topics, on = 'userid')
+	    all_features2 = pd.merge(all_features2, topics, on = 'userid')
+	    all_features2 = pd.merge(all_features2, mood_change, on = 'userid')
 	    feature_cesd = pd.merge(all_features2, participants, on = 'userid')
 
 	    return feature_cesd
@@ -231,23 +240,25 @@ class ColumnSelector(BaseEstimator, TransformerMixin):
 		return self.columns.tolist
 		    
 
-class TrainingClassifiers(): 
-	def __init__(self):
+
+class TrainingClassifiers: 
+	
+	def __init__(self, X_train, X_test, y_train, y_test, parameters, features_list, tfidf_words):
 		self.X_train = X_train
 		self.y_train = y_train
 		self.X_test = X_test
 		self.y_test= y_test
 		self.parameters = parameters
-		self.experiment = experiment
+		self.features_list = features_list
 		self.tfidf_words = tfidf_words 
 
-	def select_features(self,features_list):
+	def select_features(self):
 		'''
 		select columns with names in feature list then convert it to a transformer object 
-		feature_list is in the dictionary 
+		features_list is in the dictionary 
 		'''
 		fea_list = []
-		for fea in features_list: #select column names with keywords in dict
+		for fea in self.features_list: #select column names with keywords in dict
 			f_list = [i for i in self.X_train.columns if fea in i]
 			fea_list.append(f_list)
 		#flatten a list
@@ -257,9 +268,9 @@ class TrainingClassifiers():
 
 		return flat
 
-	def get_other_feature_names(self, feature_list):
+	def get_other_feature_names(self):
 		fea_list = []
-		for fea in feature_list: #select column names with keywords in dict
+		for fea in self.features_list: #select column names with keywords in dict
 			f_list = [i for i in self.X_train.columns if fea in i]
 			fea_list.append(f_list)
 		#flatten a list
@@ -268,9 +279,9 @@ class TrainingClassifiers():
 		return flat
 
 
-	def setup_pipeline(self,features_list, classifier, tfidf_words):
+	def setup_pipeline(self, classifier):
 		'''set up pipeline'''
-		features_col = self.get_other_feature_names(features_list)
+		features_col = self.get_other_feature_names()
 
 
 		pipeline = Pipeline([
@@ -281,7 +292,7 @@ class TrainingClassifiers():
 		        ('text', Pipeline([
 		            ('selector', ColumnSelector(columns='text')),
 		            #('cv', CountVectorizer()),
-		            ('tfidf', TfidfVectorizer(max_features = tfidf_words, ngram_range = (1,3), stop_words ='english', max_df = 0.50, min_df = 0.0025)),
+		            ('tfidf', TfidfVectorizer(max_features = self.tfidf_words, ngram_range = (1,3), stop_words ='english', max_df = 0.50, min_df = 0.0025)),
 		           # ('svd', TruncatedSVD(algorithm='randomized', n_components=300))
 		             ])),
 		  # # select other features, feature sets are defines in the yaml file
@@ -312,15 +323,15 @@ class TrainingClassifiers():
 		
 		return grid_search
 
-	def test_model(self, path, classifier, features_list, tfidf_words):
+	def test_model(self, path, classifier):
 		'''test model and save data'''
 		start = time.time()
 		#training model
 		print('getting pipeline...')
 		#the dictionary returns a list, here we extract the string from list use [0]
-		pipeline = self.setup_pipeline(features_list, eval(classifier)(), tfidf_words)
+		pipeline = self.setup_pipeline(eval(classifier)())
 
-		print('features', features_list)
+		print('features', self.features_list)
 		grid_search = self.training_models(pipeline)
 		#make prediction
 		print('prediction...')
@@ -336,28 +347,70 @@ class TrainingClassifiers():
 
 		return precision,recall,fscore,support,grid_search,pipeline
 
-def get_liwc_text(self, timeRange):  
+def get_liwc_text(timeRange):  
     '''run this to get text for liwc, you need to define the time range in days '''
     prepare = PrepareData()
     sen = prepare.sentiment_data()
     liwc_text = prepare.liwc_preprocess(timeRange)
+    liwc_text.to_csv(prepare.path + 'liwc_text.csv')
     return liwc_text
 
+def get_separate_text_file(timeRange):
+	''' prepare separate text file for liwc'''
+	liwc = get_liwc_text(timeRange)
+	prepare = PrepareData()
+	for index, row in liwc.iterrows():
+		out_file = open(prepare.path + 'liwc_text/{}.txt'.format(row['userid']), 'a')
+		out_file.write(row['text'])
+		out_file.close()
 
+# liwc_score = pd.read_csv(prepare.path + 'liwc_scores.csv')
+# liwc_score['userid'] = liwc_score['userid'].apply(lambda x: x.split('.')[0])
+
+
+def loop_the_grid():
+	prepare = PrepareData()
+
+	X_train, X_test, y_train, y_test = prepare.get_train_test_split()
+	experiment = load_experiment(prepare.path + '../experiment/experiment.yaml')
+
+	f = open(prepare.path + 'results/result.csv' , 'a')
+	writer_top = csv.writer(f, delimiter = ',',quoting=csv.QUOTE_MINIMAL)
+	writer_top.writerow(['best_scores'] + ['best_parameters'] + ['marco_precision']+['marco_recall']+['marco_fscore']+['support'] +['time'] + ['model'] +['feature_set'] +['tfidf_words'])
+
+	for classifier in experiment['experiment']:
+
+		for feature_set, features_list in experiment['features'].items(): #loop feature sets
+			for tfidf_words in experiment['tfidf_features']['max_fea']: #loop tfidf features
+				
+				parameters = experiment['experiment'][classifier]
+				print('parameters are:', parameters)
+				training = TrainingClassifiers(X_train = X_train, y_train=y_train, X_test=X_test, y_test =y_test, parameters =parameters, features_list =features_list, tfidf_words=tfidf_words)
+				
+				precision, recall, fscore, support, grid_search, pipeline = training.test_model(prepare.path, classifier)
+
+				print('printing fscore', fscore)
+				result_row = [[grid_search.best_score_, grid_search.best_params_, precision,recall,fscore,support, str(datetime.datetime.now()), classifier, features_list, tfidf_words]]
+
+				writer_top.writerows(result_row)
+
+	f.close()
+					
+loop_the_grid()
 #for debug 
 # prepare = PrepareData()
-
 # X_train, X_test, y_train, y_test = prepare.get_train_test_split()
 # experiment = load_experiment(prepare.path + '../experiment/experiment.yaml')
-
 # parameters = experiment['experiment']['sklearn.ensemble.RandomForestClassifier']
 # features_list = experiment['features']['set3']
-
 # tfidf_words = 2000
-# training = TrainingClassifiers()
-# precision,recall,fscore,support,grid_search,pipeline = training.test_model(prepare.path, 'sklearn.ensemble.RandomForestClassifier', features_list, tfidf_words)
 
 
+# training = TrainingClassifiers(X_train = X_train, X_test =X_test, y_train = y_train, y_test =y_test, parameters=parameters, features_list=features_list, tfidf_words= tfidf_words)
+
+# precision,recall,fscore,support,grid_search,pipeline = training.test_model(prepare.path, 'sklearn.ensemble.RandomForestClassifier')
+
+#X_train = X_train, X_test =X_test, y_train = y_train, y_test =y_test, parameters=parameters, features_list=features_list, tfidf_words= tfidf_words
 
 # fea_list = []
 # for fea in features_list: 
@@ -386,62 +439,13 @@ def get_liwc_text(self, timeRange):
 # ldaText.to_csv(prepare.path + 'sample.csv')
 # # lda_score_df, lda_model = t.get_lda_score(ldaText, 30)
 
-
-# 		'''aggregate text then process text with liwc'''
-# 		#get posts within time range
-# path = prepare.path
-# participants = pd.read_csv(path + 'participants_matched.csv') 
-# sentiment_pre = pd.read_csv(path + 'status_sentiment.csv')  
-# text = mood.get_relative_day(sentiment_pre, 365)
-# #merge posts with matched participants
-# text_merge = pd.merge(participants, text, on = 'userid') 
-# text_fea = text_merge[['userid','text']]
-
-# #aggregate text
-# #text_fea = text_fea.groupby(['userid'])['text'].apply(lambda text: ''.join(text.to_string(index=False)))
-
-# text2 = text_fea.groupby(['userid'])['text'].apply(lambda x: x.str.cat(sep=',')).reset_index()
-# text2.to_csv(path + 'pre_process.csv')
-# text_fea2 = text_fea.drop_duplicates() #remove duplication
-
-
 	
 
 
 
-prepare = PrepareData()
-
-X_train, X_test, y_train, y_test = prepare.get_train_test_split()
-experiment = load_experiment(prepare.path + '../experiment/experiment.yaml')
-
-f = open(prepare.path + 'results/result.csv' , 'a')
-writer_top = csv.writer(f, delimiter = ',',quoting=csv.QUOTE_MINIMAL)
-writer_top.writerow(['best_scores'] + ['best_parameters'] + ['marco_precision']+['marco_recall']+['marco_fscore']+['support'] +['time'] + ['model'] +['feature_set'] +['tfidf_words'])
-
-for classifier in experiment['experiment']:
-
-	for feature in experiment['features']: #loop feature sets
-		for word_n in experiment['tfidf_features']['max_fea']: #loop tfidf features
-			tfidf_words = word_n
-
-			parameters = experiment['experiment'][classifier]
-			print('parameters are:', parameters)
-			training = TrainingClassifiers()
-			
-			precision, recall, fscore, support, grid_search, pipeline = training.test_model(prepare.path, classifier, feature, tfidf_words)
-
-			print('printing fscore', fscore)
-			result_row = [[grid_search.best_score_, grid_search.best_params_, precision,recall,fscore,support, str(datetime.datetime.now()), classifier, feature,tfidf_words]]
-
-			writer_top.writerows(result_row)
-
-	f.close
-				
 	
 	
-
-
-
+#
 
 
 

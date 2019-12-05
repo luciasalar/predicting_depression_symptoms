@@ -10,19 +10,29 @@ knitr::opts_chunk$set(echo = TRUE)
 require(lubridate)
 require(ggplot2)
 require(openair)
+require(dplyr)
 ```
 
 ## data selection
 ### Here we selected frequent users for our prediction model, frequent users refer to those who posted at least once per week for half the year
 
+
+since we are using SILENCE day as a feature, we should not select frequent users. Instead, I remove users completed scales in 2012 because the status updates is only up to Dec 2011. We should retain the data in its natural state as much as possible, even though there will be noise in the data and the prediction model will be lower in accuracy. 
+
+apply frequent user in the ML model? 
+not apply frequent user in the HMM model?
+
 *Maria's note: the way you've written it means that they have posted at least once in a time period of 25 weeks. I recommend using 26 weeks as your unit, because that is exactly half the year.*
 
 ```{r stats, include=FALSE}
 path = '/home/lucia/phd_work/mypersonality_data/predicting_depression_symptoms/data/'
+path = '/home/lucia/Documents/lucia/predicting_depression_symptoms/data/' #hawksworth server 
 setwd(path)
 participants <- read.csv('participants_matched.csv')
 status <- read.csv('status_sentiment.csv')
 ```
+
+
 ```{r merge, include=FALSE}
 participants_b <- participants[,c('userid', 'time_completed','cesd_sum')]
 sel_status <- merge(participants_b, status, by = 'userid')
@@ -31,48 +41,147 @@ sel_status$X <- NULL
 ```
 
 *Q from Maria: what is the content of the participants\_matched file?*
+participants_matched contain all participants completed cesd, age >- 18, this file contain demographic info, cesd values
 
-Here we show the posting statistics, there are `r dim(sel_status)[1]` posts from  `r dim(participants_b)[1]` users (y 2009 - y 2012). We can see that ppl posted more often in 2010
+Here we show the posting statistics, there are `r dim(sel_status)[1]` posts from  `r dim(participants_b)[1]` users (y 2009 - y 2012). We can see that ppl posted more often at the end of 2011. The frequency is aggregated by day
 
 ```{r, echo=FALSE}
 #convert to date object
-sel_status$time <- as.Date(sel_status$time)
-count_tab <- data.frame(table(sel_status$time))
-count_tab$Var1<- as.Date(count_tab$Var1)
+sel_status$time <- as.Date(sel_status$time) 
+count_tab <- data.frame(table(sel_status$time)) #aggregated by day
+names(count_tab) <- c('time','post_freq')
+#get user posting frequency on each day
+sel_status %>% 
+  group_by(time, userid) %>%
+  summarise(number = n()) -> user_day
 
-ggplot(data = count_tab , aes(x = Var1, y = Freq))+
+#get number of unique user on each day
+user_day %>% group_by(time) %>% summarise(number = n()) -> unique_user
+#merge user and frequency
+unique_user$time <- as.Date(unique_user$time)
+count_tab$time <- as.Date(count_tab$time)
+count_tab_all <- left_join(count_tab, unique_user, by = 'time')
+count_tab_all$post_freq_user <- count_tab_all$post_freq/count_tab_all$number  
+
+#count_tab$Var1<- as.Date(count_tab$Var1)
+
+p <- ggplot(data = count_tab_all , aes(x = time, y = post_freq_user))+
   geom_line(color = "#00AFBB", size = 2)
+  
+p + labs(title = 'Posting Frequency Per Person from 2009-2012') +
+  xlab('Timeline(Day)') +
+  ylab('posting frequency per person')
 ```
 
 *Q from Maria: what are the names and units of the axes? What are the units of the time axis? Days/weeks?*
+Added information on the graph
 
 ```{r week, include=FALSE}
+#get users completed cesd time 
+completeAt2012 <- subset(sel_status, format(as.Date(time_completed),"%Y")==2012)
+completeAt2012 <- completeAt2012[!duplicated(completeAt2012$userid),]
+completeAt2011 <- subset(sel_status, format(as.Date(time_completed),"%Y")==2011)
+completeAt20112 <- completeAt2011[!duplicated(completeAt2011$userid),]
+completeAt20112 <- completeAt20112[,c('userid', 'rownum')]
 #get week
-sel_status$week<- week(sel_status$time)
-#divided data in year
+completeAt2011$week<- week(completeAt2011$time)
+# here we get frequent users in year X
 get_frequent_user <- function(year) {
-  sel_status2009 <- subset(sel_status, format(as.Date(time),"%Y")==year)
+  sel_statusSub <- subset(completeAt2011, format(as.Date(time),"%Y")==year)
   #group data by userid, week, then count number of posts each week
-  sel_status2009$count <- 1
-  week_count <- aggregate(count ~userid+week, data=sel_status2009, sum, na.rm=TRUE)
+  sel_statusSub$count <- 1
+  week_count <- aggregate(count ~userid+week, data=sel_statusSub, sum, na.rm=TRUE)
   #There are 52 weeks in a year, let's see for each participants, how many weeks do they have at least one post
-  week_stats2009 <- as.data.frame(table(week_count$userid, week_count$week))
-  week_has_post <- aggregate(Freq ~Var1, data=week_stats2009, sum, na.rm=TRUE)
-  #select those has post in at least 25 weeks 
-  frequent_user <- week_has_post[week_has_post$Freq >= 25,]
+  week_statsSub <- as.data.frame(table(week_count$userid, week_count$week))
+  week_has_post <- aggregate(Freq ~Var1, data=week_statsSub, sum, na.rm=TRUE)
+  #select those has post in at least 26 weeks
+  frequent_user <- week_has_post[week_has_post$Freq >= 26,]
   return (frequent_user)
 }
 
-frequent_user2009 <- get_frequent_user(2009)
+#get frequent users 
 frequent_user2010 <- get_frequent_user(2010)
 frequent_user2011 <- get_frequent_user(2011)
 
-frequent_users <- rbind(frequent_user2009, frequent_user2010)
-frequent_users <- rbind(frequent_users, frequent_user2011)
-#write.csv(frequent_users, 'frequent_users.csv')
+#frequent_users <- rbind(frequent_user2009, frequent_user2010)
+frequent_users <- rbind(frequent_user2010, frequent_user2011)
+frequent_users 
+frequent_users <- frequent_users[!duplicated(frequent_users$Var1),]
+#write.csv(frequent_users, 'data/frequent_users.csv')
+write.csv(completeAt20112, 'data/only2011_users.csv')
 ```
 
-We see the number of posts a user write in each week and we selected `r dim(frequent_users)[1]` users who wrote at least 1 post in 25 weeks in a year (52-53 weeks). week_stats2009 shows whether user has at least one post each week 
+We see the number of posts a user write in each week and we selected `r dim(frequent_users)[1]` users who wrote at least 1 post in 26 weeks in a year (52-53 weeks). week_stats2009 shows whether user has at least one post each week Participants completed CESD during 2011-2 to 2012-7. We want to select users who posted frequently 365 days before they completely the scale.  (remove this criteria)
+
+We can see `r dim(completeAt2012)[1]` users completed the scale at 2012 and `dim(completeAt20112)[1]` completed the scale at 2011. We remove users completed in 2012 because we dont have their status updates in the recent 6 months
 
 *Q from Maria: Can you please show those statistics in the file? the path points to your home directory, not to a shared OneDrive or DataSync*
+Why point the path to DataSync? It will be very inefficient when the internet is not good. Also some of the files are quite big, esp the search results from Google API. I am always using the hawksworth server for computing and file storage. You may download the files from one drive.
+### gender
+```{r gender2, include=TRUE}
+final_participants <- merge(participants, frequent_users, by.x = 'userid', by.y = 'Var1')
+
+table(final_participants$gender)
+prop.table(table(final_participants$gender))
+```
+male: 0, female: 1
+
+### age
+```{r, include=TRUE}
+summary(final_participants$age)
+```
+
+### ethnicity
+```{r ethnicity, include=TRUE}
+table(final_participants$ethnicity)
+prop.table(table(final_participants$ethnicity))
+```
+
+### maritual status
+```{r maritual, include=TRUE}
+table(final_participants$marital_status)
+prop.table(table(final_participants$marital_status))
+```
+
+## Depression score
+CESD NOTE: -1 means “user submitted a form with that question in but left it blank”, 0 means “user didn't submit a form with that question in” and 1, 2, 3, 4 are the response options.
+here we need to remove participants with -1 and 0    
+
+```{r dep, include=TRUE}
+#final_participants$cesd_sum <- rowSums(final_participants[10:29])
+summary(final_participants$cesd_sum)
+sd(final_participants$cesd_sum)
+```
+Here we visualise their depression symptom score
+
+```{r , echo=FALSE}
+p <- ggplot(final_participants) +
+    geom_density(aes(x=cesd_sum), fill="#ADD8E6", size=1) +
+    labs(title="CESD Score") +
+    theme(text = element_text(size=20))+
+    xlim(-10,60) +
+    xlab("mean=26.00, sd=8.97") +
+    ylab("Density") +
+    geom_vline(xintercept=22, linetype="longdash", colour="red") +
+    annotate("text", x=0, y=0.02, label= "low score", size = 6) +
+    annotate("text", x = 50, y=0.02, label= "high score", size = 6) 
+p
+```
+
+Let's see the cesd score from non-frequent users
+
+
+```{r dep, include=TRUE}
+final_participants <- merge(completeAt20112, frequent_users, by.x = 'userid', by.y = 'Var1')
+
+final_p2 <- subset(participants, !(completeAt20112$userid %in%  frequent_users$Var1 ))
+#final_participants$cesd_sum <- rowSums(final_participants[10:29])
+summary(final_p2$cesd_sum)
+sd(final_p2$cesd_sum)
+```
+
+
+
+
+
 

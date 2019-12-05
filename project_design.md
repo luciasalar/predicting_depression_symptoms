@@ -40,6 +40,15 @@ social media mood is different from real life mood
 
 # Here's our design:
 
+# Use HMM model
+
+* use HMM to compute hidden state
+
+* compare the mean hidden state between depressed and non-depressed groups
+
+* add content originality in the transition matrix 
+
+
 
 Develop a prediction model on depression symptoms:
 ### discuss: should we build one model with all users and one model with frequent users only? I selected a set of users who posted at least once in 25 weeks each year. However, I don't think selecting frequent users is a good idea, the model is suppose to learn whether frequent/non frequent posting behavior predicts depression

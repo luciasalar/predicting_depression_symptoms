@@ -225,7 +225,7 @@ sp = SelectText()
 participants = sp.selected_text()
 
 s = SearchGoogle(path= sp.path, textFile = participants)
-s.get_all_queries(18206, 50000)
+s.get_all_queries(120001, 150000)
 
 #get cosine similarity score, this table is used as feature directly
 # search = SearchFeatures(path = sp.path) 
