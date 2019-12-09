@@ -71,14 +71,14 @@ The purpose of buiding the HMM model is not to make prediction, it is to model t
 
 ###initialize emmission prob 
 
-			 	#positive negative neutral    silence
-		#low       0.2      0.3      0.1          0.4
-		#high      0.3      0.1      0.2          0.4
+			 	positive negative neutral    silence
+		low       0.2      0.3      0.1          0.4
+		high      0.3      0.1      0.2          0.4
 
 ###trained emission prob: data/results/HMMresult.csv.
 
-		#low	[[0.08694357 0.05289536 0.04695897 0.81320211]
-		#high 	[0.0321883  0.13017332 0.07177855 0.76585982]]
+		low	[[0.08694357 0.05289536 0.04695897 0.81320211]
+		high 	[0.0321883  0.13017332 0.07177855 0.76585982]]
  
 * Here we can see the emission probability makes a lot of sense, people with low symptoms have more silence days
 
@@ -102,7 +102,7 @@ Develop a prediction model on depression symptoms:
 **Models are specified in the experiment/experiment.yaml file** 
 *features in yaml file indicate the type of model*
 
-* mood: mood within a time window X: Mood is categorical in this feature, silence day is filled by np.nan. Mood within a time window X, this time window move across the mood vector from day 1 to day 365, if time window = 3, we'll have mood from day 1-3, 4-6...  Since sklearn classifiers can't handle nan values, we impute the nan values in the mood feature with mean of the vector (This is not ideal, that's why we want to introduce guassian process in here)
+* mood: mood within a time window X: Mood is categorical in this feature, silence day is filled by np.nan. Mood within a time window X, this time window move across the mood vector from day 1 to day 365, if time window = 3, we'll have mood from day 1-3, 4-6...  Since sklearn classifiers can't handle nan values, we impute the nan values in the mood feature with mean of the vector (This is not ideal, that's why we want to introduce guassian process in here). XGboost can handel NAN values, but I strongly recommend not to use these boosting models, it takes a lot more time to train, and the result is usually not better than trees.
 
 * mood change: mood change feature within a time window X: Here the mood value is the average sentistrength value of the day (not categorical anymore). If time window is 3, we have average mood from (day6 to day 4) - (average mood from day 3 to day 1)
 
@@ -111,7 +111,7 @@ Develop a prediction model on depression symptoms:
 
 * Results: the ML models are still in training, we also need to test the size of the sliding window, in the result.csv file, all the window size is 3 so far. We can see that the precision score of the positive class increase a lot once we added the mood features. For example:
 
-No 14 (row number) is a relatively good model
+No 14 (row number) is a relatively good model, it is also somewhat close to the HMM model. 
 
                    0          1  accuracy  macro avg  weighted avg
 	f1-score    0.717949   0.400000  0.616279   0.558974      0.581157
@@ -120,6 +120,9 @@ No 14 (row number) is a relatively good model
 	support    49.000000  37.000000  0.616279  86.000000     86.000000
 
 
+
+
+-----------------------------------------------------
 * model 1: This model use a set of features including, averaged sentiment score in 1 year, LIWC, demographic, part-of-speech, readability score asn so on (baseline) (also check again to see if there's a paper predicting depression using this dataset)
 * model 2: Same set of features as model 1 but we replace the averaged sentiment score in 1 year with temporal mood feature
 * model 3: Same set of features as model 1 but we replace the averaged sentiment score in 1 year with temporal mood transition feature
