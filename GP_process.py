@@ -1,5 +1,4 @@
 import pandas as pd 
-import datetime
 import collections 
 import numpy as np
 from collections import defaultdict
@@ -7,11 +6,16 @@ from collections import defaultdict
 # from theano import shared
 # from pymc3.distributions.timeseries import GaussianRandomWalk
 # from scipy import optimize
+#from time import mktime as mktime
 import time
-import datetime
+from datetime import datetime
 import GPy
 import matplotlib.pyplot as plt
-
+from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
+from sklearn.gaussian_process import GaussianProcessRegressor
+from matplotlib import pyplot as plt
+import os
+import csv
 
 #other paths
 #path = '/home/lucia/phd_work/mypersonality_data/predicting_depression_symptoms/data/'
@@ -101,67 +105,85 @@ class SentiFeature:
 		return userTime
 
 
-class GaussianSmoothing:
-	def __init__(self, userTimeObj):
-		self.userTimeObj = userTimeObj
-		self.smoothing = 0.5 
+	def change_timestamp(self, sentiment_selected):
+		'''convert time to timestamp (Epoch, also known as Unix timestamps, is the number of seconds (not milliseconds!) 
+		that have elapsed since January 1, 1970 at 00:00:00 GMT, then divide timestamp by number of hours in a year'''
+		userTime = self.get_user_time_obj(sentiment_selected)
+
+		mydict = lambda: defaultdict(mydict)
 		
-	def infer_z(self, y):
-		'''smoothing model '''
-		model = pm.Model()
-		LARGE_NUMBER = 1e5
-		with model:
-		    smoothing_param = shared(0.9)
-		    mu = pm.Normal("mu", sigma=LARGE_NUMBER)
-		    tau = pm.Exponential("tau", 1.0/LARGE_NUMBER)
-		    z = GaussianRandomWalk("z",
-		                           mu=mu,
-		                           tau=tau / (1.0 - smoothing_param),
-		                           shape=y.shape)
-		    obs = pm.Normal("obs",
-		                    mu=z,
-		                    tau=tau / smoothing_param,
-		                    observed=y)
+		new_dict = mydict()
+		for k, v in userTime.items():
+			timestamp_hour = []
+			for timestamp in v['postTime']:
+				#print(type(datetime.datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S").timetuple()))
+				time_num = time.mktime(datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S").timetuple())
+				new_time = round(time_num/8760,2) #(24 hours * 365 days)
+				timestamp_hour.append(new_time)
+			new_dict[k]['senti'] = v['senti']
+			new_dict[k]['time'] = timestamp_hour
 
-		with model:
-			smoothing_param.set_value(self.smoothing)
-			res = pm.find_MAP(vars=[z], fmin=optimize.fmin_l_bfgs_b)
-			return res['z']
+		return new_dict
 
-	def GP_regression(self, X, y):
-		x = np.atleast_2d(np.linspace(0, 10, 365)).T
 
-		kernel = C(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
-		gp = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9)
+class GaussianProcess:
+	def __init__(self, userTimeObj, path):
+		self.userTimeObj = userTimeObj
+		self.path = path 
+	
+	def GP_regression(self, X, Y):
+		'''the GP model '''
+		# define the covariance kernel 
+		kernel = GPy.kern.RBF(input_dim=1, variance=1., lengthscale=1.)
+		m = GPy.models.GPRegression(X,Y,kernel)
 
-		gp.fit(X, y)
-		y_pred, sigma = gp.predict(x, return_std=True)
-		return y_pred
+		#optimization  
+		#This selects random (drawn from N(0,1)) initializations for the parameter values, optimizes each, and sets the model to the best solution found.
+		m.optimize_restarts(num_restarts = 10)
+
+
+		return m
 
 
 	def get_model_scores(self):
 		'''get smoothing score for each user  '''
 
 		mydict = lambda: defaultdict(mydict)
-		smoothing_dict = mydict()
+		GP_models = mydict()
 		count = 0 
 		for user, v in self.userTimeObj.items():
 			if user is not None:
-				#get smoothing scores, here mood becomes a continous concept 
-				smoothing_dict[user]['smoothing'] = self.GP_regression(np.asarray(v['senti']))
-				smoothing_dict[user]['time'] = v['postTime']
-				#print(len(smoothing_dict[user]), len(v['senti']))
+				#train a model on each user
+				#print(len(np.asarray(v['time'])),len(np.asarray(v['senti'])))
+				GP_models[user]['model'] = self.GP_regression(np.asarray(v['time']).reshape(-1,1),np.asarray(v['senti']).reshape(-1,1))
+				#fig = m.plot()
+				#fig = GP_models[user]['model'].plot()
+				#plt.show(fig)
+				#plt.savefig(self.path +'plots/gp/gp_process{}'.format(user))
+			
 				count = count +1 
-				if count == 3:
+				if count == 100:
 					break
-		return smoothing_dict
-		
-class GuassianModel:
-	'''create one gaussian model for the sample '''
-	def __init__(self, sorted_sentiment):
-		self.path = path
-		self.sort_senti = sorted_sentiment
-		
+		return GP_models
+
+	def save_results(self):
+		'''save model results and plots '''
+		models = self.get_model_scores()
+
+		file_exists = os.path.isfile(self.path + 'result/GPresults.csv')
+		f = open(self.path + 'results/GPresults.csv' , 'a')
+		writer_top = csv.writer(f, delimiter = ',',quoting=csv.QUOTE_MINIMAL)
+
+		if not file_exists:
+			writer_top.writerow(['userid'] + ['model_para'])
+		for k, m in models.items():
+			result_row = [[k, m['model']]]
+			writer_top.writerows(result_row)
+			
+			fig = m['model'].plot()
+			for i in fig: 
+				#plt.show()
+				plt.savefig(path +'results/plots/GP/gp_process{}'.format(k))
 
 
 
@@ -174,49 +196,24 @@ participants = sp.process_participants()
 senti = SentiFeature(path = path, participants = participants)
 
 sentiment_selected = senti.get_relative_day(365)
-userTime = senti.get_user_time_obj(sentiment_selected)
+userTime = senti.change_timestamp(sentiment_selected)
 
-sorted_senti = senti.SortTime(sentiment_selected)
-Y1 = sorted_senti['sentiment_sum'].values.reshape(-1,1)
-Y1 = Y1[1:100]
-#X1 = sorted_senti['time']
+g = GaussianProcess(userTimeObj = userTime, path = path)
+g.save_results()
+#models = g.get_model_scores()
+
+# sorted_senti = senti.SortTime(sentiment_selected)
+# Y1 = sorted_senti['sentiment_sum'].values.reshape(-1,1)
+# Y1 = Y1[1:100]
+# #X1 = sorted_senti['time'] 
 
 
-X1= np.random.uniform(0, 1., (99, 1))
-#plt.plot(X1, Y1, 'ok', markersize=10)
-
-kernel = GPy.kern.RBF(input_dim=1, variance=1., lengthscale=1.)
-model = GPy.models.GPRegression(X1,Y1,kernel, noise_var=1e-10)
-
-testX = np.linspace(0, 1, 100).reshape(-1, 1)
-
-# g = GaussianSmoothing(userTimeObj = userTime)
-# score = g.get_model_scores()
-
-# Instantiate a Gaussian Process model
-
-kernel = C(1.0, (1e-3, 1e3)) * RBF(10, (1e-2, 1e2))
-gp = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=9)
-
-# Fit to data using Maximum Likelihood Estimation of the parameters
-gp.fit(X1, Y1)
-
-# Make the prediction on the meshed x-axis (ask for MSE as well)
-y_pred, sigma = gp.predict(testX, return_std=True)
-
-plt.plot(testX, y_pred, 'b-', label='Prediction')
-plt.fill(np.concatenate([testX, testX[::-1]]),
-         np.concatenate([y_pred - 1.9600 * sigma,
-                        (y_pred + 1.9600 * sigma)[::-1]]),
-         alpha=.5, fc='b', ec='None', label='95% confidence interval')
-plt.xlabel('$x$')
-plt.ylabel('$f(x)$')
-plt.ylim(-10, 20)
-plt.legend(loc='upper left')
-
-# for k, v in userTime.items():
-# 	time = time.mktime(datetime.datetime.strptime(v, "%Y-%m-%d %H-%M-%S").timetuple())
-# 	print(time)
-#sorted_senti = senti.SortTime(sentiment_selected)
-
+		#print(type(fig))
+	#plt.plot(m['model'])
 	
+	
+	
+
+	#print(m['model'])
+	
+
