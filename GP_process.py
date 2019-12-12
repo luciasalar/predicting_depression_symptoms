@@ -105,7 +105,7 @@ class SentiFeature:
 		return userTime
 
 
-	def change_timestamp(self, sentiment_selected):
+	def change_timestamp(self, sentiment_selected, timescale):
 		'''convert time to timestamp (Epoch, also known as Unix timestamps, is the number of seconds (not milliseconds!) 
 		that have elapsed since January 1, 1970 at 00:00:00 GMT, then divide timestamp by number of hours in a year'''
 		userTime = self.get_user_time_obj(sentiment_selected)
@@ -118,12 +118,12 @@ class SentiFeature:
 			for timestamp in v['postTime']:
 				#print(type(datetime.datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S").timetuple()))
 				time_num = time.mktime(datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S").timetuple())
-				new_time = round(time_num/8760,2) #(24 hours * 365 days)
+				new_time = time_num/timescale #(60 min * 60 second)
 				timestamp_hour.append(new_time)
 			new_dict[k]['senti'] = v['senti']
 			new_dict[k]['time'] = timestamp_hour
 
-		return new_dict
+		return new_dict, timescale
 
 
 class GaussianProcess:
@@ -131,10 +131,10 @@ class GaussianProcess:
 		self.userTimeObj = userTimeObj
 		self.path = path 
 	
-	def GP_regression(self, X, Y):
+	def GP_regression(self, X, Y, lengthscaleNum):
 		'''the GP model '''
 		# define the covariance kernel 
-		kernel = GPy.kern.RBF(input_dim=1, variance=1., lengthscale=1.)
+		kernel = GPy.kern.RBF(input_dim=1, variance=1., lengthscale=lengthscaleNum)
 		m = GPy.models.GPRegression(X,Y,kernel)
 
 		#optimization  
@@ -142,10 +142,10 @@ class GaussianProcess:
 		m.optimize_restarts(num_restarts = 10)
 
 
-		return m
+		return m, lengthscaleNum
 
 
-	def get_model_scores(self):
+	def get_model_scores(self, lengthscaleNum):
 		'''get smoothing score for each user  '''
 
 		mydict = lambda: defaultdict(mydict)
@@ -155,7 +155,7 @@ class GaussianProcess:
 			if user is not None:
 				#train a model on each user
 				#print(len(np.asarray(v['time'])),len(np.asarray(v['senti'])))
-				GP_models[user]['model'] = self.GP_regression(np.asarray(v['time']).reshape(-1,1),np.asarray(v['senti']).reshape(-1,1))
+				GP_models[user]['model'], GP_models[user]['lengthscale'] = self.GP_regression(np.asarray(v['time']).reshape(-1,1),np.asarray(v['senti']).reshape(-1,1), lengthscaleNum)
 				#fig = m.plot()
 				#fig = GP_models[user]['model'].plot()
 				#plt.show(fig)
@@ -166,54 +166,42 @@ class GaussianProcess:
 					break
 		return GP_models
 
-	def save_results(self):
+	def save_results(self, timescale, lengthscale):
 		'''save model results and plots '''
-		models = self.get_model_scores()
+		models = self.get_model_scores(lengthscale) 
 
 		file_exists = os.path.isfile(self.path + 'result/GPresults.csv')
 		f = open(self.path + 'results/GPresults.csv' , 'a')
 		writer_top = csv.writer(f, delimiter = ',',quoting=csv.QUOTE_MINIMAL)
 
 		if not file_exists:
-			writer_top.writerow(['userid'] + ['model_para'])
+			writer_top.writerow(['userid'] + ['model_para'] + ['lengthscale_init'] +['timescale'])
 		for k, m in models.items():
-			result_row = [[k, m['model']]]
+			result_row = [[k, m['model'], m['lengthscale'], timescale]]
 			writer_top.writerows(result_row)
 			
 			fig = m['model'].plot()
 			for i in fig: 
 				#plt.show()
-				plt.savefig(path +'results/plots/GP/gp_process{}'.format(k))
+				plt.savefig(path +'results/plots/GP/gp_process_{}'.format(k))
 
 
 
-#read sentiment file
+	#read sentiment file
 sp = SelectParticipants()
 path = sp.path
 participants = sp.process_participants()
 
+
 #here you define the number of days you want to use as feature and the time window for mood
 senti = SentiFeature(path = path, participants = participants)
 
-sentiment_selected = senti.get_relative_day(365)
-userTime = senti.change_timestamp(sentiment_selected)
+sentiment_selected = senti.get_relative_day(365) #data in number of days use for training
+userTime, timescale = senti.change_timestamp(sentiment_selected, 3600) #set time scale
+
 
 g = GaussianProcess(userTimeObj = userTime, path = path)
-g.save_results()
-#models = g.get_model_scores()
+g.save_results(timescale, 168) #set length scale 24*7
 
-# sorted_senti = senti.SortTime(sentiment_selected)
-# Y1 = sorted_senti['sentiment_sum'].values.reshape(-1,1)
-# Y1 = Y1[1:100]
-# #X1 = sorted_senti['time'] 
-
-
-		#print(type(fig))
-	#plt.plot(m['model'])
-	
-	
-	
-
-	#print(m['model'])
 	
 
