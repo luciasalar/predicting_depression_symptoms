@@ -24,12 +24,13 @@ import csv
 '''for each user generate the mood (category) in the past X days (x is the time window) '''
 
 
-class SelectParticipants():
+class SelectParticipants:
 	def __init__(self):
 		self.path = '/disk/data/share/s1690903/predicting_depression_symptoms/data/' 
 		#self.path = '/home/lucia/phd_work/predicting_depression_symptoms/data/' 
 		self.participants = pd.read_csv(self.path + 'participants_matched.csv')
 		self.frequent_users = pd.read_csv(self.path + 'frequent_users.csv')
+		self.annotate = pd.read_csv(self.path + 'annotate_data.csv')
 
 	def process_participants(self):
 		'''process participant files, select useful columns '''
@@ -42,6 +43,17 @@ class SelectParticipants():
 		participants.drop('freq', axis=1, inplace=True)
 
 		return participants
+
+	def processed_annotation(self):
+		'''adjust labels to positive: 1, negative: -1, neutral: 0, mix: 0 '''
+		participants = self.annotate[['userid','negative_ny','time', 'time_diff']]
+		participants=participants.rename(columns = {'negative_ny':'sentiment_sum'})
+		participants = participants.loc[participants['sentiment_sum'] != 5,] #remove non English
+		participants = participants.replace([1, 2, 0, 4], [-1, 1, 0, 0]) #recode values
+
+
+		return participants
+
 
 
 class SentiFeature:
@@ -125,6 +137,26 @@ class SentiFeature:
 
 		return new_dict, timescale
 
+	def change_timestamp_anno(self, sentiment_selected, timescale):
+		'''convert time to timestamp (Epoch, also known as Unix timestamps, is the number of seconds (not milliseconds!) 
+		that have elapsed since January 1, 1970 at 00:00:00 GMT, then divide timestamp by number of hours in a year'''
+		userTime = self.get_user_time_obj(sentiment_selected)
+
+		mydict = lambda: defaultdict(mydict)
+		
+		new_dict = mydict()
+		for k, v in userTime.items():
+			timestamp_hour = []
+			for timestamp in v['postTime']:
+				#print(type(datetime.datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S").timetuple()))
+				time_num = time.mktime(datetime.strptime(timestamp, "%d/%m/%Y %H:%M").timetuple())
+				new_time = time_num/timescale #(60 min * 60 second)
+				timestamp_hour.append(new_time)
+			new_dict[k]['senti'] = v['senti']
+			new_dict[k]['time'] = timestamp_hour
+
+		return new_dict, timescale
+
 
 class GaussianProcess:
 	def __init__(self, userTimeObj, path):
@@ -139,7 +171,7 @@ class GaussianProcess:
 
 		#optimization  
 		#This selects random (drawn from N(0,1)) initializations for the parameter values, optimizes each, and sets the model to the best solution found.
-		m.optimize_restarts(num_restarts = 10)
+		m.optimize_restarts(num_restarts = 10, robust=True)
 
 
 		return m, lengthscaleNum
@@ -154,12 +186,7 @@ class GaussianProcess:
 		for user, v in self.userTimeObj.items():
 			if user is not None:
 				#train a model on each user
-				#print(len(np.asarray(v['time'])),len(np.asarray(v['senti'])))
 				GP_models[user]['model'], GP_models[user]['lengthscale'] = self.GP_regression(np.asarray(v['time']).reshape(-1,1),np.asarray(v['senti']).reshape(-1,1), lengthscaleNum)
-				#fig = m.plot()
-				#fig = GP_models[user]['model'].plot()
-				#plt.show(fig)
-				#plt.savefig(self.path +'plots/gp/gp_process{}'.format(user))
 			
 				count = count +1 
 				if count == 100:
@@ -170,8 +197,8 @@ class GaussianProcess:
 		'''save model results and plots '''
 		models = self.get_model_scores(lengthscale) 
 
-		file_exists = os.path.isfile(self.path + 'result/GPresults.csv')
-		f = open(self.path + 'results/GPresults.csv' , 'a')
+		file_exists = os.path.isfile(self.path + 'result/GPresults_annotation.csv')
+		f = open(self.path + 'results/GPresults_annotation.csv' , 'a')
 		writer_top = csv.writer(f, delimiter = ',',quoting=csv.QUOTE_MINIMAL)
 
 		if not file_exists:
@@ -184,24 +211,34 @@ class GaussianProcess:
 			for i in fig: 
 				#plt.show()
 				plt.savefig(path +'results/plots/GP/gp_process_{}'.format(k))
+				plt.close()
 
 
 
 	#read sentiment file
+# sp = SelectParticipants()
+# path = sp.path
+#participants = sp.process_participants()
+
+
+
+# #here you define the number of days you want to use as feature and the time window for mood
+#senti = SentiFeature(path = path, participants = participants)
+
+#sentiment_selected = senti.get_relative_day(365) #data in number of days use for training
+# userTime, timescale = senti.change_timestamp(sentiment_selected, 3600) #set time scale
+
+
+# g = GaussianProcess(userTimeObj = userTime, path = path)
+# g.save_results(timescale, 168) #set length scale 24*7
+
+#using annotated data
 sp = SelectParticipants()
 path = sp.path
-participants = sp.process_participants()
+annotate = sp.processed_annotation() #get annotation data
 
-
-#here you define the number of days you want to use as feature and the time window for mood
-senti = SentiFeature(path = path, participants = participants)
-
-sentiment_selected = senti.get_relative_day(365) #data in number of days use for training
-userTime, timescale = senti.change_timestamp(sentiment_selected, 3600) #set time scale
-
+senti = SentiFeature(path = path, participants = annotate)
+userTime, timescale = senti.change_timestamp_anno(annotate, 3600)
 
 g = GaussianProcess(userTimeObj = userTime, path = path)
 g.save_results(timescale, 168) #set length scale 24*7
-
-	
-
