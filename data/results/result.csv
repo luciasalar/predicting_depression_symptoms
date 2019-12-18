@@ -1,170 +1,558 @@
-0.590983606557377,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.5, 'clf__classifier__kernel': 'linear'}","                   0          1  accuracy   macro avg  weighted avg
-f1-score    0.391753   0.638037  0.546154    0.514895      0.554679
-precision   0.358491   0.675325  0.546154    0.516908      0.568089
-recall      0.431818   0.604651  0.546154    0.518235      0.546154
-support    44.000000  86.000000  0.546154  130.000000    130.000000",2019-12-06 22:25:30.566473,sklearn.svm.SVC,['liwc'],1000
-0.5778142076502732,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.5, 'clf__classifier__kernel': 'linear'}","                   0          1  accuracy   macro avg  weighted avg
-f1-score    0.400000   0.682353  0.584615    0.541176      0.586787
-precision   0.391304   0.690476  0.584615    0.540890      0.589218
-recall      0.409091   0.674419  0.584615    0.541755      0.584615
-support    44.000000  86.000000  0.584615  130.000000    130.000000",2019-12-06 22:25:50.878560,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange']",1000
-0.7055913978494623,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.5, 'clf__classifier__kernel': 'linear'}","                   0     1  accuracy  macro avg  weighted avg
-f1-score    0.842105   0.0  0.727273   0.421053      0.676236
-precision   0.786885   0.0  0.727273   0.393443      0.631893
-recall      0.905660   0.0  0.727273   0.452830      0.727273
-support    53.000000  13.0  0.727273  66.000000     66.000000",2019-12-06 22:31:18.486116,sklearn.svm.SVC,['liwc'],1000
-0.7320430107526882,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.5, 'clf__classifier__kernel': 'linear'}","                   0     1  accuracy  macro avg  weighted avg
-f1-score    0.831858   0.0  0.712121   0.415929      0.668008
-precision   0.783333   0.0  0.712121   0.391667      0.629040
-recall      0.886792   0.0  0.712121   0.443396      0.712121
-support    53.000000  13.0  0.712121  66.000000     66.000000",2019-12-06 22:31:27.249106,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange']",1000
-0.7647311827956988,"{'clf__classifier__class_weight': 'balanced', 'clf__classifier__max_depth': 100, 'clf__classifier__max_features': 'auto', 'clf__classifier__max_leaf_nodes': 300, 'clf__classifier__n_estimators': 100, 'clf__classifier__n_jobs': -1, 'clf__classifier__random_state': 300}","                   0     1  accuracy  macro avg  weighted avg
-f1-score    0.890756   0.0   0.80303   0.445378      0.715304
-precision   0.803030   0.0   0.80303   0.401515      0.644858
-recall      1.000000   0.0   0.80303   0.500000      0.803030
-support    53.000000  13.0   0.80303  66.000000     66.000000",2019-12-06 22:37:12.606377,sklearn.ensemble.RandomForestClassifier,['liwc'],1000
-0.7647311827956988,"{'clf__classifier__class_weight': 'balanced', 'clf__classifier__max_depth': 100, 'clf__classifier__max_features': 'auto', 'clf__classifier__max_leaf_nodes': 300, 'clf__classifier__n_estimators': 100, 'clf__classifier__n_jobs': -1, 'clf__classifier__random_state': 300}","                   0     1  accuracy  macro avg  weighted avg
-f1-score    0.890756   0.0   0.80303   0.445378      0.715304
-precision   0.803030   0.0   0.80303   0.401515      0.644858
-recall      1.000000   0.0   0.80303   0.500000      0.803030
-support    53.000000  13.0   0.80303  66.000000     66.000000",2019-12-06 22:37:31.001505,sklearn.ensemble.RandomForestClassifier,"['liwc', 'sentiment', 'topic', 'moodChange']",1000
-0.7647311827956988,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.5, 'clf__classifier__kernel': 'linear'}","                   0     1  accuracy  macro avg  weighted avg
-f1-score    0.890756   0.0   0.80303   0.445378      0.715304
-precision   0.803030   0.0   0.80303   0.401515      0.644858
-recall      1.000000   0.0   0.80303   0.500000      0.803030
-support    53.000000  13.0   0.80303  66.000000     66.000000",2019-12-06 22:42:44.752309,sklearn.svm.SVC,['liwc'],5000
-0.7580645161290323,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.5, 'clf__classifier__kernel': 'linear'}","                   0     1  accuracy  macro avg  weighted avg
-f1-score    0.890756   0.0   0.80303   0.445378      0.715304
-precision   0.803030   0.0   0.80303   0.401515      0.644858
-recall      1.000000   0.0   0.80303   0.500000      0.803030
-support    53.000000  13.0   0.80303  66.000000     66.000000",2019-12-06 22:42:54.213583,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange']",5000
-0.5762820512820512,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.5, 'clf__classifier__kernel': 'linear'}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.697248   0.476190  0.616279   0.586719      0.602142
-precision   0.633333   0.576923  0.616279   0.605128      0.609064
-recall      0.775510   0.405405  0.616279   0.590458      0.616279
-support    49.000000  37.000000  0.616279  86.000000     86.000000",2019-12-06 22:47:50.120805,sklearn.svm.SVC,['liwc'],5000
-0.5864102564102565,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.5, 'clf__classifier__kernel': 'linear'}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.707965   0.440678  0.616279   0.574321      0.592969
-precision   0.625000   0.590909  0.616279   0.607955      0.610333
-recall      0.816327   0.351351  0.616279   0.583839      0.616279
-support    49.000000  37.000000  0.616279  86.000000     86.000000",2019-12-06 22:48:01.257043,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange']",5000
-0.5762820512820512,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.5, 'clf__classifier__kernel': 'linear'}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.697248   0.476190  0.616279   0.586719      0.602142
-precision   0.633333   0.576923  0.616279   0.605128      0.609064
-recall      0.775510   0.405405  0.616279   0.590458      0.616279
-support    49.000000  37.000000  0.616279  86.000000     86.000000",2019-12-06 22:53:41.764021,sklearn.svm.SVC,['liwc'],5000
-0.5864102564102565,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.5, 'clf__classifier__kernel': 'linear'}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.707965   0.440678  0.616279   0.574321      0.592969
-precision   0.625000   0.590909  0.616279   0.607955      0.610333
-recall      0.816327   0.351351  0.616279   0.583839      0.616279
-support    49.000000  37.000000  0.616279  86.000000     86.000000",2019-12-06 22:53:52.867144,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange']",5000
-0.5964102564102565,"{'clf__classifier__C': 0.5, 'clf__classifier__n_jobs': -1, 'clf__classifier__penalty': 'l2', 'clf__classifier__random_state': 300}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.696429   0.433333  0.604651   0.564881      0.583236
-precision   0.619048   0.565217  0.604651   0.592133      0.595888
-recall      0.795918   0.351351  0.604651   0.573635      0.604651
-support    49.000000  37.000000  0.604651  86.000000     86.000000",2019-12-06 22:54:10.896867,sklearn.linear_model.LogisticRegression,['liwc'],5000
-0.5864102564102565,"{'clf__classifier__C': 0.5, 'clf__classifier__n_jobs': -1, 'clf__classifier__penalty': 'l2', 'clf__classifier__random_state': 300}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.717949   0.400000  0.616279   0.558974      0.581157
-precision   0.617647   0.611111  0.616279   0.614379      0.614835
-recall      0.857143   0.297297  0.616279   0.577220      0.616279
-support    49.000000  37.000000  0.616279  86.000000     86.000000",2019-12-06 22:54:28.614340,sklearn.linear_model.LogisticRegression,"['liwc', 'sentiment', 'topic', 'moodChange']",5000
-0.6873076923076923,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.5, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.690909   0.451613  0.604651   0.571261      0.587956
-precision   0.622951   0.560000  0.604651   0.591475      0.595867
-recall      0.775510   0.378378  0.604651   0.576944      0.604651
-support    49.000000  37.000000  0.604651  86.000000     86.000000",2019-12-06 23:21:24.523168,sklearn.svm.SVC,['liwc'],1000
-0.6516666666666666,"{'clf__classifier__C': 0.7, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.719298   0.448276  0.627907   0.583787      0.602696
-precision   0.630769   0.619048  0.627907   0.624908      0.625726
-recall      0.836735   0.351351  0.627907   0.594043      0.627907
-support    49.000000  37.000000  0.627907  86.000000     86.000000",2019-12-06 23:42:17.355317,sklearn.svm.SVC,['liwc'],1500
-0.6466666666666666,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.725806   0.291667  0.604651   0.508737      0.539025
-precision   0.600000   0.636364  0.604651   0.618182      0.615645
-recall      0.918367   0.189189  0.604651   0.553778      0.604651
-support    49.000000  37.000000  0.604651  86.000000     86.000000",2019-12-07 00:03:32.170879,sklearn.svm.SVC,['liwc'],2000
-0.6416666666666666,"{'clf__classifier__C': 2.0, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.728682   0.186047  0.593023   0.457364      0.495223
-precision   0.587500   0.666667  0.593023   0.627083      0.621560
-recall      0.959184   0.108108  0.593023   0.533646      0.593023
-support    49.000000  37.000000  0.593023  86.000000     86.000000",2019-12-07 00:26:09.743991,sklearn.svm.SVC,['liwc'],5000
-0.6770512820512821,"{'clf__classifier__C': 1.0, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.672727   0.419355  0.581395   0.546041      0.563718
-precision   0.606557   0.520000  0.581395   0.563279      0.569318
-recall      0.755102   0.351351  0.581395   0.553227      0.581395
-support    49.000000  37.000000  0.581395  86.000000     86.000000",2019-12-07 00:46:48.683211,sklearn.svm.SVC,"['liwc', 'sentiment']",1000
-0.6467948717948717,"{'clf__classifier__C': 0.3, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.702703   0.459016  0.616279   0.580860      0.597861
-precision   0.629032   0.583333  0.616279   0.606183      0.609371
-recall      0.795918   0.378378  0.616279   0.587148      0.616279
-support    49.000000  37.000000  0.616279  86.000000     86.000000",2019-12-07 01:07:36.764471,sklearn.svm.SVC,"['liwc', 'sentiment']",1500
-0.6466666666666666,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.733333   0.384615  0.627907   0.558974      0.583304
-precision   0.619718   0.666667  0.627907   0.643192      0.639917
-recall      0.897959   0.270270  0.627907   0.584115      0.627907
-support    49.000000  37.000000  0.627907  86.000000     86.000000",2019-12-07 01:28:42.227927,sklearn.svm.SVC,"['liwc', 'sentiment']",2000
-0.6366666666666666,"{'clf__classifier__C': 2.0, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.728682   0.186047  0.593023   0.457364      0.495223
-precision   0.587500   0.666667  0.593023   0.627083      0.621560
-recall      0.959184   0.108108  0.593023   0.533646      0.593023
-support    49.000000  37.000000  0.593023  86.000000     86.000000",2019-12-07 01:51:06.423077,sklearn.svm.SVC,"['liwc', 'sentiment']",5000
-0.6770512820512821,"{'clf__classifier__C': 1.0, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.672727   0.419355  0.581395   0.546041      0.563718
-precision   0.606557   0.520000  0.581395   0.563279      0.569318
-recall      0.755102   0.351351  0.581395   0.553227      0.581395
-support    49.000000  37.000000  0.581395  86.000000     86.000000",2019-12-07 02:12:10.359298,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",1000
-0.6467948717948717,"{'clf__classifier__C': 0.3, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.702703   0.459016  0.616279   0.580860      0.597861
-precision   0.629032   0.583333  0.616279   0.606183      0.609371
-recall      0.795918   0.378378  0.616279   0.587148      0.616279
-support    49.000000  37.000000  0.616279  86.000000     86.000000",2019-12-07 02:33:03.409298,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",1500
-0.6466666666666666,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.733333   0.384615  0.627907   0.558974      0.583304
-precision   0.619718   0.666667  0.627907   0.643192      0.639917
-recall      0.897959   0.270270  0.627907   0.584115      0.627907
-support    49.000000  37.000000  0.627907  86.000000     86.000000",2019-12-07 02:54:12.077438,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",2000
-0.6366666666666666,"{'clf__classifier__C': 2.0, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.728682   0.186047  0.593023   0.457364      0.495223
-precision   0.587500   0.666667  0.593023   0.627083      0.621560
-recall      0.959184   0.108108  0.593023   0.533646      0.593023
-support    49.000000  37.000000  0.593023  86.000000     86.000000",2019-12-07 03:16:37.569668,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",5000
-0.6362820512820513,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.699187   0.244898  0.569767   0.472042      0.503737
-precision   0.581081   0.500000  0.569767   0.540541      0.546197
-recall      0.877551   0.162162  0.569767   0.519857      0.569767
-support    49.000000  37.000000  0.569767  86.000000     86.000000",2019-12-07 03:38:57.684390,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'mood']",1000
-0.6261538461538462,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.704918   0.280000  0.581395   0.492459      0.522104
-precision   0.589041   0.538462  0.581395   0.563751      0.567280
-recall      0.877551   0.189189  0.581395   0.533370      0.581395
-support    49.000000  37.000000  0.581395  86.000000     86.000000",2019-12-07 04:01:34.602111,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'mood']",1500
-0.6364102564102564,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.724409   0.222222  0.593023   0.473316      0.508352
-precision   0.589744   0.625000  0.593023   0.607372      0.604912
-recall      0.938776   0.135135  0.593023   0.536955      0.593023
-support    49.000000  37.000000  0.593023  86.000000     86.000000",2019-12-07 04:24:25.082745,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'mood']",2000
-0.6315384615384615,"{'clf__classifier__C': 2.0, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.728682   0.186047  0.593023   0.457364      0.495223
-precision   0.587500   0.666667  0.593023   0.627083      0.621560
-recall      0.959184   0.108108  0.593023   0.533646      0.593023
-support    49.000000  37.000000  0.593023  86.000000     86.000000",2019-12-07 04:48:26.162067,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'mood']",5000
-0.6616666666666666,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.721311   0.320000  0.604651   0.520656      0.548654
-precision   0.602740   0.615385  0.604651   0.609062      0.608180
-recall      0.897959   0.216216  0.604651   0.557088      0.604651
-support    49.000000  37.000000  0.604651  86.000000     86.000000",2019-12-07 05:10:02.925344,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange']",1000
-0.6516666666666666,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.710744   0.313725  0.593023   0.512235      0.539934
-precision   0.597222   0.571429  0.593023   0.584325      0.586125
-recall      0.877551   0.216216  0.593023   0.546884      0.593023
-support    49.000000  37.000000  0.593023  86.000000     86.000000",2019-12-07 05:32:17.758649,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange']",1500
-0.6415384615384615,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.731707   0.326531  0.616279   0.529119      0.557387
-precision   0.608108   0.666667  0.616279   0.637387      0.633302
-recall      0.918367   0.216216  0.616279   0.567292      0.616279
-support    49.000000  37.000000  0.616279  86.000000     86.000000",2019-12-07 05:54:43.576510,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange']",2000
-0.6417948717948718,"{'clf__classifier__C': 2.0, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy  macro avg  weighted avg
-f1-score    0.734375   0.227273  0.604651   0.480824      0.516203
-precision   0.594937   0.714286  0.604651   0.654611      0.646285
-recall      0.959184   0.135135  0.604651   0.547159      0.604651
-support    49.000000  37.000000  0.604651  86.000000     86.000000",2019-12-07 06:18:00.271463,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange']",5000
+best_scores,best_parameters,report,time,model,feature_set,tfidf_words,MoodslideWindow
+best_scores,best_parameters,report,time,model,feature_set,tfidf_words,MoodslideWindow
+best_scores,best_parameters,report,time,model,feature_set,tfidf_words,MoodslideWindow
+0.6161654135338346,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.172414   0.744681  0.609756    0.458547      0.549273
+precision   0.312500   0.654206  0.609756    0.483353      0.537526
+recall      0.119048   0.864198  0.609756    0.491623      0.609756
+support    42.000000  81.000000  0.609756  123.000000    123.000000",2019-12-11 15:11:58.454731,sklearn.svm.SVC,['liwc'],1000,7_days
+0.6198621553884711,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.185185   0.770833  0.642276    0.478009      0.570856
+precision   0.416667   0.666667  0.642276    0.541667      0.581301
+recall      0.119048   0.913580  0.642276    0.516314      0.642276
+support    42.000000  81.000000  0.642276  123.000000    123.000000",2019-12-11 16:03:34.661118,sklearn.svm.SVC,['liwc'],1500,7_days
+0.6162280701754386,"{'clf__classifier__C': 2.0, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.044444   0.786070  0.650407    0.415257      0.532832
+precision   0.333333   0.658333  0.650407    0.495833      0.547358
+recall      0.023810   0.975309  0.650407    0.499559      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-11 16:38:53.514084,sklearn.svm.SVC,['liwc'],2000,7_days
+0.6091478696741854,"{'clf__classifier__C': 1.5, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'sigmoid'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.046512   0.798030  0.666667    0.422271      0.541414
+precision   1.000000   0.663934  0.666667    0.831967      0.778689
+recall      0.023810   1.000000  0.666667    0.511905      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-11 17:15:21.276229,sklearn.svm.SVC,['liwc'],5000,7_days
+0.605764411027569,"{'clf__classifier__C': 0.3, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.358209   0.759777  0.650407    0.558993      0.622656
+precision   0.480000   0.693878  0.650407    0.586939      0.620846
+recall      0.285714   0.839506  0.650407    0.562610      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-11 17:49:35.389396,sklearn.svm.SVC,"['liwc', 'sentiment']",1000,7_days
+0.6162280701754386,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.218182   0.774869  0.650407    0.496525      0.584781
+precision   0.461538   0.672727  0.650407    0.567133      0.600614
+recall      0.142857   0.913580  0.650407    0.528219      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-11 18:42:09.385993,sklearn.svm.SVC,"['liwc', 'sentiment']",1500,7_days
+0.6164786967418546,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.192308   0.783505  0.658537    0.487906      0.581633
+precision   0.500000   0.672566  0.658537    0.586283      0.613641
+recall      0.119048   0.938272  0.658537    0.528660      0.658537
+support    42.000000  81.000000  0.658537  123.000000    123.000000",2019-12-11 19:17:13.590058,sklearn.svm.SVC,"['liwc', 'sentiment']",2000,7_days
+0.6091478696741854,"{'clf__classifier__C': 1.5, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'sigmoid'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.046512   0.798030  0.666667    0.422271      0.541414
+precision   1.000000   0.663934  0.666667    0.831967      0.778689
+recall      0.023810   1.000000  0.666667    0.511905      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-11 19:53:57.796005,sklearn.svm.SVC,"['liwc', 'sentiment']",5000,7_days
+0.605764411027569,"{'clf__classifier__C': 0.3, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.358209   0.759777  0.650407    0.558993      0.622656
+precision   0.480000   0.693878  0.650407    0.586939      0.620846
+recall      0.285714   0.839506  0.650407    0.562610      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-11 20:28:34.198573,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",1000,7_days
+0.6162280701754386,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.218182   0.774869  0.650407    0.496525      0.584781
+precision   0.461538   0.672727  0.650407    0.567133      0.600614
+recall      0.142857   0.913580  0.650407    0.528219      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-11 21:03:21.113387,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",1500,7_days
+0.6164786967418546,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.192308   0.783505  0.658537    0.487906      0.581633
+precision   0.500000   0.672566  0.658537    0.586283      0.613641
+recall      0.119048   0.938272  0.658537    0.528660      0.658537
+support    42.000000  81.000000  0.658537  123.000000    123.000000",2019-12-11 21:38:39.075141,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",2000,7_days
+0.6091478696741854,"{'clf__classifier__C': 1.5, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'sigmoid'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.046512   0.798030  0.666667    0.422271      0.541414
+precision   1.000000   0.663934  0.666667    0.831967      0.778689
+recall      0.023810   1.000000  0.666667    0.511905      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-11 22:15:36.346373,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",5000,7_days
+0.6161654135338346,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.172414   0.744681  0.609756    0.458547      0.549273
+precision   0.312500   0.654206  0.609756    0.483353      0.537526
+recall      0.119048   0.864198  0.609756    0.491623      0.609756
+support    42.000000  81.000000  0.609756  123.000000    123.000000",2019-12-13 12:05:35.906578,sklearn.svm.SVC,['liwc'],1000,3_days
+0.6198621553884711,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.185185   0.770833  0.642276    0.478009      0.570856
+precision   0.416667   0.666667  0.642276    0.541667      0.581301
+recall      0.119048   0.913580  0.642276    0.516314      0.642276
+support    42.000000  81.000000  0.642276  123.000000    123.000000",2019-12-13 12:41:20.710768,sklearn.svm.SVC,['liwc'],1500,3_days
+0.6161654135338346,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.172414   0.744681  0.609756    0.458547      0.549273
+precision   0.312500   0.654206  0.609756    0.483353      0.537526
+recall      0.119048   0.864198  0.609756    0.491623      0.609756
+support    42.000000  81.000000  0.609756  123.000000    123.000000",2019-12-13 13:18:14.410856,sklearn.svm.SVC,['liwc'],1000,3_days
+0.6162280701754386,"{'clf__classifier__C': 2.0, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.044444   0.786070  0.650407    0.415257      0.532832
+precision   0.333333   0.658333  0.650407    0.495833      0.547358
+recall      0.023810   0.975309  0.650407    0.499559      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-13 13:19:54.479561,sklearn.svm.SVC,['liwc'],2000,3_days
+0.6198621553884711,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.185185   0.770833  0.642276    0.478009      0.570856
+precision   0.416667   0.666667  0.642276    0.541667      0.581301
+recall      0.119048   0.913580  0.642276    0.516314      0.642276
+support    42.000000  81.000000  0.642276  123.000000    123.000000",2019-12-13 13:55:22.583641,sklearn.svm.SVC,['liwc'],1500,3_days
+0.6091478696741854,"{'clf__classifier__C': 1.5, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'sigmoid'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.046512   0.798030  0.666667    0.422271      0.541414
+precision   1.000000   0.663934  0.666667    0.831967      0.778689
+recall      0.023810   1.000000  0.666667    0.511905      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-13 13:59:20.722624,sklearn.svm.SVC,['liwc'],5000,3_days
+0.6162280701754386,"{'clf__classifier__C': 2.0, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.044444   0.786070  0.650407    0.415257      0.532832
+precision   0.333333   0.658333  0.650407    0.495833      0.547358
+recall      0.023810   0.975309  0.650407    0.499559      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-13 14:35:36.478062,sklearn.svm.SVC,['liwc'],2000,3_days
+0.605764411027569,"{'clf__classifier__C': 0.3, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.358209   0.759777  0.650407    0.558993      0.622656
+precision   0.480000   0.693878  0.650407    0.586939      0.620846
+recall      0.285714   0.839506  0.650407    0.562610      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-13 14:38:27.816806,sklearn.svm.SVC,"['liwc', 'sentiment']",1000,3_days
+0.6161654135338346,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.172414   0.744681  0.609756    0.458547      0.549273
+precision   0.312500   0.654206  0.609756    0.483353      0.537526
+recall      0.119048   0.864198  0.609756    0.491623      0.609756
+support    42.000000  81.000000  0.609756  123.000000    123.000000",2019-12-13 14:56:39.722881,sklearn.svm.SVC,['liwc'],1000,7_days
+0.6091478696741854,"{'clf__classifier__C': 1.5, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'sigmoid'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.046512   0.798030  0.666667    0.422271      0.541414
+precision   1.000000   0.663934  0.666667    0.831967      0.778689
+recall      0.023810   1.000000  0.666667    0.511905      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-13 15:17:37.612737,sklearn.svm.SVC,['liwc'],5000,3_days
+0.6162280701754386,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.218182   0.774869  0.650407    0.496525      0.584781
+precision   0.461538   0.672727  0.650407    0.567133      0.600614
+recall      0.142857   0.913580  0.650407    0.528219      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-13 15:18:22.753428,sklearn.svm.SVC,"['liwc', 'sentiment']",1500,3_days
+0.6198621553884711,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.185185   0.770833  0.642276    0.478009      0.570856
+precision   0.416667   0.666667  0.642276    0.541667      0.581301
+recall      0.119048   0.913580  0.642276    0.516314      0.642276
+support    42.000000  81.000000  0.642276  123.000000    123.000000",2019-12-13 15:36:19.475428,sklearn.svm.SVC,['liwc'],1500,7_days
+0.605764411027569,"{'clf__classifier__C': 0.3, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.358209   0.759777  0.650407    0.558993      0.622656
+precision   0.480000   0.693878  0.650407    0.586939      0.620846
+recall      0.285714   0.839506  0.650407    0.562610      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-13 15:57:00.847041,sklearn.svm.SVC,"['liwc', 'sentiment']",1000,3_days
+0.6164786967418546,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.192308   0.783505  0.658537    0.487906      0.581633
+precision   0.500000   0.672566  0.658537    0.586283      0.613641
+recall      0.119048   0.938272  0.658537    0.528660      0.658537
+support    42.000000  81.000000  0.658537  123.000000    123.000000",2019-12-13 15:58:20.532933,sklearn.svm.SVC,"['liwc', 'sentiment']",2000,3_days
+0.6162280701754386,"{'clf__classifier__C': 2.0, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.044444   0.786070  0.650407    0.415257      0.532832
+precision   0.333333   0.658333  0.650407    0.495833      0.547358
+recall      0.023810   0.975309  0.650407    0.499559      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-13 16:16:41.105634,sklearn.svm.SVC,['liwc'],2000,7_days
+0.6162280701754386,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.218182   0.774869  0.650407    0.496525      0.584781
+precision   0.461538   0.672727  0.650407    0.567133      0.600614
+recall      0.142857   0.913580  0.650407    0.528219      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-13 16:36:46.522937,sklearn.svm.SVC,"['liwc', 'sentiment']",1500,3_days
+0.6091478696741854,"{'clf__classifier__C': 1.5, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'sigmoid'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.046512   0.798030  0.666667    0.422271      0.541414
+precision   1.000000   0.663934  0.666667    0.831967      0.778689
+recall      0.023810   1.000000  0.666667    0.511905      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-13 16:40:15.792228,sklearn.svm.SVC,"['liwc', 'sentiment']",5000,3_days
+0.6091478696741854,"{'clf__classifier__C': 1.5, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'sigmoid'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.046512   0.798030  0.666667    0.422271      0.541414
+precision   1.000000   0.663934  0.666667    0.831967      0.778689
+recall      0.023810   1.000000  0.666667    0.511905      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-13 16:58:31.639237,sklearn.svm.SVC,['liwc'],5000,7_days
+0.6164786967418546,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.192308   0.783505  0.658537    0.487906      0.581633
+precision   0.500000   0.672566  0.658537    0.586283      0.613641
+recall      0.119048   0.938272  0.658537    0.528660      0.658537
+support    42.000000  81.000000  0.658537  123.000000    123.000000",2019-12-13 17:17:17.355468,sklearn.svm.SVC,"['liwc', 'sentiment']",2000,3_days
+0.605764411027569,"{'clf__classifier__C': 0.3, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.358209   0.759777  0.650407    0.558993      0.622656
+precision   0.480000   0.693878  0.650407    0.586939      0.620846
+recall      0.285714   0.839506  0.650407    0.562610      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-13 17:19:27.527971,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",1000,3_days
+0.605764411027569,"{'clf__classifier__C': 0.3, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.358209   0.759777  0.650407    0.558993      0.622656
+precision   0.480000   0.693878  0.650407    0.586939      0.620846
+recall      0.285714   0.839506  0.650407    0.562610      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-13 17:38:13.146400,sklearn.svm.SVC,"['liwc', 'sentiment']",1000,7_days
+0.6091478696741854,"{'clf__classifier__C': 1.5, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'sigmoid'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.046512   0.798030  0.666667    0.422271      0.541414
+precision   1.000000   0.663934  0.666667    0.831967      0.778689
+recall      0.023810   1.000000  0.666667    0.511905      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-13 17:59:38.245319,sklearn.svm.SVC,"['liwc', 'sentiment']",5000,3_days
+0.6162280701754386,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.218182   0.774869  0.650407    0.496525      0.584781
+precision   0.461538   0.672727  0.650407    0.567133      0.600614
+recall      0.142857   0.913580  0.650407    0.528219      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-13 17:59:39.409635,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",1500,3_days
+0.6162280701754386,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.218182   0.774869  0.650407    0.496525      0.584781
+precision   0.461538   0.672727  0.650407    0.567133      0.600614
+recall      0.142857   0.913580  0.650407    0.528219      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-13 18:18:17.119028,sklearn.svm.SVC,"['liwc', 'sentiment']",1500,7_days
+0.605764411027569,"{'clf__classifier__C': 0.3, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.358209   0.759777  0.650407    0.558993      0.622656
+precision   0.480000   0.693878  0.650407    0.586939      0.620846
+recall      0.285714   0.839506  0.650407    0.562610      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-13 18:39:05.606050,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",1000,3_days
+0.6164786967418546,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.192308   0.783505  0.658537    0.487906      0.581633
+precision   0.500000   0.672566  0.658537    0.586283      0.613641
+recall      0.119048   0.938272  0.658537    0.528660      0.658537
+support    42.000000  81.000000  0.658537  123.000000    123.000000",2019-12-13 18:39:41.282169,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",2000,3_days
+0.6164786967418546,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.192308   0.783505  0.658537    0.487906      0.581633
+precision   0.500000   0.672566  0.658537    0.586283      0.613641
+recall      0.119048   0.938272  0.658537    0.528660      0.658537
+support    42.000000  81.000000  0.658537  123.000000    123.000000",2019-12-13 18:59:27.584355,sklearn.svm.SVC,"['liwc', 'sentiment']",2000,7_days
+0.6162280701754386,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.218182   0.774869  0.650407    0.496525      0.584781
+precision   0.461538   0.672727  0.650407    0.567133      0.600614
+recall      0.142857   0.913580  0.650407    0.528219      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-13 19:24:12.594567,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",1500,3_days
+0.6091478696741854,"{'clf__classifier__C': 1.5, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'sigmoid'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.046512   0.798030  0.666667    0.422271      0.541414
+precision   1.000000   0.663934  0.666667    0.831967      0.778689
+recall      0.023810   1.000000  0.666667    0.511905      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-13 19:27:26.710475,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",5000,3_days
+0.6091478696741854,"{'clf__classifier__C': 1.5, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'sigmoid'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.046512   0.798030  0.666667    0.422271      0.541414
+precision   1.000000   0.663934  0.666667    0.831967      0.778689
+recall      0.023810   1.000000  0.666667    0.511905      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-13 19:50:18.340625,sklearn.svm.SVC,"['liwc', 'sentiment']",5000,7_days
+0.6164786967418546,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.192308   0.783505  0.658537    0.487906      0.581633
+precision   0.500000   0.672566  0.658537    0.586283      0.613641
+recall      0.119048   0.938272  0.658537    0.528660      0.658537
+support    42.000000  81.000000  0.658537  123.000000    123.000000",2019-12-13 20:12:45.892289,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",2000,3_days
+0.6021929824561403,"{'clf__classifier__C': 2.0, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'sigmoid'}","              0          1  accuracy   macro avg  weighted avg
+f1-score    0.0   0.794118  0.658537    0.397059      0.522956
+precision   0.0   0.658537  0.658537    0.329268      0.433670
+recall      0.0   1.000000  0.658537    0.500000      0.658537
+support    42.0  81.000000  0.658537  123.000000    123.000000",2019-12-13 20:17:29.414294,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'mood']",1000,3_days
+0.605764411027569,"{'clf__classifier__C': 0.3, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.358209   0.759777  0.650407    0.558993      0.622656
+precision   0.480000   0.693878  0.650407    0.586939      0.620846
+recall      0.285714   0.839506  0.650407    0.562610      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-13 20:36:47.985879,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",1000,7_days
+0.6091478696741854,"{'clf__classifier__C': 1.5, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'sigmoid'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.046512   0.798030  0.666667    0.422271      0.541414
+precision   1.000000   0.663934  0.666667    0.831967      0.778689
+recall      0.023810   1.000000  0.666667    0.511905      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-13 21:00:23.769937,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",5000,3_days
+0.6091478696741854,"{'clf__classifier__C': 2.0, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.088889   0.796020  0.666667    0.442454      0.554561
+precision   0.666667   0.666667  0.666667    0.666667      0.666667
+recall      0.047619   0.987654  0.666667    0.517637      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-13 21:09:01.868935,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'mood']",1500,3_days
+0.6162280701754386,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.218182   0.774869  0.650407    0.496525      0.584781
+precision   0.461538   0.672727  0.650407    0.567133      0.600614
+recall      0.142857   0.913580  0.650407    0.528219      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-13 21:22:36.393438,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",1500,7_days
+0.6021929824561403,"{'clf__classifier__C': 2.0, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'sigmoid'}","              0          1  accuracy   macro avg  weighted avg
+f1-score    0.0   0.794118  0.658537    0.397059      0.522956
+precision   0.0   0.658537  0.658537    0.329268      0.433670
+recall      0.0   1.000000  0.658537    0.500000      0.658537
+support    42.0  81.000000  0.658537  123.000000    123.000000",2019-12-13 21:46:41.466282,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'mood']",1000,3_days
+0.6092105263157894,"{'clf__classifier__C': 2.0, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.085106   0.783920  0.650407    0.434513      0.545300
+precision   0.400000   0.661017  0.650407    0.530508      0.571889
+recall      0.047619   0.962963  0.650407    0.505291      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-13 21:52:54.652801,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'mood']",2000,3_days
+0.6164786967418546,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.192308   0.783505  0.658537    0.487906      0.581633
+precision   0.500000   0.672566  0.658537    0.586283      0.613641
+recall      0.119048   0.938272  0.658537    0.528660      0.658537
+support    42.000000  81.000000  0.658537  123.000000    123.000000",2019-12-13 22:03:22.291131,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",2000,7_days
+0.6091478696741854,"{'clf__classifier__C': 2.0, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.088889   0.796020  0.666667    0.442454      0.554561
+precision   0.666667   0.666667  0.666667    0.666667      0.666667
+recall      0.047619   0.987654  0.666667    0.517637      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-13 22:30:02.285277,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'mood']",1500,3_days
+0.6091478696741854,"{'clf__classifier__C': 1.5, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'sigmoid'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.046512   0.798030  0.666667    0.422271      0.541414
+precision   1.000000   0.663934  0.666667    0.831967      0.778689
+recall      0.023810   1.000000  0.666667    0.511905      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-13 22:38:19.622783,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'mood']",5000,3_days
+0.6091478696741854,"{'clf__classifier__C': 1.5, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'sigmoid'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.046512   0.798030  0.666667    0.422271      0.541414
+precision   1.000000   0.663934  0.666667    0.831967      0.778689
+recall      0.023810   1.000000  0.666667    0.511905      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-13 22:45:50.022359,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",5000,7_days
+0.6092105263157894,"{'clf__classifier__C': 2.0, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.085106   0.783920  0.650407    0.434513      0.545300
+precision   0.400000   0.661017  0.650407    0.530508      0.571889
+recall      0.047619   0.962963  0.650407    0.505291      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-13 23:13:55.155234,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'mood']",2000,3_days
+0.6197368421052631,"{'clf__classifier__C': 2.0, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.088889   0.796020  0.666667    0.442454      0.554561
+precision   0.666667   0.666667  0.666667    0.666667      0.666667
+recall      0.047619   0.987654  0.666667    0.517637      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-13 23:19:39.252633,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange']",1000,3_days
+0.6091478696741854,"{'clf__classifier__C': 1.5, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'sigmoid'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.046512   0.798030  0.666667    0.422271      0.541414
+precision   1.000000   0.663934  0.666667    0.831967      0.778689
+recall      0.023810   1.000000  0.666667    0.511905      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-13 23:56:58.140744,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'mood']",5000,3_days
+0.6268796992481203,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.210526   0.761905  0.634146    0.486216      0.573629
+precision   0.400000   0.666667  0.634146    0.533333      0.575610
+recall      0.142857   0.888889  0.634146    0.515873      0.634146
+support    42.000000  81.000000  0.634146  123.000000    123.000000",2019-12-13 23:58:52.051429,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange']",1500,3_days
+0.6197368421052631,"{'clf__classifier__C': 2.0, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.088889   0.796020  0.666667    0.442454      0.554561
+precision   0.666667   0.666667  0.666667    0.666667      0.666667
+recall      0.047619   0.987654  0.666667    0.517637      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-14 00:35:54.942735,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange']",1000,3_days
+0.612719298245614,"{'clf__classifier__C': 2.0, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.086957   0.790000  0.658537    0.438478      0.549936
+precision   0.500000   0.663866  0.658537    0.581933      0.607911
+recall      0.047619   0.975309  0.658537    0.511464      0.658537
+support    42.000000  81.000000  0.658537  123.000000    123.000000",2019-12-14 00:38:11.079557,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange']",2000,3_days
+0.6268796992481203,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.210526   0.761905  0.634146    0.486216      0.573629
+precision   0.400000   0.666667  0.634146    0.533333      0.575610
+recall      0.142857   0.888889  0.634146    0.515873      0.634146
+support    42.000000  81.000000  0.634146  123.000000    123.000000",2019-12-14 01:15:11.791111,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange']",1500,3_days
+0.6091478696741854,"{'clf__classifier__C': 1.5, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'sigmoid'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.046512   0.798030  0.666667    0.422271      0.541414
+precision   1.000000   0.663934  0.666667    0.831967      0.778689
+recall      0.023810   1.000000  0.666667    0.511905      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-14 01:19:36.415267,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange']",5000,3_days
+0.612719298245614,"{'clf__classifier__C': 2.0, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.086957   0.790000  0.658537    0.438478      0.549936
+precision   0.500000   0.663866  0.658537    0.581933      0.607911
+recall      0.047619   0.975309  0.658537    0.511464      0.658537
+support    42.000000  81.000000  0.658537  123.000000    123.000000",2019-12-14 01:54:54.185314,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange']",2000,3_days
+0.6197368421052631,"{'clf__classifier__C': 2.0, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.088889   0.796020  0.666667    0.442454      0.554561
+precision   0.666667   0.666667  0.666667    0.666667      0.666667
+recall      0.047619   0.987654  0.666667    0.517637      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-14 01:58:07.180253,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange', 'moodTransitions']",1000,3_days
+0.6091478696741854,"{'clf__classifier__C': 1.5, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'sigmoid'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.046512   0.798030  0.666667    0.422271      0.541414
+precision   1.000000   0.663934  0.666667    0.831967      0.778689
+recall      0.023810   1.000000  0.666667    0.511905      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-14 02:36:23.682006,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange']",5000,3_days
+0.6268796992481203,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.210526   0.761905  0.634146    0.486216      0.573629
+precision   0.400000   0.666667  0.634146    0.533333      0.575610
+recall      0.142857   0.888889  0.634146    0.515873      0.634146
+support    42.000000  81.000000  0.634146  123.000000    123.000000",2019-12-14 02:37:32.355431,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange', 'moodTransitions']",1500,3_days
+0.6197368421052631,"{'clf__classifier__C': 2.0, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.088889   0.796020  0.666667    0.442454      0.554561
+precision   0.666667   0.666667  0.666667    0.666667      0.666667
+recall      0.047619   0.987654  0.666667    0.517637      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-14 03:15:28.228885,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange', 'moodTransitions']",1000,3_days
+0.612719298245614,"{'clf__classifier__C': 2.0, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.086957   0.790000  0.658537    0.438478      0.549936
+precision   0.500000   0.663866  0.658537    0.581933      0.607911
+recall      0.047619   0.975309  0.658537    0.511464      0.658537
+support    42.000000  81.000000  0.658537  123.000000    123.000000",2019-12-14 03:17:07.833145,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange', 'moodTransitions']",2000,3_days
+0.6268796992481203,"{'clf__classifier__C': 0.1, 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.210526   0.761905  0.634146    0.486216      0.573629
+precision   0.400000   0.666667  0.634146    0.533333      0.575610
+recall      0.142857   0.888889  0.634146    0.515873      0.634146
+support    42.000000  81.000000  0.634146  123.000000    123.000000",2019-12-14 03:54:44.411381,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange', 'moodTransitions']",1500,3_days
+0.6091478696741854,"{'clf__classifier__C': 1.5, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'sigmoid'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.046512   0.798030  0.666667    0.422271      0.541414
+precision   1.000000   0.663934  0.666667    0.831967      0.778689
+recall      0.023810   1.000000  0.666667    0.511905      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-14 03:58:38.863270,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange', 'moodTransitions']",5000,3_days
+0.612719298245614,"{'clf__classifier__C': 2.0, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.086957   0.790000  0.658537    0.438478      0.549936
+precision   0.500000   0.663866  0.658537    0.581933      0.607911
+recall      0.047619   0.975309  0.658537    0.511464      0.658537
+support    42.000000  81.000000  0.658537  123.000000    123.000000",2019-12-14 04:34:27.014540,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange', 'moodTransitions']",2000,3_days
+0.6091478696741854,"{'clf__classifier__C': 1.5, 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'sigmoid'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.046512   0.798030  0.666667    0.422271      0.541414
+precision   1.000000   0.663934  0.666667    0.831967      0.778689
+recall      0.023810   1.000000  0.666667    0.511905      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-14 05:12:48.768702,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange', 'moodTransitions']",5000,3_days
+0.6199874686716791,"{'clf__classifier__class_weight': 'balanced', 'clf__classifier__max_depth': 50, 'clf__classifier__max_features': 'auto', 'clf__classifier__max_leaf_nodes': 300, 'clf__classifier__n_estimators': 500, 'clf__classifier__n_jobs': -1, 'clf__classifier__random_state': 300}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.081633   0.771574  0.634146    0.426603      0.535984
+precision   0.285714   0.655172  0.634146    0.470443      0.529016
+recall      0.047619   0.938272  0.634146    0.492945      0.634146
+support    42.000000  81.000000  0.634146  123.000000    123.000000",2019-12-14 15:42:09.555135,sklearn.ensemble.ExtraTreesClassifier,['liwc'],1000,7_days
+0.6199874686716791,"{'clf__classifier__class_weight': 'balanced', 'clf__classifier__max_depth': 50, 'clf__classifier__max_features': 'auto', 'clf__classifier__max_leaf_nodes': 300, 'clf__classifier__n_estimators': 500, 'clf__classifier__n_jobs': -1, 'clf__classifier__random_state': 300}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.081633   0.771574  0.634146    0.426603      0.535984
+precision   0.285714   0.655172  0.634146    0.470443      0.529016
+recall      0.047619   0.938272  0.634146    0.492945      0.634146
+support    42.000000  81.000000  0.634146  123.000000    123.000000",2019-12-14 15:48:44.127085,sklearn.ensemble.ExtraTreesClassifier,['liwc'],1000,30_days
+0.6164786967418546,"{'clf__classifier__class_weight': 'balanced', 'clf__classifier__max_depth': 20, 'clf__classifier__max_features': 'auto', 'clf__classifier__max_leaf_nodes': 300, 'clf__classifier__n_estimators': 1000, 'clf__classifier__n_jobs': -1, 'clf__classifier__random_state': 300}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.185185   0.770833  0.642276    0.478009      0.570856
+precision   0.416667   0.666667  0.642276    0.541667      0.581301
+recall      0.119048   0.913580  0.642276    0.516314      0.642276
+support    42.000000  81.000000  0.642276  123.000000    123.000000",2019-12-14 17:09:16.664029,sklearn.ensemble.ExtraTreesClassifier,['liwc'],1500,7_days
+0.6164786967418546,"{'clf__classifier__class_weight': 'balanced', 'clf__classifier__max_depth': 20, 'clf__classifier__max_features': 'auto', 'clf__classifier__max_leaf_nodes': 300, 'clf__classifier__n_estimators': 1000, 'clf__classifier__n_jobs': -1, 'clf__classifier__random_state': 300}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.185185   0.770833  0.642276    0.478009      0.570856
+precision   0.416667   0.666667  0.642276    0.541667      0.581301
+recall      0.119048   0.913580  0.642276    0.516314      0.642276
+support    42.000000  81.000000  0.642276  123.000000    123.000000",2019-12-14 17:27:56.828150,sklearn.ensemble.ExtraTreesClassifier,['liwc'],1500,30_days
+nan,"{'clf__classifier__class_weight': 'balanced', 'clf__classifier__max_depth': 20, 'clf__classifier__max_features': 'auto', 'clf__classifier__max_leaf_nodes': 300, 'clf__classifier__n_estimators': 100, 'clf__classifier__n_jobs': -1, 'clf__classifier__random_state': 300}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.343750   0.769231  0.658537    0.556490      0.623945
+precision   0.500000   0.693069  0.658537    0.596535      0.627143
+recall      0.261905   0.864198  0.658537    0.563051      0.658537
+support    42.000000  81.000000  0.658537  123.000000    123.000000",2019-12-14 20:48:35.041430,sklearn.ensemble.ExtraTreesClassifier,['liwc'],2000,7_days
+nan,"{'clf__classifier__class_weight': 'balanced', 'clf__classifier__max_depth': 20, 'clf__classifier__max_features': 'auto', 'clf__classifier__max_leaf_nodes': 300, 'clf__classifier__n_estimators': 100, 'clf__classifier__n_jobs': -1, 'clf__classifier__random_state': 300}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.343750   0.769231  0.658537    0.556490      0.623945
+precision   0.500000   0.693069  0.658537    0.596535      0.627143
+recall      0.261905   0.864198  0.658537    0.563051      0.658537
+support    42.000000  81.000000  0.658537  123.000000    123.000000",2019-12-14 21:00:52.873282,sklearn.ensemble.ExtraTreesClassifier,['liwc'],2000,30_days
+nan,"{'clf__classifier__class_weight': 'balanced', 'clf__classifier__max_depth': 20, 'clf__classifier__max_features': 'auto', 'clf__classifier__max_leaf_nodes': 300, 'clf__classifier__n_estimators': 100, 'clf__classifier__n_jobs': -1, 'clf__classifier__random_state': 300}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.358209   0.759777  0.650407    0.558993      0.622656
+precision   0.480000   0.693878  0.650407    0.586939      0.620846
+recall      0.285714   0.839506  0.650407    0.562610      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-15 00:03:59.258866,sklearn.ensemble.ExtraTreesClassifier,['liwc'],5000,30_days
+0.6162907268170426,"{'clf__classifier__C': 2.0, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'sigmoid'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.515464   0.684564  0.617886    0.600014      0.626822
+precision   0.454545   0.750000  0.617886    0.602273      0.649113
+recall      0.595238   0.629630  0.617886    0.612434      0.617886
+support    42.000000  81.000000  0.617886  123.000000    123.000000",2019-12-15 05:26:32.430163,sklearn.svm.SVC,['liwc'],1000,30_days
+nan,"{'clf__classifier__class_weight': 'balanced', 'clf__classifier__max_depth': 20, 'clf__classifier__max_features': 'auto', 'clf__classifier__max_leaf_nodes': 300, 'clf__classifier__n_estimators': 100, 'clf__classifier__n_jobs': -1, 'clf__classifier__random_state': 300}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.185185   0.770833  0.642276    0.478009      0.570856
+precision   0.416667   0.666667  0.642276    0.541667      0.581301
+recall      0.119048   0.913580  0.642276    0.516314      0.642276
+support    42.000000  81.000000  0.642276  123.000000    123.000000",2019-12-15 05:28:01.319330,sklearn.ensemble.ExtraTreesClassifier,"['liwc', 'sentiment']",1000,30_days
+0.605764411027569,"{'clf__classifier__C': 2.0, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.046512   0.798030  0.666667    0.422271      0.541414
+precision   1.000000   0.663934  0.666667    0.831967      0.778689
+recall      0.023810   1.000000  0.666667    0.511905      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-15 08:44:33.568797,sklearn.svm.SVC,['liwc'],1500,30_days
+nan,"{'clf__classifier__class_weight': 'balanced', 'clf__classifier__max_depth': 20, 'clf__classifier__max_features': 'auto', 'clf__classifier__max_leaf_nodes': 300, 'clf__classifier__n_estimators': 100, 'clf__classifier__n_jobs': -1, 'clf__classifier__random_state': 300}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.137931   0.734043  0.593496    0.435987      0.530492
+precision   0.250000   0.644860  0.593496    0.447430      0.510030
+recall      0.095238   0.851852  0.593496    0.473545      0.593496
+support    42.000000  81.000000  0.593496  123.000000    123.000000",2019-12-15 08:53:33.222870,sklearn.ensemble.ExtraTreesClassifier,"['liwc', 'sentiment']",1500,30_days
+0.6024436090225563,"{'clf__classifier__C': 0.1, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__gamma': 0.5, 'clf__classifier__kernel': 'poly'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.250000   0.778947  0.658537    0.514474      0.598331
+precision   0.500000   0.678899  0.658537    0.589450      0.617812
+recall      0.166667   0.913580  0.658537    0.540123      0.658537
+support    42.000000  81.000000  0.658537  123.000000    123.000000",2019-12-15 11:46:41.482201,sklearn.svm.SVC,['liwc'],2000,30_days
+nan,"{'clf__classifier__class_weight': 'balanced', 'clf__classifier__max_depth': 20, 'clf__classifier__max_features': 'auto', 'clf__classifier__max_leaf_nodes': 300, 'clf__classifier__n_estimators': 100, 'clf__classifier__n_jobs': -1, 'clf__classifier__random_state': 300}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.210526   0.761905  0.634146    0.486216      0.573629
+precision   0.400000   0.666667  0.634146    0.533333      0.575610
+recall      0.142857   0.888889  0.634146    0.515873      0.634146
+support    42.000000  81.000000  0.634146  123.000000    123.000000",2019-12-15 12:03:09.613517,sklearn.ensemble.ExtraTreesClassifier,"['liwc', 'sentiment']",2000,30_days
+0.612781954887218,"{'clf__classifier__C': 1.5, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'poly'}","              0          1  accuracy   macro avg  weighted avg
+f1-score    0.0   0.794118  0.658537    0.397059      0.522956
+precision   0.0   0.658537  0.658537    0.329268      0.433670
+recall      0.0   1.000000  0.658537    0.500000      0.658537
+support    42.0  81.000000  0.658537  123.000000    123.000000",2019-12-15 14:51:02.534117,sklearn.svm.SVC,['liwc'],5000,30_days
+nan,"{'clf__classifier__class_weight': 'balanced', 'clf__classifier__max_depth': 20, 'clf__classifier__max_features': 'auto', 'clf__classifier__max_leaf_nodes': 300, 'clf__classifier__n_estimators': 100, 'clf__classifier__n_jobs': -1, 'clf__classifier__random_state': 300}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.382353   0.764045  0.658537    0.573199      0.633711
+precision   0.500000   0.701031  0.658537    0.600515      0.632386
+recall      0.309524   0.839506  0.658537    0.574515      0.658537
+support    42.000000  81.000000  0.658537  123.000000    123.000000",2019-12-15 15:09:19.640790,sklearn.ensemble.ExtraTreesClassifier,"['liwc', 'sentiment']",5000,30_days
+0.6234335839598998,"{'clf__classifier__C': 1.0, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.376812   0.757062  0.650407    0.566937      0.627220
+precision   0.481481   0.697917  0.650407    0.589699      0.624012
+recall      0.309524   0.827160  0.650407    0.568342      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-15 19:16:57.381854,sklearn.svm.SVC,"['liwc', 'sentiment']",1000,30_days
+nan,"{'clf__classifier__class_weight': 'balanced', 'clf__classifier__max_depth': 20, 'clf__classifier__max_features': 'auto', 'clf__classifier__max_leaf_nodes': 300, 'clf__classifier__n_estimators': 100, 'clf__classifier__n_jobs': -1, 'clf__classifier__random_state': 300}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.185185   0.770833  0.642276    0.478009      0.570856
+precision   0.416667   0.666667  0.642276    0.541667      0.581301
+recall      0.119048   0.913580  0.642276    0.516314      0.642276
+support    42.000000  81.000000  0.642276  123.000000    123.000000",2019-12-15 21:14:31.432096,sklearn.ensemble.ExtraTreesClassifier,"['liwc', 'sentiment', 'topic']",1000,30_days
+0.6092105263157895,"{'clf__classifier__C': 1.0, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.130435   0.800000  0.674797    0.465217      0.571368
+precision   0.750000   0.672269  0.674797    0.711134      0.698811
+recall      0.071429   0.987654  0.674797    0.529541      0.674797
+support    42.000000  81.000000  0.674797  123.000000    123.000000",2019-12-16 00:26:25.972804,sklearn.svm.SVC,"['liwc', 'sentiment']",1500,30_days
+nan,"{'clf__classifier__class_weight': 'balanced', 'clf__classifier__max_depth': 20, 'clf__classifier__max_features': 'auto', 'clf__classifier__max_leaf_nodes': 300, 'clf__classifier__n_estimators': 100, 'clf__classifier__n_jobs': -1, 'clf__classifier__random_state': 300}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.137931   0.734043  0.593496    0.435987      0.530492
+precision   0.250000   0.644860  0.593496    0.447430      0.510030
+recall      0.095238   0.851852  0.593496    0.473545      0.593496
+support    42.000000  81.000000  0.593496  123.000000    123.000000",2019-12-16 00:59:21.397354,sklearn.ensemble.ExtraTreesClassifier,"['liwc', 'sentiment', 'topic']",1500,30_days
+0.612844611528822,"{'clf__classifier__C': 2.0, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'sigmoid'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.468085   0.671053  0.593496    0.569569      0.601747
+precision   0.423077   0.718310  0.593496    0.570693      0.617499
+recall      0.523810   0.629630  0.593496    0.576720      0.593496
+support    42.000000  81.000000  0.593496  123.000000    123.000000",2019-12-16 04:18:40.669566,sklearn.svm.SVC,"['liwc', 'sentiment']",2000,30_days
+nan,"{'clf__classifier__class_weight': 'balanced', 'clf__classifier__max_depth': 20, 'clf__classifier__max_features': 'auto', 'clf__classifier__max_leaf_nodes': 300, 'clf__classifier__n_estimators': 100, 'clf__classifier__n_jobs': -1, 'clf__classifier__random_state': 300}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.210526   0.761905  0.634146    0.486216      0.573629
+precision   0.400000   0.666667  0.634146    0.533333      0.575610
+recall      0.142857   0.888889  0.634146    0.515873      0.634146
+support    42.000000  81.000000  0.634146  123.000000    123.000000",2019-12-16 05:13:01.297580,sklearn.ensemble.ExtraTreesClassifier,"['liwc', 'sentiment', 'topic']",2000,30_days
+0.612907268170426,"{'clf__classifier__C': 1.5, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'sigmoid'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.465116   0.712500  0.626016    0.588808      0.628028
+precision   0.454545   0.721519  0.626016    0.588032      0.630357
+recall      0.476190   0.703704  0.626016    0.589947      0.626016
+support    42.000000  81.000000  0.626016  123.000000    123.000000",2019-12-16 08:39:04.071440,sklearn.svm.SVC,"['liwc', 'sentiment']",5000,30_days
+nan,"{'clf__classifier__class_weight': 'balanced', 'clf__classifier__max_depth': 20, 'clf__classifier__max_features': 'auto', 'clf__classifier__max_leaf_nodes': 300, 'clf__classifier__n_estimators': 100, 'clf__classifier__n_jobs': -1, 'clf__classifier__random_state': 300}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.382353   0.764045  0.658537    0.573199      0.633711
+precision   0.500000   0.701031  0.658537    0.600515      0.632386
+recall      0.309524   0.839506  0.658537    0.574515      0.658537
+support    42.000000  81.000000  0.658537  123.000000    123.000000",2019-12-16 09:31:30.338589,sklearn.ensemble.ExtraTreesClassifier,"['liwc', 'sentiment', 'topic']",5000,30_days
+0.6234335839598998,"{'clf__classifier__C': 1.0, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.376812   0.757062  0.650407    0.566937      0.627220
+precision   0.481481   0.697917  0.650407    0.589699      0.624012
+recall      0.309524   0.827160  0.650407    0.568342      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-16 10:06:13.949112,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",1000,30_days
+0.6092105263157895,"{'clf__classifier__C': 1.0, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__gamma': 0.001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.130435   0.800000  0.674797    0.465217      0.571368
+precision   0.750000   0.672269  0.674797    0.711134      0.698811
+recall      0.071429   0.987654  0.674797    0.529541      0.674797
+support    42.000000  81.000000  0.674797  123.000000    123.000000",2019-12-16 10:41:13.572163,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",1500,30_days
+0.612844611528822,"{'clf__classifier__C': 2.0, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'sigmoid'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.468085   0.671053  0.593496    0.569569      0.601747
+precision   0.423077   0.718310  0.593496    0.570693      0.617499
+recall      0.523810   0.629630  0.593496    0.576720      0.593496
+support    42.000000  81.000000  0.593496  123.000000    123.000000",2019-12-16 11:16:26.328309,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",2000,30_days
+0.612907268170426,"{'clf__classifier__C': 1.5, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'sigmoid'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.465116   0.712500  0.626016    0.588808      0.628028
+precision   0.454545   0.721519  0.626016    0.588032      0.630357
+recall      0.476190   0.703704  0.626016    0.589947      0.626016
+support    42.000000  81.000000  0.626016  123.000000    123.000000",2019-12-16 11:53:06.455262,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",5000,30_days
+0.5600877192982456,"{'clf__classifier__C': 1.0, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__n_jobs': -1, 'clf__classifier__penalty': 'l2'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.328767   0.716763  0.601626    0.522765      0.584277
+precision   0.387097   0.673913  0.601626    0.530505      0.575976
+recall      0.285714   0.765432  0.601626    0.525573      0.601626
+support    42.000000  81.000000  0.601626  123.000000    123.000000",2019-12-17 11:47:40.194513,sklearn.linear_model.LogisticRegression,['liwc'],1000,30_days
+0.581077694235589,"{'clf__classifier__C': 1.0, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__n_jobs': -1, 'clf__classifier__penalty': 'l2'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.358209   0.759777  0.650407    0.558993      0.622656
+precision   0.480000   0.693878  0.650407    0.586939      0.620846
+recall      0.285714   0.839506  0.650407    0.562610      0.650407
+support    42.000000  81.000000  0.650407  123.000000    123.000000",2019-12-17 11:55:38.173044,sklearn.linear_model.LogisticRegression,['liwc'],1500,30_days
+0.5777568922305765,"{'clf__classifier__C': 0.1, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__n_jobs': -1, 'clf__classifier__penalty': 'l2'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.318841   0.734463  0.617886    0.526652      0.592543
+precision   0.407407   0.677083  0.617886    0.542245      0.584999
+recall      0.261905   0.802469  0.617886    0.532187      0.617886
+support    42.000000  81.000000  0.617886  123.000000    123.000000",2019-12-17 11:58:12.572237,sklearn.linear_model.LogisticRegression,['liwc'],2000,30_days
+0.5777568922305764,"{'clf__classifier__C': 0.5, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__n_jobs': -1, 'clf__classifier__penalty': 'l2'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.438356   0.763006  0.666667    0.600681      0.652150
+precision   0.516129   0.717391  0.666667    0.616760      0.648668
+recall      0.380952   0.814815  0.666667    0.597884      0.666667
+support    42.000000  81.000000  0.666667  123.000000    123.000000",2019-12-17 12:06:30.547861,sklearn.linear_model.LogisticRegression,['liwc'],5000,30_days
+0.5600250626566416,"{'clf__classifier__C': 0.3, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__n_jobs': -1, 'clf__classifier__penalty': 'l2'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.351351   0.720930  0.609756    0.536141      0.594733
+precision   0.406250   0.681319  0.609756    0.543784      0.587393
+recall      0.309524   0.765432  0.609756    0.537478      0.609756
+support    42.000000  81.000000  0.609756  123.000000    123.000000",2019-12-17 12:09:01.683508,sklearn.linear_model.LogisticRegression,"['liwc', 'sentiment']",1000,30_days
+0.5776315789473685,"{'clf__classifier__C': 0.3, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__n_jobs': -1, 'clf__classifier__penalty': 'l2'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.371429   0.750000  0.642276    0.560714      0.620732
+precision   0.464286   0.694737  0.642276    0.579511      0.616046
+recall      0.309524   0.814815  0.642276    0.562169      0.642276
+support    42.000000  81.000000  0.642276  123.000000    123.000000",2019-12-17 12:11:59.963772,sklearn.linear_model.LogisticRegression,"['liwc', 'sentiment']",1500,30_days
+0.5953634085213034,"{'clf__classifier__C': 0.9, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__n_jobs': -1, 'clf__classifier__penalty': 'l2'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.338028   0.731429  0.617886    0.534728      0.597097
+precision   0.413793   0.680851  0.617886    0.547322      0.589661
+recall      0.285714   0.790123  0.617886    0.537919      0.617886
+support    42.000000  81.000000  0.617886  123.000000    123.000000",2019-12-17 12:24:23.816629,sklearn.linear_model.LogisticRegression,"['liwc', 'sentiment']",2000,30_days
+0.5742481203007518,"{'clf__classifier__C': 0.1, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__n_jobs': -1, 'clf__classifier__penalty': 'l2'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.459459   0.767442  0.674797    0.613451      0.662277
+precision   0.531250   0.725275  0.674797    0.628262      0.659022
+recall      0.404762   0.814815  0.674797    0.609788      0.674797
+support    42.000000  81.000000  0.674797  123.000000    123.000000",2019-12-17 12:33:20.681084,sklearn.linear_model.LogisticRegression,"['liwc', 'sentiment']",5000,30_days
+0.5600250626566416,"{'clf__classifier__C': 0.3, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__n_jobs': -1, 'clf__classifier__penalty': 'l2'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.351351   0.720930  0.609756    0.536141      0.594733
+precision   0.406250   0.681319  0.609756    0.543784      0.587393
+recall      0.309524   0.765432  0.609756    0.537478      0.609756
+support    42.000000  81.000000  0.609756  123.000000    123.000000",2019-12-17 12:37:24.620233,sklearn.linear_model.LogisticRegression,"['liwc', 'sentiment', 'topic']",1000,30_days
+0.5776315789473685,"{'clf__classifier__C': 0.3, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__n_jobs': -1, 'clf__classifier__penalty': 'l2'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.371429   0.750000  0.642276    0.560714      0.620732
+precision   0.464286   0.694737  0.642276    0.579511      0.616046
+recall      0.309524   0.814815  0.642276    0.562169      0.642276
+support    42.000000  81.000000  0.642276  123.000000    123.000000",2019-12-17 12:44:11.424751,sklearn.linear_model.LogisticRegression,"['liwc', 'sentiment', 'topic']",1500,30_days
+0.5953634085213034,"{'clf__classifier__C': 0.9, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__n_jobs': -1, 'clf__classifier__penalty': 'l2'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.338028   0.731429  0.617886    0.534728      0.597097
+precision   0.413793   0.680851  0.617886    0.547322      0.589661
+recall      0.285714   0.790123  0.617886    0.537919      0.617886
+support    42.000000  81.000000  0.617886  123.000000    123.000000",2019-12-17 12:51:21.140928,sklearn.linear_model.LogisticRegression,"['liwc', 'sentiment', 'topic']",2000,30_days
+0.5742481203007518,"{'clf__classifier__C': 0.1, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__n_jobs': -1, 'clf__classifier__penalty': 'l2'}","                   0          1  accuracy   macro avg  weighted avg
+f1-score    0.459459   0.767442  0.674797    0.613451      0.662277
+precision   0.531250   0.725275  0.674797    0.628262      0.659022
+recall      0.404762   0.814815  0.674797    0.609788      0.674797
+support    42.000000  81.000000  0.674797  123.000000    123.000000",2019-12-17 13:00:34.640783,sklearn.linear_model.LogisticRegression,"['liwc', 'sentiment', 'topic']",5000,30_days
