@@ -1,0 +1,41 @@
+best_scores,best_parameters,report,time,model,feature_set,tfidf_words,timewindow,step,MoodslideWindow
+0.6843205574912892,"{'clf__classifier__C': 0.9, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy  macro avg  weighted avg
+precision   0.545455   0.565217  0.555556   0.555336      0.555556
+recall      0.545455   0.565217  0.555556   0.555336      0.555556
+f1-score    0.545455   0.565217  0.555556   0.555336      0.555556
+support    44.000000  46.000000  0.555556  90.000000     90.000000",2019-12-31 14:01:10.942023,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic']",2000,30,3,30_days
+0.6842044134727062,"{'clf__classifier__C': 1.5, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy  macro avg  weighted avg
+precision   0.543860   0.606061  0.566667   0.574960      0.575651
+recall      0.704545   0.434783  0.566667   0.569664      0.566667
+f1-score    0.613861   0.506329  0.566667   0.560095      0.558900
+support    44.000000  46.000000  0.566667  90.000000     90.000000",2019-12-31 14:28:54.365814,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'mood']",2000,30,3,30_days
+0.6890824622531939,"{'clf__classifier__C': 0.9, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy  macro avg  weighted avg
+precision   0.568182   0.586957  0.577778   0.577569      0.577778
+recall      0.568182   0.586957  0.577778   0.577569      0.577778
+f1-score    0.568182   0.586957  0.577778   0.577569      0.577778
+support    44.000000  46.000000  0.577778  90.000000     90.000000",2019-12-31 14:55:51.208383,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange']",2000,30,3,30_days
+0.6937282229965157,"{'clf__classifier__C': 1.5, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'sigmoid'}","                   0          1  accuracy  macro avg  weighted avg
+precision   0.568966   0.656250       0.6   0.612608      0.613578
+recall      0.750000   0.456522       0.6   0.603261      0.600000
+f1-score    0.647059   0.538462       0.6   0.592760      0.591554
+support    44.000000  46.000000       0.6  90.000000     90.000000",2019-12-31 15:23:54.356323,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodChange', 'mood']",2000,30,3,30_days
+0.6840882694541232,"{'clf__classifier__C': 1.0, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy  macro avg  weighted avg
+precision   0.551724   0.625000  0.577778   0.588362      0.589176
+recall      0.727273   0.434783  0.577778   0.581028      0.577778
+f1-score    0.627451   0.512821  0.577778   0.570136      0.568862
+support    44.000000  46.000000  0.577778  90.000000     90.000000",2019-12-31 15:51:19.478486,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodTransitions']",2000,30,3,30_days
+0.6842044134727062,"{'clf__classifier__C': 0.9, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy  macro avg  weighted avg
+precision   0.566038   0.621622  0.588889   0.593830      0.594447
+recall      0.681818   0.500000  0.588889   0.590909      0.588889
+f1-score    0.618557   0.554217  0.588889   0.586387      0.585672
+support    44.000000  46.000000  0.588889  90.000000     90.000000",2019-12-31 16:16:42.423860,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodTransitions_momentum']",2000,30,3,30_days
+0.6745644599303137,"{'clf__classifier__C': 1.5, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy  macro avg  weighted avg
+precision   0.526316   0.575758  0.544444   0.551037      0.551586
+recall      0.681818   0.413043  0.544444   0.547431      0.544444
+f1-score    0.594059   0.481013  0.544444   0.537536      0.536280
+support    44.000000  46.000000  0.544444  90.000000     90.000000",2019-12-31 16:42:11.389964,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'moodTransitions', 'moodTransitions_momentum']",2000,30,3,30_days
+0.6698025551684089,"{'clf__classifier__C': 1.5, 'clf__classifier__class_weight': 'balanced', 'clf__classifier__gamma': 0.0001, 'clf__classifier__kernel': 'rbf'}","                   0          1  accuracy  macro avg  weighted avg
+precision   0.500000   0.529412  0.511111   0.514706      0.515033
+recall      0.636364   0.391304  0.511111   0.513834      0.511111
+f1-score    0.560000   0.450000  0.511111   0.505000      0.503778
+support    44.000000  46.000000  0.511111  90.000000     90.000000",2019-12-31 17:08:43.904685,sklearn.svm.SVC,"['liwc', 'sentiment', 'topic', 'mood', ""moodChange'"", 'moodTransitions', 'moodTransitions_momentum']",2000,30,3,30_days
