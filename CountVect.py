@@ -4,8 +4,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from nltk.corpus import stopwords
 import re
 import numpy as np
-from multiprocessing import Pool
-import multiprocessing
+# from multiprocessing import Pool
+# import multiprocessing
 import time
 from nltk.stem import PorterStemmer
 import string
@@ -213,16 +213,16 @@ class Count_Vect():
         return text_fea2
 
 
-    def parallelize_dataframe(self, df, func):
-        """
-        parallelize processing pandas dataframe using multithread
-        """
-        df_split = np.array_split(df, self.num_partitions)
-        pool = Pool(self.num_cores)
-        df = pd.concat(pool.map(func, df_split))
-        pool.close()
-        pool.join()
-        return df
+    # def parallelize_dataframe(self, df, func):
+    #     """
+    #     parallelize processing pandas dataframe using multithread
+    #     """
+    #     df_split = np.array_split(df, self.num_partitions)
+    #     pool = Pool(self.num_cores)
+    #     df = pd.concat(pool.map(func, df_split))
+    #     pool.close()
+    #     pool.join()
+    #     return df
 
     def get_precocessed_text(self, file):
         """

@@ -16,6 +16,7 @@ from sklearn.gaussian_process import GaussianProcessRegressor
 from matplotlib import pyplot as plt
 import os
 import csv
+from construct_mood_transition_feature import *
 
 #other paths
 #path = '/home/lucia/phd_work/mypersonality_data/predicting_depression_symptoms/data/'
@@ -27,6 +28,7 @@ import csv
 class SelectParticipants:
 	def __init__(self):
 		self.path = '/disk/data/share/s1690903/predicting_depression_symptoms/data/' 
+		#self.path = '/Users/lucia/hawksworth/predicting_depression_symptoms/data/'
 		#self.path = '/home/lucia/phd_work/predicting_depression_symptoms/data/' 
 		self.participants = pd.read_csv(self.path + 'participants_matched.csv')
 		self.frequent_users = pd.read_csv(self.path + 'frequent_users.csv')
@@ -117,6 +119,26 @@ class SentiFeature:
 		return userTime
 
 
+	def get_user_mood_obj(self, moodVec):
+		'''for each user, there's a value vector for sentiment and value vector for time '''
+		
+		mydict = lambda: defaultdict(mydict)
+		userTime = mydict()
+		preUser = None
+		sentiment_all = []
+		time_all = []
+
+		moodVector = moodVec.to_numpy()
+		moodVec['userid'] = moodVec.index
+
+		for userid, mv in zip(moodVec['userid'], moodVector):
+			userTime[userid]['senti'] = mv
+			userTime[userid]['time'] = np.arange(len(mv))
+
+		return userTime
+
+
+
 	def change_timestamp(self, sentiment_selected, timescale):
 		'''convert time to timestamp (Epoch, also known as Unix timestamps, is the number of seconds (not milliseconds!) 
 		that have elapsed since January 1, 1970 at 00:00:00 GMT, then divide timestamp by number of hours in a year'''
@@ -189,7 +211,7 @@ class GaussianProcess:
 				GP_models[user]['model'], GP_models[user]['lengthscale'] = self.GP_regression(np.asarray(v['time']).reshape(-1,1),np.asarray(v['senti']).reshape(-1,1), lengthscaleNum)
 			
 				count = count +1 
-				if count == 100:
+				if count == 10:
 					break
 		return GP_models
 
@@ -209,9 +231,10 @@ class GaussianProcess:
 			
 			fig = m['model'].plot()
 			for i in fig: 
-				#plt.show()
+				
 				plt.savefig(path +'results/plots/GP/gp_process_{}'.format(k))
-				plt.close()
+				#plt.show()
+			#plt.close()
 
 
 
@@ -219,8 +242,6 @@ class GaussianProcess:
 # sp = SelectParticipants()
 # path = sp.path
 #participants = sp.process_participants()
-
-
 
 # #here you define the number of days you want to use as feature and the time window for mood
 #senti = SentiFeature(path = path, participants = participants)
@@ -238,7 +259,10 @@ path = sp.path
 annotate = sp.processed_annotation() #get annotation data
 
 senti = SentiFeature(path = path, participants = annotate)
-userTime, timescale = senti.change_timestamp_anno(annotate, 3600)
 
-g = GaussianProcess(userTimeObj = userTime, path = path)
-g.save_results(timescale, 168) #set length scale 24*7
+#using mood vector 
+mood_vector_feature, windowSzie = mood.get_mood_in_timewindow(365, 30, 3)
+mood_vector_feature = mood_vector_feature.fillna(mood_vector_feature.mean()) 
+mvObj = senti.get_user_mood_obj(mood_vector_feature)
+g = GaussianProcess(userTimeObj = mvObj, path = path)
+g.save_results(0, 168) #set length scale 24*7

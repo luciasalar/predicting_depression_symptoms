@@ -1,18 +1,18 @@
 from construct_mood_feature import *
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
-
-
-
+import itertools
+import pandas as pd
+import numpy as np
 
 
 class TransitionMatrix:
-    def __init__(self, ValenceObject):
+    def __init__(self, ValenceObject, windowSize):
         '''ValenceObject is a dictionary, key as userid, value as a vector to represent mood each day '''
         self.ValenceObject = ValenceObject
-        self.windowSzie = 7 #window size of the transition state
+        self.windowSize = windowSize #window size of the transition state
 
     def get_transitions_count(self):
-    	#count number of transition
+        #count number of transition
         emptyTran = 0
         negaTran = 0
         posiTran = 0
@@ -63,7 +63,7 @@ class TransitionMatrix:
         transitions =[]
         preValence = 0
         for valence in valenceVec:
-    	#these are self transition states
+        #these are self transition states
             if valence == -1 and preValence == -1:
                 transitions.append(1)
             elif valence == 1 and preValence == 1:
@@ -86,28 +86,29 @@ class TransitionMatrix:
             elif valence == 0 and preValence == -1:
                 transitions.append(7)
             #negative to neutral transition 
-            elif (valence == -1 and preValence == 0) :
+            elif valence == -1 and preValence == 0 :
                 transitions.append(8)
             #Empty to positive transition
-            elif (valence == -1 and preValence == 1):
+            elif valence == 4 and preValence == 1:
                 transitions.append(9)
             #positive to empty transition
-            elif (valence == 1 and preValence == -1) :
+            elif valence == 1 and preValence == 4:
                 transitions.append(10)
             #Empty to negative transition
-            elif (valence == None and preValence == -1):
+            elif valence == 4 and preValence == -1:
                 transitions.append(11)
             # negative to empty transition
-            elif (valence == -1 and preValence == None) :
+            elif valence == -1 and preValence == 4:
                 transitions.append(12)
+               
             #Empty to neutral transition
-            elif (valence == None and preValence == 0) :
+            elif valence == 4 and preValence == 0 :
                 transitions.append(13)
             #neutral to empty transition
-            elif (valence == 0 and preValence == None):
+            elif valence == 0 and preValence == 4:
                 transitions.append(14)
             #Empty and empty
-            elif valence == None and preValence == None :
+            elif valence == 4 and preValence == 4:
                 transitions.append(15)
                 
             preValence = valence
@@ -118,7 +119,8 @@ class TransitionMatrix:
         '''get transtions of mood dict'''
         result = {}
         for k, v in self.ValenceObject.items():
-            result[k] = self.get_transitions(v)
+            b= np.where(np.isnan(v), 4, v)
+            result[k] = self.get_transitions(b)
         return result
 
 
@@ -215,10 +217,10 @@ class TransitionMatrix:
         return probabilities
  
   
-    def slideWindows(self, windowSize):
+    def slideWindows(self):
         '''a slide window that run across the mood vector array, return vector shows the probability of each transition state'''
         probabilities_dict = {}
-        windowSize = 30
+        
         t = self.get_mood_transitions()
         #count = 0
         for k, TransArray in t.items():
@@ -226,9 +228,9 @@ class TransitionMatrix:
             start = 0
             probabilities_array = []
             
-            for i in range(0, len(TransArray)-1, windowSize):   
+            for i in range(0, len(TransArray)-1, self.windowSize):   
             
-                end = start+windowSize
+                end = start+self.windowSize
                 slide = TransArray[start:end]
                 start = end
                 #compute transition probability of a slide
@@ -237,6 +239,45 @@ class TransitionMatrix:
           
             # append transition probability to dictionary  
             probabilities_dict[k] = probabilities_array
+            #print(len(probabilities_array))
+        return probabilities_dict
+
+
+    def slideWindows2(self):
+        '''a slide window that run across the mood vector array, return vector shows the probability of each transition state'''
+        probabilities_dict = {}
+        
+        t = self.get_mood_transitions()
+        #count = 0
+        for k, TransArray in t.items():
+            #value in the dictionary is an array with all the transition states
+            start = 0
+            probabilities_array = []
+            prev_pro = None
+            
+            for i in range(0, len(TransArray)-1, self.windowSize):   
+                
+            
+                end = start+self.windowSize
+                slide = TransArray[start:end]
+                start = end
+                #compute transition probability of a slide
+                probabilities = self.transitionPro(slide)
+
+
+                if prev_pro != None:
+                    result_pro = np.asarray(probabilities) - np.asarray(prev_pro)
+                    # print(probabilities)
+                    # print(prev_pro)
+                    # print('result:', result_pro)
+                    probabilities_array.append(result_pro)
+
+
+                prev_pro = probabilities
+
+          
+            # append transition probability to dictionary  
+            probabilities_dict[k] = list(itertools.chain(*probabilities_array))
             #print(len(probabilities_array))
         return probabilities_dict
 
@@ -335,35 +376,36 @@ class TransitionMatrix:
         silence_tran.append(silTNeu)
         silence_tran.append(silTPos)
 
+        len_arr = len(transitionArray) - 1
         if sum(positive_tran) != 0:
-            transMat_pos.append(posTOPos/sum(positive_tran))
-            transMat_pos.append(PosTNeg/sum(positive_tran))
-            transMat_pos.append(PosTNeu/sum(positive_tran))
-            transMat_pos.append(PosTSil/sum(positive_tran))
+            transMat_pos.append(posTOPos/len_arr)
+            transMat_pos.append(PosTNeg/len_arr)
+            transMat_pos.append(PosTNeu/len_arr)
+            transMat_pos.append(PosTSil/len_arr)
         else: 
             transMat_pos.append([0,0,0,0])
 
         if sum(negative_tran) != 0:
-            transMat_neg.append(negaToNega/sum(negative_tran))
-            transMat_neg.append(NegTPos/sum(negative_tran))
-            transMat_neg.append(NegTNeu/sum(negative_tran))
-            transMat_neg.append(NegTSil/sum(negative_tran))
+            transMat_neg.append(negaToNega/len_arr)
+            transMat_neg.append(NegTPos/len_arr)
+            transMat_neg.append(NegTNeu/len_arr)
+            transMat_neg.append(NegTSil/len_arr)
         else: 
             transMat_neg.append([0,0,0,0])
 
         if sum(neutral_tran) != 0:
-            transMat_neu.append(neuTNeu/sum(neutral_tran))
-            transMat_neu.append(NeuTPos/sum(neutral_tran))
-            transMat_neu.append(NeuTNeg/sum(neutral_tran))
-            transMat_neu.append(NeuSil/sum(neutral_tran))
+            transMat_neu.append(neuTNeu/len_arr)
+            transMat_neu.append(NeuTPos/len_arr)
+            transMat_neu.append(NeuTNeg/len_arr)
+            transMat_neu.append(NeuSil/len_arr)
         else: 
             transMat_neu.append([0,0,0,0])
 
         if sum(silence_tran) != 0:
-            transMat_sil.append(silToSil/sum(silence_tran))
-            transMat_sil.append(silTNeg/sum(silence_tran))
-            transMat_sil.append(silTNeu/sum(silence_tran))
-            transMat_sil.append(silTPos/sum(silence_tran))
+            transMat_sil.append(silToSil/len_arr)
+            transMat_sil.append(silTNeg/len_arr)
+            transMat_sil.append(silTNeu/len_arr)
+            transMat_sil.append(silTPos/len_arr)
         else: 
             transMat_sil.append([0,0,0,0])
 
@@ -371,6 +413,7 @@ class TransitionMatrix:
         transMat.append(transMat_neg)
         transMat.append(transMat_neu)
         transMat.append(transMat_sil)
+        # print(transMat_sil)
 
         return transMat
 
@@ -381,18 +424,38 @@ class TransitionMatrix:
         t = self.get_mood_transitions()
         #count = 0
         for k, TransArray in t.items():
-            probabilities = self.transMat_(TransArray)
+            probabilities = self.transitionPro(TransArray)
             transMat_user_dict[k] = probabilities
         return transMat_user_dict
+
+
+    def get_mood_transitions_pro(self):
+        mood_tran = self.slideWindows() 
+        mood_tran_dict = {}
+        for k, v in mood_tran.items():
+            mood_tran_dict[k] = list(itertools.chain(*v))
+
+        TransitionStates_df = pd.DataFrame.from_dict(mood_tran_dict).T
+        return TransitionStates_df
+
+    def get_transitions_momentum(self):
+        mood_tran_df = self.get_mood_transitions_pro()
+        mood_t_momentum = self.slideWindows2()
+        mood_t_momentum_df = pd.DataFrame.from_dict(mood_t_momentum ).T
+
+        return mood_t_momentum_df, mood_tran_df
+
+
+
     # def get_transitions_df(self, path):
     #     '''convert transition of mood dict to df'''
     #     TransitionStates = get_mood_transitions(mood_vector_feature)  
     #     TransitionStates_df = pd.DataFrame.from_dict(TransitionStates).T
-    #     TransitionStates_df.to_csv(path + './mood_vectors/mood_transition_frequent_user_window_{}.csv'.format(self.windowSzie)) #feature matrx for prediction 
+    #     TransitionStates_df.to_csv(path + './mood_vectors/mood_transition_frequent_user_window_{}.csv'.format(self.self.windowSize)) #feature matrx for prediction 
     #     return TransitionStates_df
 
     # def get_transition_oneHoc(self, path):
-    #     TransitionStates = get_transitions_df(path, windowSzie)
+    #     TransitionStates = get_transitions_df(path, self.windowSize)
     #     #convert transition df to one hot
     #     onehoc_X = OneHotEncoder(handle_unknown='ignore')
     #     TransitionStatesOneHot = onehoc_X.fit_transform(TransitionStates.iloc[:,0:]).toarray()
@@ -400,17 +463,23 @@ class TransitionMatrix:
     #     df = pd.DataFrame(TransitionStatesOneHot)
     #     df.columns = [str(col) + '_transitions' for col in df.columns]
     #     df.index = TransitionStates.index
-    #     df.to_csv(path + './mood_vectors/mood_transition_one_hoc_frequent_user_window_{}.csv'.format(self.windowSzie))
+    #     df.to_csv(path + './mood_vectors/mood_transition_one_hoc_frequent_user_window_{}.csv'.format(self.self.windowSize))
     #     return df
 
-#TransitionStatesOneHot = get_transition_oneHoc(path, windowSzie)
+#TransitionStatesOneHot = get_transition_oneHoc(path, self.windowSize)
+
+#read sentiment file
+
 
 moodOb = MoodFeature(path = path, participants = participants)
 ValenceObject = moodOb.get_mood_vector(365)
 
-transition = TransitionMatrix(ValenceObject = ValenceObject)
+transition = TransitionMatrix(ValenceObject = ValenceObject, windowSize = 30)
+# a, b = transition.get_transitions_momentum()
 
-#t = transition.slideWindows(30)   
+
+# s = transition.slideWindows2(30) 
+# s1 = transition.slideWindows(30) 
 
 
 

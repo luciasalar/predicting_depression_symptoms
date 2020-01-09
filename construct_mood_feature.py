@@ -13,8 +13,11 @@ import statistics
 class SelectParticipants():
 	def __init__(self):
 		self.path = '/disk/data/share/s1690903/predicting_depression_symptoms/data/' 
+		#self.path = '/Users/lucia/hawksworth/predicting_depression_symptoms/data/'
 		self.participants = pd.read_csv(self.path + 'participants_matched.csv')
-		self.frequent_users = pd.read_csv(self.path + 'frequent_users.csv')
+		#self.frequent_users = pd.read_csv(self.path + 'frequent_users.csv')
+		# self.frequent_users = pd.read_csv(self.path + 'all_users.csv')
+		self.frequent_users = pd.read_csv(self.path + 'adjusted_sample2.csv')
 
 	def process_participants(self):
 		'''process participant files, select useful columns '''
@@ -77,20 +80,20 @@ class MoodFeature:
 		for user in dfUserid:
 		   # print(user)
 		    if user not in users:
-		        users[user] = [None]*length
+		        users[user] = [np.nan]*length
 		return users
 
 	def getValenceVector(self, userObject, df):
 		''' parse mood condition to a day framework, return a dictionary of user: day1 mood, day2 mood...'''
-		preDay = None
-		preUser = None
-		preValence = None
+		preDay = np.nan
+		preUser = np.nan
+		preValence = np.nan
 		curdayPosts = []
 		i = 0
 		for valence, day, user in zip(df['sentiment_sum'], df['time_diff'], df['userid']):
 		    #rint(user, day)
 		    #posVal = 0
-		    if preUser is None:
+		    if preUser is np.nan:
 		        curdayPosts = [valence]
 		    elif day == preDay and user == preUser:# and valence != preValence:
 		        curdayPosts.append(valence)
@@ -124,7 +127,7 @@ class MoodFeature:
 		elif (neu_count !=0 and (neu_count >= positive_count or neu_count >= neg_count)):
 		    return 0
 		else: #silence days
-		    return None
+		    return np.nan
 
 	def getAveragedValence(self, curdayPosts):
 		'''get average mood of the day'''
@@ -139,15 +142,15 @@ class MoodFeature:
 		
 	def getAveragedValenceVector(self, userObject, df):
 		''' parse mood condition to a day framework, return a dictionary of user: day1 mood, day2 mood...'''
-		preDay = None
-		preUser = None
-		preValence = None
+		preDay = np.nan
+		preUser = np.nan
+		preValence = np.nan
 		curdayPosts = []
 		i = 0
 		for valence, day, user in zip(df['sentiment_sum'], df['time_diff'], df['userid']):
 		    #rint(user, day)
 		    #posVal = 0
-		    if preUser is None:
+		    if preUser is np.nan:
 		        curdayPosts = [valence]
 		    elif day == preDay and user == preUser:# and valence != preValence:
 		        curdayPosts.append(valence)
@@ -161,24 +164,24 @@ class MoodFeature:
 		return userObject
 
 
-	def get_mood_dict(self, timeRange, windowSzie, moodVector):
+	def get_mood_dict(self, timeRange, windowSzie, moodVector, step):
 		'''construct mood temporal feature, in the past X day, the dominant mood is ? The window moves +1 day in each iteration'''
 		#count = 0
 		mood_vect_window_dict={}
 		for k, v in moodVector.items():
 			mood_vect_window  = []
-			for start in range(0,timeRange): #define data range
+			for start in range(0,timeRange, step): #define data range
 				end = start+windowSzie #window size
 				#print(start, end)
 				mini_vect = v[start:end]
 				#mood_vect_window = []
 				freq = collections.Counter(mini_vect)
-				#if silence days are more than 50% then mood is slience 
-				if freq[None] > len(mini_vect)*0.7:
-					mood_vect_window.append(None)
+				#if silence days are more than 90% then mood is slience 
+				if freq[np.nan] > len(mini_vect)*0.9:
+					mood_vect_window.append(np.nan)
 					#print(freq[-1])
 				else: #otherwise remove silence and count the most frequent one 
-					lst = [i for i in mini_vect if i != None]
+					lst = [i for i in mini_vect if i != np.nan]
 					freq2 = collections.Counter(lst).most_common(1)[0][0]
 					mood_vect_window.append(freq2)
 
@@ -217,7 +220,7 @@ class MoodFeature:
 		moodVector = self.getAveragedValenceVector(users, sorted_senti)
 		return moodVector
 
-	def get_mood_change_dict(self, timeRange, windowSzie, moodVector):
+	def get_mood_change_dict(self, timeRange, windowSzie, moodVector, step):
 		'''construct mood temporal feature, how much does the mood changes every X day? X is the time window'''
 		#count = 0
 		mood_vect_window_dict= {}
@@ -225,23 +228,45 @@ class MoodFeature:
 			mood_vect_window  = []
 			preWin_mean = 0 
 			 
-			for start in range(0,timeRange): #define data range
+			for start in range(0,timeRange, step): #define data range
 				end = start+windowSzie #window size
 				#print(start, end)
 				mini_vect = v[start:end]
 				#mood_vect_window = []
-				win_mean = statistics.mean(mini_vect)
+				win_mean = np.nanmean(mini_vect)
+				
 				#get the change between two windows
 				mood_vect_window.append(win_mean - preWin_mean)
+				#print(win_mean)
 				preWin_mean = win_mean
 
 			mood_vect_window_dict[k] = mood_vect_window 
 		return mood_vect_window_dict
 
-	def get_mood_in_timewindow(self, timeRange, windowSzie):
+	def get_mood_continous_dict(self, timeRange, windowSzie, moodVector, step):
+		'''construct mood temporal feature, how much does the mood changes every X day? X is the time window'''
+		#count = 0
+		mood_vect_window_dict= {}
+		for k, v in moodVector.items():
+			mood_vect_window  = []
+			preWin_mean = 0 
+			 
+			for start in range(0,timeRange, step): #define data range
+				end = start+windowSzie #window size
+				#print(start, end)
+				mini_vect = v[start:end]
+				#mood_vect_window = []
+				win_mean = np.nanmean(mini_vect)
+				#get the change between two windows
+				mood_vect_window.append(win_mean)
+
+			mood_vect_window_dict[k] = mood_vect_window 
+		return mood_vect_window_dict
+
+	def get_mood_in_timewindow(self, timeRange, windowSzie, step):
 		# get mood vector with 
 		moodVector = self.get_mood_vector(timeRange)
-		mood_dict = self.get_mood_dict(timeRange, windowSzie, moodVector) #paramenter: number of days used as features, time window
+		mood_dict = self.get_mood_dict(timeRange, windowSzie, moodVector, step) #paramenter: number of days used as features, time window
 		mood_vect_df = pd.DataFrame.from_dict(mood_dict).T
 		#change column names
 
@@ -249,22 +274,26 @@ class MoodFeature:
 		#mood_vect_df.rename(columns={'0_mood':'userid'}, inplace=True)
 		#mood_vect_df['userid'] = mood_vect_df.index
 
-		mood_vect_df.to_csv(self.path + './mood_vectors/mood_vector_frequent_user_window_{}_timeRange{}.csv'.format(windowSzie, timeRange)) #feature matrx for prediction 
+		mood_vect_df.to_csv(self.path + './mood_vectors/mood_vector_frequent_user_window_{}_timeRange{}_step{}.csv'.format(windowSzie, timeRange, step)) #feature matrx for prediction 
 		return mood_vect_df, windowSzie
 
-	def get_mood_change_in_timewindow(self, timeRange, windowSzie):
+	def get_mood_change_in_timewindow(self, timeRange, windowSzie, step):
 		# get mood vector with 
 		moodVector = self.get_mood_continous(timeRange)
-		mood_dict = self.get_mood_change_dict(timeRange, windowSzie, moodVector) #paramenter: number of days used as features, time window
+		mood_dict = self.get_mood_change_dict(timeRange, windowSzie, moodVector, step) #paramenter: number of days used as features, time window
 		mood_vect_df = pd.DataFrame.from_dict(mood_dict).T
-		#change column names
 
-		#mood_vect_df.columns = [str(col) + '_mood' for col in mood_vect_df.columns]
-		#mood_vect_df.rename(columns={'0_mood':'userid'}, inplace=True)
-		#mood_vect_df['userid'] = mood_vect_df.index
-		mood_vect_df.to_csv(self.path + './mood_vectors/mood_change_frequent_user_window_{}_timeRange{}.csv'.format(windowSzie, timeRange)) #feature matrx for prediction 
+		mood_vect_df.to_csv(self.path + './mood_vectors/mood_change_frequent_user_window_{}_timeRange{}_step{}.csv'.format(windowSzie, timeRange, step)) #feature matrx for prediction 
 		return mood_vect_df, windowSzie
 
+	def get_mood_continous_in_timewindow(self, timeRange, windowSzie, step):
+		# get mood vector with 
+		moodVector = self.get_mood_continous(timeRange)
+		mood_dict = self.get_mood_continous_dict(timeRange, windowSzie, moodVector, step) #paramenter: number of days used as features, time window
+		mood_vect_con_df = pd.DataFrame.from_dict(mood_dict).T
+
+		mood_vect_con_df.to_csv(self.path + './mood_vectors/mood_change_continous_user_window_{}_timeRange{}_step{}.csv'.format(windowSzie, timeRange, step)) #feature matrx for prediction 
+		return mood_vect_con_df, windowSzie
 
 #read sentiment file
 sp = SelectParticipants()
@@ -273,14 +302,12 @@ participants = sp.process_participants()
 
 #here you define the number of days you want to use as feature and the time window for mood
 mood = MoodFeature(path = path, participants = participants)
-mood_vector_feature, windowSzie = mood.get_mood_in_timewindow(365, 3)
+#get mood feature in time window (category)
+# mood_vector_feature, windowSzie = mood.get_mood_in_timewindow(365, 30, 3)
+
+# #get mood feature in time window (continues)
+# mood_vector_con_feature, windowSzie = mood.get_mood_continous_in_timewindow(365, 30, 3)
+
+# mood_vector_feature, windowSzie = mood.get_mood_change_in_timewindow(365, 30, 3)
 
 
-# mood_vector_feature.columns = [str(col) + '_mood' for col in mood_vector_feature.columns]
-
-# mood_vector_feature.rename(columns = {"0_mood":"userid"}, inplace=True) 
-# moodV = mood.get_mood_continous(365)
-
-# moodC = mood.get_mood_change_dict(356, 3, moodV)
-
-#mood_vector_feature, windowSzie = mood.get_mood_change_in_timewindow(365, 3)
