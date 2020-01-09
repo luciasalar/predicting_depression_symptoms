@@ -255,7 +255,7 @@ class TransitionMatrix:
             probabilities_array = []
             prev_pro = None
             
-            for i in range(0, len(TransArray)-1, self.windowSize):   
+            for i in range(0, len(TransArray)-1, self.windowSize):   #here the step equals to window size
                 
             
                 end = start+self.windowSize
@@ -284,7 +284,7 @@ class TransitionMatrix:
 
 
     def transMat_(self, transitionArray):
-        ''' get transition matrix'''
+        ''' get transition matrix, this is used in the HMM file'''
         
         #transition states  
         posTOPos = 0 
@@ -430,6 +430,7 @@ class TransitionMatrix:
 
 
     def get_mood_transitions_pro(self):
+        '''get mood transition feature dict '''
         mood_tran = self.slideWindows() 
         mood_tran_dict = {}
         for k, v in mood_tran.items():
@@ -439,47 +440,24 @@ class TransitionMatrix:
         return TransitionStates_df
 
     def get_transitions_momentum(self):
+        '''get mood transition and transition momentum features '''
         mood_tran_df = self.get_mood_transitions_pro()
         mood_t_momentum = self.slideWindows2()
         mood_t_momentum_df = pd.DataFrame.from_dict(mood_t_momentum ).T
 
         return mood_t_momentum_df, mood_tran_df
 
-
-
-    # def get_transitions_df(self, path):
-    #     '''convert transition of mood dict to df'''
-    #     TransitionStates = get_mood_transitions(mood_vector_feature)  
-    #     TransitionStates_df = pd.DataFrame.from_dict(TransitionStates).T
-    #     TransitionStates_df.to_csv(path + './mood_vectors/mood_transition_frequent_user_window_{}.csv'.format(self.self.windowSize)) #feature matrx for prediction 
-    #     return TransitionStates_df
-
-    # def get_transition_oneHoc(self, path):
-    #     TransitionStates = get_transitions_df(path, self.windowSize)
-    #     #convert transition df to one hot
-    #     onehoc_X = OneHotEncoder(handle_unknown='ignore')
-    #     TransitionStatesOneHot = onehoc_X.fit_transform(TransitionStates.iloc[:,0:]).toarray()
-
-    #     df = pd.DataFrame(TransitionStatesOneHot)
-    #     df.columns = [str(col) + '_transitions' for col in df.columns]
-    #     df.index = TransitionStates.index
-    #     df.to_csv(path + './mood_vectors/mood_transition_one_hoc_frequent_user_window_{}.csv'.format(self.self.windowSize))
-    #     return df
-
-#TransitionStatesOneHot = get_transition_oneHoc(path, self.windowSize)
-
-#read sentiment file
+#construct a daily mood vector
 
 
 moodOb = MoodFeature(path = path, participants = participants)
-ValenceObject = moodOb.get_mood_vector(365)
+ValenceObject = moodOb.get_mood_vector(365) #here returns a function with mood on 365 days
 
+# now convert the mood vector to transition features
 transition = TransitionMatrix(ValenceObject = ValenceObject, windowSize = 30)
 # a, b = transition.get_transitions_momentum()
 
 
-# s = transition.slideWindows2(30) 
-# s1 = transition.slideWindows(30) 
 
 
 

@@ -7,8 +7,9 @@ from collections import defaultdict
 # from pymc3.distributions.timeseries import GaussianRandomWalk
 # from scipy import optimize
 #from time import mktime as mktime
+import datetime
 import time
-from datetime import datetime
+# from datetime import datetime
 import GPy
 import matplotlib.pyplot as plt
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C
@@ -120,7 +121,7 @@ class SentiFeature:
 
 
 	def get_user_mood_obj(self, moodVec):
-		'''for each user, there's a value vector for sentiment and value vector for time '''
+		'''inser mood vector to a dictionary, for each user, there's a value vector for sentiment and value vector for time '''
 		
 		mydict = lambda: defaultdict(mydict)
 		userTime = mydict()
@@ -151,7 +152,7 @@ class SentiFeature:
 			timestamp_hour = []
 			for timestamp in v['postTime']:
 				#print(type(datetime.datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S").timetuple()))
-				time_num = time.mktime(datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S").timetuple())
+				time_num = time.mktime(datetime.datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S").timetuple())
 				new_time = time_num/timescale #(60 min * 60 second)
 				timestamp_hour.append(new_time)
 			new_dict[k]['senti'] = v['senti']
@@ -171,7 +172,7 @@ class SentiFeature:
 			timestamp_hour = []
 			for timestamp in v['postTime']:
 				#print(type(datetime.datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S").timetuple()))
-				time_num = time.mktime(datetime.strptime(timestamp, "%d/%m/%Y %H:%M").timetuple())
+				time_num = time.mktime(datetime.datetime.strptime(timestamp, "%d/%m/%Y %H:%M").timetuple())
 				new_time = time_num/timescale #(60 min * 60 second)
 				timestamp_hour.append(new_time)
 			new_dict[k]['senti'] = v['senti']
@@ -253,14 +254,13 @@ class GaussianProcess:
 # g = GaussianProcess(userTimeObj = userTime, path = path)
 # g.save_results(timescale, 168) #set length scale 24*7
 
-#using annotated data
+#using annotated data or mood vector 
 sp = SelectParticipants()
 path = sp.path
 annotate = sp.processed_annotation() #get annotation data
 
 senti = SentiFeature(path = path, participants = annotate)
 
-#using mood vector 
 mood_vector_feature, windowSzie = mood.get_mood_in_timewindow(365, 30, 3)
 mood_vector_feature = mood_vector_feature.fillna(mood_vector_feature.mean()) 
 mvObj = senti.get_user_mood_obj(mood_vector_feature)

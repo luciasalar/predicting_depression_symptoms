@@ -235,12 +235,12 @@ class PrepareData():
 		return X, y_recode
 
 	def get_train_test_split(self):
-		'''split 10% holdout set, then split train test with the rest 90%'''
+		'''split 10% holdout set, then split train test with the rest 90%, stratify splitting'''
 		X, y = self.pre_train()
 			# get 10% holdout set for testing
 		X_train1, X_final_test, y_train1, y_final_test = train_test_split(X, y, test_size=0.10, stratify=y, random_state = 330)
 
-			#split train test 
+			#split train test in the rest of 90% 
 		X_train, X_test, y_train, y_test = train_test_split(X_train1, y_train1, test_size=0.30, stratify=y_train1, random_state = 300)
 		print(X_train.shape, X_test.shape)
 		return X_train, X_test, y_train, y_test, y_final_test, X_final_test
@@ -248,7 +248,7 @@ class PrepareData():
 
 
 class ColumnSelector(BaseEstimator, TransformerMixin):
-	'''feature selector for pipline '''
+	'''feature selector for pipline (pandas df format) '''
 	def __init__(self, columns):
 		self.columns = columns
 
@@ -400,7 +400,7 @@ def get_separate_text_file(timeRange):
 
 
 def loop_the_grid(MoodslideWindow):
-	
+	'''loop parameters in the environment file '''
 
 	path = '/disk/data/share/s1690903/predicting_depression_symptoms/data/'
 	experiment = load_experiment(path + '../experiment/experiment.yaml')
@@ -416,10 +416,10 @@ def loop_the_grid(MoodslideWindow):
 		for timewindow in experiment['timewindow']:
 			for step in experiment['step']:
 				if step < timewindow:
-
+					# prepare environment 
 					prepare = PrepareData(timewindow = timewindow, step = step)
 					
-					
+					# split data
 					X_train, X_test, y_train, y_test, y_final_test, X_final_test = prepare.get_train_test_split()
 					X_train.to_csv(path + 'train_feature.csv')
 					for feature_set, features_list in experiment['features'].items(): #loop feature sets
