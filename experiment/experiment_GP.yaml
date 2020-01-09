@@ -1,0 +1,6 @@
+lengthscale: [1680]
+time_division: [36]
+variance: [20]
+optimizer: ['lbfgsb']
+kernel: ['GPy.kern.Matern32']
+#kernel: ['GPy.kern.RBF', 'GPy.kern.Exponential', 'GPy.kern.Matern32', 'GPy.kern.Matern52']

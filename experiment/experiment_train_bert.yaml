@@ -1,0 +1,9 @@
+epochs: [10, 8, 5]
+clip: [1, 2, 3]
+embedding_dim: [512]
+hidden_dim: [786]
+n_layers: [2, 3]
+lr: [0.00001, 0.00003, 0.00005]
+output_size: [256, 512]
+
+
