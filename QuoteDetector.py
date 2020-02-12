@@ -62,6 +62,7 @@ class SearchGoogle:
                 f = open(self.path + '/searchQuote/searchText{}.csv'.format(str(datetime.datetime.now())), 'w')
                 writer = csv.writer(f, delimiter = ',',quoting=csv.QUOTE_MINIMAL)  
                 writer.writerow(["textID"]+["text"] + ["link"] + ["name"]+['description'])
+                f.close()
         
 
     def get_all_queries(self, startLine, endLine):
@@ -222,10 +223,10 @@ class SearchFeatures:
 
 sp = SelectText()
 
-participants = sp.selected_text()
+# participants = sp.selected_text()
 
-s = SearchGoogle(path= sp.path, textFile = participants)
-s.get_all_queries(120001, 150000)
+# s = SearchGoogle(path= sp.path, textFile = participants)
+# s.get_all_queries(120001, 150000)
 
 #get cosine similarity score, this table is used as feature directly
 # search = SearchFeatures(path = sp.path) 
