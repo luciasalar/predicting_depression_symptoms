@@ -196,7 +196,7 @@ class MoodFeature:
 		sentiment_selected = self.get_relative_day(adjusted_sentiment, timeRange)
 		#get mood score for each day , construct mood vector
 
-		# sort posts according to time
+		# sort posts according to time, in ascending order
 		sorted_senti = self.SortTime(sentiment_selected)
 
 		# get mood vector for X days

@@ -232,7 +232,11 @@ class GaussianProcess:
 			
 			fig = m['model'].plot()
 			for i in fig: 
-				
+				plt.xlabel('Time (time window = 14, step = 3)', fontsize=18)
+				plt.legend(loc=2, prop={'size': 12})
+				plt.ylabel('Mood of Every 14 Days', fontsize=18)
+				plt.xticks(fontsize=18)
+				plt.yticks(fontsize=18)
 				plt.savefig(path +'results/plots/GP/gp_process_{}'.format(k))
 				#plt.show()
 			#plt.close()
@@ -261,7 +265,7 @@ annotate = sp.processed_annotation() #get annotation data
 
 senti = SentiFeature(path = path, participants = annotate)
 
-mood_vector_feature, windowSzie = mood.get_mood_in_timewindow(365, 30, 3)
+mood_vector_feature, windowSzie = mood.get_mood_in_timewindow(365, 14, 3)
 mood_vector_feature = mood_vector_feature.fillna(mood_vector_feature.mean()) 
 mvObj = senti.get_user_mood_obj(mood_vector_feature)
 g = GaussianProcess(userTimeObj = mvObj, path = path)
