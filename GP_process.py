@@ -212,8 +212,8 @@ class GaussianProcess:
 				GP_models[user]['model'], GP_models[user]['lengthscale'] = self.GP_regression(np.asarray(v['time']).reshape(-1,1),np.asarray(v['senti']).reshape(-1,1), lengthscaleNum)
 			
 				count = count +1 
-				if count == 10:
-					break
+				# if count == 10:
+				# 	break
 		return GP_models
 
 	def save_results(self, timescale, lengthscale):

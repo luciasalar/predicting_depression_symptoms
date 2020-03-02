@@ -16,6 +16,9 @@ adjusted sample positve: negative 3:2
 * adjusted_sample2.csv
 positive : negative  1:1
 
+* adjusted_sample3.csv
+balanced sample 284:284, participants all completed scale in 2011
+
 * train_feature.csv 
 feature matix for training (the model generate this matrix each time we run it so that we can check what are the features look like)
 

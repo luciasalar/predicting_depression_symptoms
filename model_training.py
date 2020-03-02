@@ -77,7 +77,8 @@ class PrepareData():
         # aggregate text
         '''DONT USE JOIN STRING!! USE STR.CAT OTHERWISE YOU WILL LOSE A LOT OF INFORMATION  '''
         text_fea3 = text_fea.groupby(['userid'])['text'].apply(lambda x: x.str.cat(sep=',')).reset_index()
-        text_fea3 = text_fea3.drop_duplicates()# remove duplication
+        print(text_fea3.shape)
+        #text_fea3 = text_fea3.drop_duplicates()# remove duplication
         text_fea3.to_csv(self.path + 'aggregrate_text_{}.csv'.format(timeRange))
 
         return text_fea3
@@ -187,12 +188,12 @@ class PrepareData():
         all_features = pd.merge(all_features, mood_tran, on='userid')
         
         #load liwc (including WC)  mood = MoodFeature(path = path, participants = self.participants)
-        liwc = pd.read_csv(self.path + 'liwc_scores_balanced.csv')
+        liwc = pd.read_csv(self.path + 'liwc_scores3.csv')
         liwc['userid'] = liwc['userid'].apply(lambda x: x.split('.')[0])
         liwc.columns = [str(col) + '_liwc' for col in liwc.columns]
         liwc = liwc.rename(columns={"userid_liwc": "userid"})
         # print(all_features.shape)
-        # print(liwc.shape)
+        #print(liwc.shape)
 
         # # load sentiment feature (including post count)
         sentiment = self.sentiment_data()
@@ -243,7 +244,7 @@ class PrepareData():
         X, y = self.pre_train()
         # get 10% holdout set for testing
         # X_train1, X_final_test, y_train1, y_final_test = train_test_split(X, y, test_size=0.10, random_state = 2020, stratify = y)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state = 300, stratify = y)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.198, random_state = 300, stratify = y)
         # split train test in the rest of 90% 
         # X_train, X_test, y_train, y_test = train_test_split(X_train1, y_train1, test_size=0.30, random_state = 2020, stratify = y_train1)
 
@@ -352,7 +353,7 @@ class TrainingClassifiers:
 
     def training_models(self, pipeline):
         '''train models with grid search'''
-        grid_search_item = GridSearchCV(pipeline, self.parameters, cv = 9, scoring='accuracy')
+        grid_search_item = GridSearchCV(pipeline, self.parameters, cv = 5, scoring='accuracy')
         grid_search = grid_search_item.fit(self.X_train, self.y_train)
         
         return grid_search
@@ -389,7 +390,7 @@ def get_liwc_text(timeRange):
     prepare = PrepareData(timewindow=7, step=3)
     # sen = prepare.sentiment_data()
     liwc_text = prepare.liwc_preprocess(timeRange)
-    liwc_text.to_csv(prepare.path + 'liwc_text2.csv')
+    liwc_text.to_csv(prepare.path + 'liwc_text3.csv')
     return liwc_text
 
 def get_separate_text_file(timeRange):
@@ -397,11 +398,11 @@ def get_separate_text_file(timeRange):
     liwc = get_liwc_text(timeRange)
     prepare = PrepareData(timewindow=7, step=3)
     for index, row in liwc.iterrows():
-        out_file = open(prepare.path + 'liwc_text2/{}.txt'.format(row['userid']), 'a')
+        out_file = open(prepare.path + 'liwc_text3/{}.txt'.format(row['userid']), 'a')
         out_file.write(row['text'])
         out_file.close()
 
-#get_liwc_text(365)
+# get_liwc_text(365)
 # get_separate_text_file(365)
 # liwc_score = pd.read_csv(prepare.path + 'liwc_scores.csv')
 # liwc_score['userid'] = liwc_score['userid'].apply(lambda x: x.split('.')[0])
@@ -413,8 +414,8 @@ def loop_the_grid(MoodslideWindow):
     path = '/disk/data/share/s1690903/predicting_depression_symptoms/data/'
     experiment = load_experiment(path + '../experiment/experiment.yaml')
 
-    file_exists = os.path.isfile(path + 'results/stratify_no_valid3.csv')
-    f = open(path + 'results/stratify_no_valid3.csv' , 'a')
+    file_exists = os.path.isfile(path + 'results/stratify_test_treefinal.csv')
+    f = open(path + 'results/stratify_test_treefinal.csv' , 'a')
     writer_top = csv.writer(f, delimiter = ',',quoting=csv.QUOTE_MINIMAL)
     if not file_exists:
         writer_top.writerow(['best_scores'] + ['best_parameters'] + ['report'] + ['time'] + ['model'] +['feature_set'] +['tfidf_words'] + ['timewindow'] + ['step'] + ['MoodslideWindow'])
@@ -437,7 +438,7 @@ def loop_the_grid(MoodslideWindow):
                         for tfidf_words in experiment['tfidf_features']['max_fea']: #loop tfidf features
                             
 
-                            f = open(prepare.path + 'results/stratify_no_valid3.csv' , 'a')
+                            f = open(prepare.path + 'results/stratify_test_treefinal.csv' , 'a')
                             writer_top = csv.writer(f, delimiter = ',',quoting=csv.QUOTE_MINIMAL)
 
                             parameters = experiment['experiment'][classifier]
@@ -456,33 +457,32 @@ def loop_the_grid(MoodslideWindow):
 loop_the_grid('30_days')
 
 # dummy classifier
-# def dummy_classifier(MoodslideWindow):
-#   '''loop parameters in the environment file '''
+def dummy_classifier(MoodslideWindow):
+    '''loop parameters in the environment file '''
 
-#   path = '/disk/data/share/s1690903/predicting_depression_symptoms/data/'
-#   experiment = load_experiment(path + '../experiment/experiment.yaml')
+    path = '/disk/data/share/s1690903/predicting_depression_symptoms/data/'
+    experiment = load_experiment(path + '../experiment/experiment.yaml')
 
 
-#   timewindow = 14
-#   step = 3
-#   # prepare environment 
-#   prepare = PrepareData(timewindow = timewindow, step = step)
+    timewindow = 14
+    step = 3
+    # prepare environment 
+    prepare = PrepareData(timewindow = timewindow, step = step)
                     
-#   #   # split data
-#   X_train, X_test, y_train, y_test, y_final_test, X_final_test = prepare.get_train_test_split()
+    #   # split data
+    X_train, X_test, y_train, y_test = prepare.get_train_test_split()
+    print(X_train.shape, X_test.shape)
 
-#   dummy_clf = DummyClassifier(strategy="stratified")
-#   dummy_clf.fit(X_test, y_test)
-#   y_pred = dummy_clf.predict(X_test)
-#   report = classification_report(y_test, y_pred, output_dict=True)
-#   print(report)
-# return report 
+    dummy_clf = DummyClassifier(strategy="stratified")
+    dummy_clf.fit(X_test, y_test)
+    y_pred = dummy_clf.predict(X_test)
+    report = classification_report(y_test, y_pred, output_dict=True)
+    print(report)
+    return report 
                     
-# report = dummy_classifier('30_days')
+#report = dummy_classifier('30_days')
 
-
-
-
+#{'0': {'precision': 0.47368421052631576, 'recall': 0.45, 'f1-score': 0.46153846153846156, 'support': 60}, '1': {'precision': 0.47619047619047616, 'recall': 0.5, 'f1-score': 0.4878048780487805, 'support': 60}, 'accuracy': 0.475, 'macro avg': {'precision': 0.474937343358396, 'recall': 0.475, 'f1-score': 0.474671669793621, 'support': 120}, 'weighted avg': {'precision': 0.47493734335839594, 'recall': 0.475, 'f1-score': 0.474671669793621, 'support': 120}}
 #for debug 
 # prepare = PrepareData(timewindow=7, step=3)
 # fea = prepare.merge_data()

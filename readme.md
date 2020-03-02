@@ -48,3 +48,16 @@ train sentiment score with fine tune bert model (this part is not used in the pa
 QuoteDetector.py
 check if a post is a quotation or lyric
 
+QuoteDetector.py
+check if a post is a quotation or lyric
+
+resample_data.py
+resample the data using various conditions
+
+plotting_results.py, plot_results.Rmd
+plot results from recall and precision tables
+
+
+
+
+
